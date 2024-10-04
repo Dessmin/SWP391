@@ -1,15 +1,12 @@
 package com.swp391.KoiShop.api;
 
 import com.swp391.KoiShop.entity.User;
-import com.swp391.KoiShop.model.RegisterRequest;
-import com.swp391.KoiShop.model.LoginRequest;
-import com.swp391.KoiShop.model.UserResponse;
+import com.swp391.KoiShop.model.*;
 import com.swp391.KoiShop.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,6 +53,18 @@ public class UserAPI {
     public ResponseEntity delete(@PathVariable long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("forgot-password")
+    public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        userService.forgotPassword(forgotPasswordRequest);
+        return ResponseEntity.ok("Success sent request to forgot password");
+    }
+
+    @PostMapping("reset-password")
+    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        userService.resetPassword(resetPasswordRequest);
+        return ResponseEntity.ok("Success sent request to reset password");
     }
 }
 

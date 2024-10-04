@@ -5,21 +5,21 @@ package com.swp391.KoiShop.service;
 import com.swp391.KoiShop.entity.User;
 import com.swp391.KoiShop.exception.DuplicateEntity;
 import com.swp391.KoiShop.exception.EntityNotFoundException;
-import com.swp391.KoiShop.model.LoginRequest;
-import com.swp391.KoiShop.model.RegisterRequest;
-import com.swp391.KoiShop.model.UserResponse;
+import com.swp391.KoiShop.model.*;
 import com.swp391.KoiShop.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +36,8 @@ public class UserService implements UserDetailsService {
     private AuthenticationManager authenticationManager;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    private EmailService emailService;
 
     public UserResponse registerUser(RegisterRequest registerRequest) {
         // map regis -> user
@@ -43,7 +45,14 @@ public class UserService implements UserDetailsService {
         try {
             String originpassword = user.getPassword();
             user.setPassword(passwordEncoder.encode(originpassword));
+            user.setJoinDate(new Date());
             User savedUser = userRepository.save(user);
+
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setUser(savedUser);
+            emailDetail.setSubject("Welcome to Koi Shop");
+            emailDetail.setLink("https://www.google.com");
+            emailService.sentEmail(emailDetail);
             return modelMapper.map(savedUser, UserResponse.class);
         } catch (Exception e) {
             if (e.getMessage().contains(user.getUsername())) {
@@ -102,5 +111,33 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUserName(username);
+    }
+
+    public User getCurrentUser() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findById(user.getUserId()).orElse(null);
+    }
+
+    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        User user = userRepository.findByEmail(forgotPasswordRequest.getEmail());
+
+        if (user == null) throw new EntityNotFoundException("User not found!");
+        else {
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setUser(user);
+            emailDetail.setSubject("Reset Password");
+            emailDetail.setLink("https://www.google.com/?token=" + tokenService.generateToken(user));
+            emailService.sentEmail(emailDetail);
+        }
+    }
+
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        User user = getCurrentUser();
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
+        try {
+            userRepository.save(user);
+        }catch (RuntimeException e) {
+            throw new RuntimeException("Error during reset password process", e);
+        }
     }
 }

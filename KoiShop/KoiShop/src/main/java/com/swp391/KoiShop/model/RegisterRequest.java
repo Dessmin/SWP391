@@ -24,7 +24,7 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "PhoneNumber không được để trống")
-    @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Số điện thoại không hợp lệ")
+    @Pattern(regexp = "(^0(3|5|7|8|9)[0-9]{7}$)", message = "Số điện thoại không hợp lệ")
     private String phoneNumber;
 
     @NotBlank(message = "Address không được để trống")
