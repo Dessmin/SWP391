@@ -140,4 +140,21 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Error during reset password process", e);
         }
     }
+
+    public UserResponse updateForCustomer(long userId, UpdateCustomerRequest updateRequest) {
+        try {
+            User existingUser = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+
+            modelMapper.map(updateRequest, existingUser);
+
+            userRepository.save(existingUser);
+
+            return modelMapper.map(existingUser, UserResponse.class);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error during update process", e);
+        }
+    }
+
 }

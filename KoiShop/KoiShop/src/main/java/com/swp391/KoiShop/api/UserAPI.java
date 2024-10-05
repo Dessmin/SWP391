@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080/")
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name = "api")
@@ -45,6 +46,12 @@ public class UserAPI {
     public ResponseEntity update(@PathVariable long id, @Valid @RequestBody User user) {
         User existingUser = userService.updateUser(id, user);
         return ResponseEntity.ok(existingUser);
+    }
+
+    @PutMapping("/{userId}/customer")
+    public ResponseEntity updateForCustomer(@PathVariable long userId, @RequestBody UpdateCustomerRequest updateRequest) {
+        UserResponse updatedUser = userService.updateForCustomer(userId, updateRequest);
+        return ResponseEntity.ok(updatedUser);  // Trả về HTTP 200 với UserResponse
     }
 
     // Delete API
