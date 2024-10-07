@@ -1,19 +1,21 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class ConsignmentRequest {
 
     @Id
@@ -22,10 +24,14 @@ public class ConsignmentRequest {
     private Integer consignmentID;
 
     @NotNull(message = "User ID is required")
-    private Integer userID;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @NotNull(message = "Koi ID is required")
-    private Integer koiID;
+    @OneToOne
+    @JoinColumn(name = "koifish_id")
+    private KoiFish koiFish;
 
     @NotNull(message = "Request date is required")
     private Date requestDate;
@@ -43,6 +49,8 @@ public class ConsignmentRequest {
     @NotNull(message = "Shop price is required")
     private boolean shopPrice;
 
-    @NotNull(message = "Category ID is required")
-    private BigDecimal categoryID;
+    @NotNull(message = "Category is required")
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

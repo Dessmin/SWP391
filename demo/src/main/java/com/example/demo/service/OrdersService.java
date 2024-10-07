@@ -26,11 +26,11 @@ public class OrdersService {
         Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
-        order.setUserID(orderDetails.getUserID());
-        order.setOrderDate(orderDetails.getOrderDate());
-        order.setTotalAmount(orderDetails.getTotalAmount());
-        order.setOrderStatus(orderDetails.getOrderStatus());
-        order.setPaymentID(orderDetails.getPaymentID());
+//        order.setUserID(orderDetails.getUserID());
+//        order.setOrderDate(orderDetails.getOrderDate());
+//        order.setTotalAmount(orderDetails.getTotalAmount());
+//        order.setOrderStatus(orderDetails.getOrderStatus());
+//        order.setPaymentID(orderDetails.getPaymentID());
 
         return ordersRepository.save(order);
     }

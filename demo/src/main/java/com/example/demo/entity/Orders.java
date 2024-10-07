@@ -1,15 +1,20 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +22,9 @@ public class Orders {
     private Integer orderID;
 
     @NotNull(message = "User ID is required")
-    private Integer userID;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @NotNull(message = "Order date is required")
     @PastOrPresent(message = "Order date cannot be in the future")
@@ -32,5 +39,11 @@ public class Orders {
     private String orderStatus;
 
     @NotNull(message = "Payment ID is required")
-    private BigDecimal paymentID;
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
+    @OneToMany(mappedBy = "orders")
+    @JsonIgnore
+    private List<OrderDetails> orderDetails;
 }

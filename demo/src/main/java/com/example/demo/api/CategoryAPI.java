@@ -2,17 +2,17 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Category;
 import com.example.demo.service.CategoryService;
-import jakarta.validation.Valid;
-import lombok.Getter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080/")
+@SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin("*")
 public class CategoryAPI {
 
 
@@ -20,13 +20,13 @@ public class CategoryAPI {
     private CategoryService categoryService;
 
     // Get all categories
-    @GetMapping("list-category")
+    @GetMapping
     public List<Category> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
     // Create a new category
-    @PostMapping("add-category")
+    @PostMapping
     public Category createCategory(@RequestBody Category category) {
         return categoryService.createCategory(category);
     }

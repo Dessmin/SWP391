@@ -27,7 +27,7 @@ public class CertificateService {
     public Certificate updateCertificate(int id, Certificate certificateDetails) {
         Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Certificate not found"));
-        certificate.setLink(certificateDetails.getLink());
+//        certificate.setLink(certificateDetails.getLink());
         return certificateRepository.save(certificate);
     }
 

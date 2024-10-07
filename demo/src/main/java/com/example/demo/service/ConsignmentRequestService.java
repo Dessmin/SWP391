@@ -26,14 +26,14 @@ public class ConsignmentRequestService {
     public ConsignmentRequest updateConsignmentRequest(int id, ConsignmentRequest requestDetails) {
         ConsignmentRequest request = repository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
 
-        request.setUserID(requestDetails.getUserID());
-        request.setKoiID(requestDetails.getKoiID());
-        request.setRequestDate(requestDetails.getRequestDate());
-        request.setConsignmentType(requestDetails.isConsignmentType());
-        request.setAgreedPrice(requestDetails.getAgreedPrice());
-        request.setStatus(requestDetails.isStatus());
-        request.setShopPrice(requestDetails.isShopPrice());
-        request.setCategoryID(requestDetails.getCategoryID());
+//        request.setUserID(requestDetails.getUserID());
+//        request.setKoiID(requestDetails.getKoiID());
+//        request.setRequestDate(requestDetails.getRequestDate());
+//        request.setConsignmentType(requestDetails.isConsignmentType());
+//        request.setAgreedPrice(requestDetails.getAgreedPrice());
+//        request.setStatus(requestDetails.isStatus());
+//        request.setShopPrice(requestDetails.isShopPrice());
+//        request.setCategoryID(requestDetails.getCategoryID());
 
         return repository.save(request);
     }

@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Promotions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

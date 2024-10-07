@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Category;
-import com.example.demo.entity.KoiFish;
-import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,7 @@ public class CategoryService {
 
     public Category updateCategory(Long id, Category categoryDetails) {
         Category category = categoryRepository.findById(id).orElseThrow();
-        category.setCategory(categoryDetails.getCategory());
+//        category.setCategory(categoryDetails.getCategory());
         category.setDescription(categoryDetails.getDescription());
         return categoryRepository.save(category);
     }

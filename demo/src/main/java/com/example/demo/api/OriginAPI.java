@@ -1,14 +1,16 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Origin;
-import com.example.demo.entity.Payment;
 import com.example.demo.service.OriginService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080/")
+@SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/origin")
 public class OriginAPI {
@@ -16,34 +18,28 @@ public class OriginAPI {
     @Autowired
     private OriginService originService;
 
-
-    @PostMapping("add-origin")
-    public Origin createOrigin(@RequestBody Origin origin) {
-        return originService.createOrigin(origin);
-    }
-
-    // Update payment by ID
-    @PutMapping("/{originN}")
-    public ResponseEntity<Origin> updateOrigin(@PathVariable String originN, @RequestBody Origin updatedOrigin) {
-        try {
-            Origin origin = originService.updateOrigin(originN, updatedOrigin);
-            return ResponseEntity.ok(origin);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Get all Origins
-    @GetMapping("list-origin")
+    @GetMapping
     public List<Origin> getAllOrigins() {
         return originService.getAllOrigins();
     }
 
+    @GetMapping("/{id}")
+    public Origin getOriginById(@PathVariable Integer id) {
+        return originService.getOriginById(id);
+    }
 
-    // Delete an Origin
-    @DeleteMapping("/{originN}")
-    public ResponseEntity<Void> deleteOrigin(@PathVariable String originN) {
-        originService.deleteOrigin(originN);
-        return ResponseEntity.noContent().build();
+    @PostMapping
+    public Origin createOrigin(@RequestBody Origin origin) {
+        return originService.createOrigin(origin);
+    }
+
+    @PutMapping("/{id}")
+    public Origin updateOrigin(@PathVariable Integer id, @RequestBody Origin origin) {
+        return originService.updateOrigin(id, origin);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOrigin(@PathVariable Integer id) {
+        originService.deleteOrigin(id);
     }
 }

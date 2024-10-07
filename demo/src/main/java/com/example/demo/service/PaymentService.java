@@ -25,7 +25,7 @@ public class PaymentService {
     public Payment updatePayment(int id, Payment updatedPayment) {
         return paymentRepository.findById(id)
                 .map(payment -> {
-                    payment.setDescription(updatedPayment.getDescription());
+//                    payment.setDescription(updatedPayment.getDescription());
                     return paymentRepository.save(payment);
                 })
                 .orElseThrow(() -> new RuntimeException("Payment not found with id " + id));

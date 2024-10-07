@@ -1,10 +1,8 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,12 +11,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Breeds {
 
     @Id
@@ -33,4 +31,11 @@ public class Breeds {
     @NotBlank(message = "Description is required")
     private String description;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "breed")
+    private Batch batch;
+
+    @OneToMany(mappedBy = "breed")
+    @JsonIgnore
+    private List<KoiFish> koiFishList;
 }

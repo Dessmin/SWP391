@@ -27,10 +27,10 @@ public class BatchService {
         Batch batch1 = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
 
-        batch1.setDescription(batch.getDescription());
-        batch1.setStatus(batch.getStatus());
-        batch1.setBreedID(batch.getBreedID());
-        batch1.setPromotionID(batch.getPromotionID());
+//        batch1.setDescription(batch.getDescription());
+//        batch1.setStatus(batch.getStatus());
+//        batch1.setBreedID(batch.getBreedID());
+//        batch1.setPromotionID(batch.getPromotionID());
 
         return batchRepository.save(batch1);
     }

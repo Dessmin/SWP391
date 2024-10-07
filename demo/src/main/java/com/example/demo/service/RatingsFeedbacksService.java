@@ -31,11 +31,11 @@ public class RatingsFeedbacksService {
         RatingsFeedbacks ratingFeedback = ratingsFeedbacksRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Rating/Feedback not found"));
 
-        ratingFeedback.setUserID(ratingFeedbackDetails.getUserID());
-        ratingFeedback.setKoiID(ratingFeedbackDetails.getKoiID());
-        ratingFeedback.setRating(ratingFeedbackDetails.getRating());
-        ratingFeedback.setFeedback(ratingFeedbackDetails.getFeedback());
-        ratingFeedback.setFeedbackDate(ratingFeedbackDetails.getFeedbackDate());
+//        ratingFeedback.setUserID(ratingFeedbackDetails.getUserID());
+//        ratingFeedback.setKoiID(ratingFeedbackDetails.getKoiID());
+//        ratingFeedback.setRating(ratingFeedbackDetails.getRating());
+//        ratingFeedback.setFeedback(ratingFeedbackDetails.getFeedback());
+//        ratingFeedback.setFeedbackDate(ratingFeedbackDetails.getFeedbackDate());
 
         return ratingsFeedbacksRepository.save(ratingFeedback);
     }

@@ -25,12 +25,12 @@ public class PromotionsService {
     public Promotions updatePromotion(Long id, Promotions promotionDetails) {
         Promotions promotion = promotionsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Promotion not found"));
-
-        promotion.setPromotionName(promotionDetails.getPromotionName());
-        promotion.setDescription(promotionDetails.getDescription());
-        promotion.setDiscountPercentage(promotionDetails.getDiscountPercentage());
-        promotion.setStartDate(promotionDetails.getStartDate());
-        promotion.setEndDate(promotionDetails.getEndDate());
+//
+//        promotion.setPromotionName(promotionDetails.getPromotionName());
+//        promotion.setDescription(promotionDetails.getDescription());
+//        promotion.setDiscountPercentage(promotionDetails.getDiscountPercentage());
+//        promotion.setStartDate(promotionDetails.getStartDate());
+//        promotion.setEndDate(promotionDetails.getEndDate());
 
         return promotionsRepository.save(promotion);
     }

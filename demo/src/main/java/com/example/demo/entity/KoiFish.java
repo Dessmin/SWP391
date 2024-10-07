@@ -1,20 +1,18 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
-@Data
 @Entity
+@Getter
+@Setter
 public class KoiFish {
 
     @Id
@@ -22,16 +20,24 @@ public class KoiFish {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer koiID;
 
-    @NotNull(message = "Certificate ID is required")
-    private Integer certificateID;
+    @NotBlank(message = "KoiFishName không được để trống")
+    @Size(min = 3, max = 50, message = "UserName phải có từ 3 đến 50 ký tự")
+    @Column(unique = true)
+    private String fishName;
+
+    @OneToMany(mappedBy = "koiFish")
+    @JsonIgnore
+    private List<Certificate> certificates ;
 
     @NotNull(message = "Breed ID is required")
-    private Integer breedID;
+    @ManyToOne
+    @JoinColumn(name = "breed_id")
+    private Breeds breed;
 
-    private Integer promotionID;
-
-    @NotBlank(message = "Origin is required")
-    private String originN;
+    @NotNull(message = "Origin ID is required")
+    @ManyToOne
+    @JoinColumn(name = "origin_id")
+    private Origin origin;
 
     @NotBlank(message = "Description is required")
     private String description;
@@ -39,12 +45,9 @@ public class KoiFish {
     @NotNull(message = "Gender is required")
     private Boolean gender;
 
-    @NotNull(message = "UserID is required")
-    private Integer userID;
-
-    @NotNull(message = "Age is required")
-    @Min(value = 0, message = "Age cannot be negative")
-    private Integer age;
+    @NotNull(message = "Birth date is required")
+    @Temporal(TemporalType.DATE)
+    private Date birthDate;
 
     @NotBlank(message = "Diet is required")
     private String diet;
@@ -68,4 +71,16 @@ public class KoiFish {
 
     @NotBlank(message = "Image is required")
     private String image;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "koiFish")
+    private ConsignmentRequest consignmentRequest;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "koiFish")
+    private OrderDetails orderDetails;
+
+    @OneToMany(mappedBy = "koiFish")
+    @JsonIgnore
+    private List<RatingsFeedbacks> ratingsFeedbacks;
 }

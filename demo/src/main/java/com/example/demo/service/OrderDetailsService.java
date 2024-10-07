@@ -23,10 +23,10 @@ public class OrderDetailsService {
 
     public OrderDetails updateOrderDetail(int id, OrderDetails orderDetailsDetails) {
         OrderDetails orderDetails = orderDetailsRepository.findById(id).orElseThrow(() -> new RuntimeException("Order Detail not found"));
-        orderDetails.setOrderID(orderDetailsDetails.getOrderID());
-        orderDetails.setKoiID(orderDetailsDetails.getKoiID());
-        orderDetails.setQuantity(orderDetailsDetails.getQuantity());
-        orderDetails.setUnitPrice(orderDetailsDetails.getUnitPrice());
+//        orderDetails.setOrderID(orderDetailsDetails.getOrderID());
+//        orderDetails.setKoiID(orderDetailsDetails.getKoiID());
+//        orderDetails.setQuantity(orderDetailsDetails.getQuantity());
+//        orderDetails.setUnitPrice(orderDetailsDetails.getUnitPrice());
         return orderDetailsRepository.save(orderDetails);
     }
 

@@ -37,4 +37,8 @@ public class BreedsService {
                 .orElseThrow(() -> new RuntimeException("Breed not found for this id :: " + id));
         breedsRepository.delete(breed);
     }
+
+    public Breeds getBreedByName(String breed) {
+        return breedsRepository.getBreedsByBreedName(breed);
+    }
 }

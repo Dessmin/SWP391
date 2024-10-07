@@ -2,12 +2,15 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Payment;
 import com.example.demo.service.PaymentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080/")
+@SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentAPI {
