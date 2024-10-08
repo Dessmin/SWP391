@@ -5,6 +5,7 @@ import com.koishop.repository.OriginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +16,14 @@ public class OriginService {
 
     public List<Origin> getAllOrigins() {
         return originRepository.findAll();
+    }
+
+    public List<String> listOriginNames() {
+        List<String> list = new ArrayList<>();
+        for (Origin origin : originRepository.findAll()) {
+            list.add(origin.getOriginName());
+        }
+        return list;
     }
 
     public Origin getOriginById(Integer id) {

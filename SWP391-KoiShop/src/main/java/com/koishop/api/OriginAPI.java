@@ -17,9 +17,14 @@ public class OriginAPI {
     @Autowired
     private OriginService originService;
 
-    @GetMapping
+    @GetMapping("list")
     public List<Origin> getAllOrigins() {
         return originService.getAllOrigins();
+    }
+
+    @GetMapping("list-originName")
+    public List<String> getAllOriginNames() {
+        return originService.listOriginNames();
     }
 
     @GetMapping("/{id}")

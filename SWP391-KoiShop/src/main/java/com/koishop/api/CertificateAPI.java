@@ -1,6 +1,6 @@
 package com.koishop.api;
 
-import com.koishop.entity.Certificate;
+import com.koishop.models.certificate_model.CertificateView;
 import com.koishop.service.CertificateService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +19,29 @@ public class CertificateAPI {
     private CertificateService certificateService;
 
     @GetMapping("list-certificates")
-    public List<Certificate> getAllCertificates() {
+    public List<CertificateView> getAllCertificates() {
         return certificateService.getAllCertificates();
     }
 
 
     @PostMapping("add-cetificate")
-    public Certificate createCertificate(@RequestBody Certificate certificate) {
+    public CertificateView createCertificate(@RequestBody CertificateView certificate) {
         return certificateService.createCertificate(certificate);
     }
 
     @PutMapping("/{certificateID}")
-    public ResponseEntity<Certificate> updateCertificate(@PathVariable int certificateID, @RequestBody Certificate certificateDetails) {
-        try {
-            Certificate updatedCertificate = certificateService.updateCertificate(certificateID, certificateDetails);
-            return ResponseEntity.ok(updatedCertificate);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    public CertificateView updateCertificate(@PathVariable int certificateID, @RequestBody CertificateView certificateDetails) {
+        return certificateService.updateCertificate(certificateID, certificateDetails);
+    }
+
+    @GetMapping("/detail")
+    public CertificateView getCertificateDetail(@PathVariable int certificateID) {
+        return certificateService.getCertificate(certificateID);
+    }
+
+    @GetMapping("/{fishName}/fish-certificate")
+    public List<String> getCertificatesByFishName(@PathVariable String fishName) {
+        return certificateService.getCertificatesByFish(fishName);
     }
 
     @DeleteMapping("/{certificateID}")

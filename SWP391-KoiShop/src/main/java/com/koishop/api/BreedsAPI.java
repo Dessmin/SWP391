@@ -23,8 +23,15 @@ public class BreedsAPI {
         return breedsService.getAllBreeds();
     }
 
-    // Lấy Breed theo ID
+    @GetMapping("list-breedName")
+    public List<String> getAllBreedNames() {
+        return breedsService.listBreedNames();
+    }
 
+    @GetMapping("/{breedName}")
+    public Breeds getBreeds(@PathVariable String breedName) {
+        return breedsService.getBreedByName(breedName);
+    }
 
     // Tạo Breed mới
     @PostMapping("add-breed")

@@ -1,5 +1,6 @@
 package com.koishop.models.user_model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.koishop.entity.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -18,10 +19,6 @@ public class AdminViewUser {
     @Size(min = 3, max = 50, message = "UserName phải có từ 3 đến 50 ký tự")
     @Column(unique = true)
     private String userName;
-
-    @NotBlank(message = "Password không được để trống")
-    @Size(min = 8, message = "Password phải có ít nhất 8 ký tự")
-    private String password;
 
     @NotBlank(message = "Email không được để trống")
     @Email(message = "Email không hợp lệ")

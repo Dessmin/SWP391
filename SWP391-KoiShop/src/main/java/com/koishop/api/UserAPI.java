@@ -22,13 +22,13 @@ public class UserAPI {
 
     // Register API
     @PostMapping("/register")
-    public ResponseEntity register(@Valid @RequestBody CustomerRequest registerRequest) {
-        UserResponse newUser = userService.registerUser(registerRequest);
+    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
+        CustomerRequest newUser = userService.registerUser(registerRequest);
         return ResponseEntity.ok(newUser);
     }
 
     // List API
-    @GetMapping("/user")
+    @GetMapping("/list-user")
     public List<UserForList> getAllAccount(){
         return userService.getAllUsers();
     }
@@ -47,9 +47,9 @@ public class UserAPI {
         return ResponseEntity.ok(existingUser);
     }
 
-    @PutMapping("/{userId}/customer")
-    public ResponseEntity updateForCustomer(@PathVariable long userId, @RequestBody CustomerRequest updateRequest) {
-        UserResponse updatedUser = userService.updateForCustomer(userId, updateRequest);
+    @PutMapping("/{userId}/customer-update")
+    public ResponseEntity updateForCustomer( @RequestBody CustomerRequest updateRequest) {
+        CustomerRequest updatedUser = userService.updateForCustomer(updateRequest);
         return ResponseEntity.ok(updatedUser);  // Trả về HTTP 200 với UserResponse
     }
 
@@ -67,9 +67,15 @@ public class UserAPI {
         return ResponseEntity.ok("Success sent request to forgot password");
     }
 
-    @PostMapping("reset-password")
-    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        userService.resetPassword(resetPasswordRequest);
+    @PostMapping("/reset-password-email")
+    public ResponseEntity resetPasswordByEmail(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        userService.resetPasswordByEmail(resetPasswordRequest);
+        return ResponseEntity.ok("Success sent request to reset password");
+    }
+
+    @GetMapping("/reset-password")
+    public ResponseEntity resetPasswordByEmail(@Valid @RequestBody ResetPasswordRequest oldPassword, @Valid @RequestBody ResetPasswordRequest newPassword) {
+        userService.resetPassword(oldPassword, newPassword);
         return ResponseEntity.ok("Success sent request to reset password");
     }
 
@@ -83,6 +89,12 @@ public class UserAPI {
     public ResponseEntity<AdminViewUser> getUser(@PathVariable long id) {
         AdminViewUser adminViewUser = userService.detail(id);
         return ResponseEntity.ok(adminViewUser);
+    }
+
+    @GetMapping("/customer-detail")
+    public ResponseEntity getCustomerDetail() {
+        CustomerRequest detailUser = userService.detailForUser();
+        return ResponseEntity.ok(detailUser);
     }
 }
 

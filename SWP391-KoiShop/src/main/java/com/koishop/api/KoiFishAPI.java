@@ -2,11 +2,13 @@ package com.koishop.api;
 
 import com.koishop.models.fish_model.DefaultFish;
 import com.koishop.models.fish_model.FishForList;
+import com.koishop.models.fish_model.FishResponse;
 import com.koishop.models.fish_model.ViewFish;
 import com.koishop.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +25,8 @@ public class KoiFishAPI {
 
     // Lấy tất cả KoiFish
     @GetMapping("list")
-    public List<FishForList> getAllKoiFish() {
-        return koiFishService.getAllKoiFish();
+    public FishResponse getAllKoiFish(@RequestParam int page) {
+        return koiFishService.getAllKoiFish(page, 6);
     }
 
     // Tạo KoiFish mới
@@ -57,9 +59,9 @@ public class KoiFishAPI {
         return koiFishService.searchKoiFishByName(koiFishName);
     }
 
-    @GetMapping("/{origin}")
-    public List<FishForList> getKoiFishByOrigin(@PathVariable String origin) {
-        return koiFishService.getKoiFishesByOrigin(origin);
+    @GetMapping("/{breed}")
+    public FishResponse getKoiFishByOrigin(@PathVariable String breed, @RequestParam int page) {
+        return koiFishService.getKoiFishesByBreed(breed, page, 6);
     }
 
     // Xóa KoiFish theo ID

@@ -19,6 +19,7 @@ public class Batch {
 
     @ManyToOne
     @JoinColumn(name = "breed_id")
+    @NotBlank(message = "Breed is required")
     private Breeds breed;
 
     @NotBlank(message = "Description is required")
@@ -26,10 +27,9 @@ public class Batch {
 
     private String image;
 
-    private String quantity;
+    private int quantity;
 
     private String price;
 
-    @NotNull(message = "Status is required")
-    private Boolean status;
+    private Boolean isSale;
 }

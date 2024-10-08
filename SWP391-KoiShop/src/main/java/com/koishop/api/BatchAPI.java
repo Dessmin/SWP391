@@ -1,6 +1,8 @@
 package com.koishop.api;
 
 import com.koishop.entity.Batch;
+import com.koishop.models.batch_model.BatchResponse;
+import com.koishop.models.batch_model.BatchView;
 import com.koishop.service.BatchService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +22,24 @@ public class BatchAPI {
 
 
     @GetMapping("/list-batch")
-    public List<Batch> getAllBatch() {
-        return batchService.getAllBatch();
+    public BatchResponse getAllBatch(@RequestParam int page) {
+        return batchService.getAllBatch(page, 6);
     }
 
+    @GetMapping("/{breed}/list-batch-breed")
+    public BatchResponse getAllBatchByBreed(@PathVariable String breed,@RequestParam int page) {
+        return batchService.getAllBatchByBreed(breed, page, 6);
+    }
     
     @PostMapping("create-batch")
-    public Batch createBatch(@RequestBody Batch batch) {
+    public BatchView createBatch(@RequestBody BatchView batch) {
         return batchService.createBatch(batch);
     }
 
 
     @PutMapping("/{batchId}")
-    public ResponseEntity<Batch> updateBatch(@PathVariable int batchId, @RequestBody Batch batchDetails) {
-        Batch updatedBatch = batchService.updateBatch(batchId, batchDetails);
+    public ResponseEntity updateBatch(@PathVariable int batchId, @RequestBody BatchView batchDetails) {
+        BatchView updatedBatch = batchService.updateBatch(batchId, batchDetails);
         return ResponseEntity.ok(updatedBatch);
     }
 

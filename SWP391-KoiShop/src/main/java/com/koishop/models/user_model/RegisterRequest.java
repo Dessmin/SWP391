@@ -8,12 +8,15 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Email;
 
 @Data
-public class CustomerRequest {
+public class RegisterRequest {
     @NotBlank(message = "UserName không được để trống")
     @Size(min = 3, max = 50, message = "UserName phải có từ 3 đến 50 ký tự")
     @Column(unique = true)
     private String userName;
 
+    @NotBlank(message = "Password không được để trống")
+    @Size(min = 8, message = "Password phải có ít nhất 8 ký tự")
+    private String password;
 
     @NotBlank(message = "Email không được để trống")
     @Email(message = "Email không hợp lệ")
@@ -27,6 +30,4 @@ public class CustomerRequest {
     @NotBlank(message = "Address không được để trống")
     @Size(min = 5, max = 100, message = "Address phải có từ 5 đến 100 ký tự")
     private String address;
-
 }
-

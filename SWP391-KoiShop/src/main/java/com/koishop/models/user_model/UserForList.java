@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Data
 public class UserForList {
+    private int id;
     private String userName;
     private Date joinDate;
     private Role role;

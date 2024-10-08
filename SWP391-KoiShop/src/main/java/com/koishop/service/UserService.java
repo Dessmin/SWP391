@@ -6,9 +6,11 @@ import com.koishop.exception.DuplicateEntity;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.user_model.*;
 import com.koishop.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +34,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
+    @Lazy
     private ModelMapper modelMapper;
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,7 +43,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private EmailService emailService;
 
-    public UserResponse registerUser(CustomerRequest registerRequest) {
+    public CustomerRequest registerUser(RegisterRequest registerRequest) {
         // map regis -> user
         User user = modelMapper.map(registerRequest, User.class);
         try {
@@ -55,7 +58,7 @@ public class UserService implements UserDetailsService {
             emailDetail.setSubject("Welcome to Koi Shop");
             emailDetail.setLink("https://www.google.com");
             emailService.sentEmail(emailDetail);
-            return modelMapper.map(savedUser, UserResponse.class);
+            return modelMapper.map(savedUser, CustomerRequest.class);
         } catch (Exception e) {
             if (e.getMessage().contains(user.getUsername())) {
                 throw new DuplicateEntity("Duplicate UserName!");
@@ -81,6 +84,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Error during update process", e);
         }
     }
+
 
     public void deleteUser(long id) {
         Optional<User> existingUser = userRepository.findById(id);
@@ -143,7 +147,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+    public void resetPasswordByEmail(ResetPasswordRequest resetPasswordRequest) {
         User user = getCurrentUser();
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
         try {
@@ -153,17 +157,20 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserResponse updateForCustomer(long userId, CustomerRequest updateRequest) {
+    public void resetPassword(ResetPasswordRequest oldPassword, ResetPasswordRequest newPassword) {
+        User user = getCurrentUser();
+        if (passwordEncoder.matches(oldPassword.getPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword.getPassword()));
+            userRepository.save(user);
+        }else throw new IllegalArgumentException("Old password is incorrect.");
+    }
+
+    public CustomerRequest updateForCustomer(CustomerRequest updateRequest) {
         try {
-            User existingUser = userRepository.findById(userId)
-                    .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-
-            modelMapper.map(updateRequest, existingUser);
-
-            userRepository.save(existingUser);
-
-            return modelMapper.map(existingUser, UserResponse.class);
-
+            User currentUser = getCurrentUser();
+            modelMapper.map(updateRequest, currentUser);
+            userRepository.save(currentUser);
+            return modelMapper.map(currentUser, CustomerRequest.class);
         } catch (Exception e) {
             throw new RuntimeException("Error during update process", e);
         }
@@ -180,4 +187,8 @@ public class UserService implements UserDetailsService {
         return modelMapper.map(existingUser, AdminViewUser.class);
     }
 
+    public CustomerRequest detailForUser() {
+        User currentUser = getCurrentUser();
+        return modelMapper.map(currentUser, CustomerRequest.class);
+    }
 }

@@ -46,8 +46,4 @@ public class ConsignmentRequest {
     @NotNull(message = "Shop price is required")
     private boolean shopPrice;
 
-    @NotNull(message = "Category is required")
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 }
