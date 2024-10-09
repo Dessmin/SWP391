@@ -1,19 +1,18 @@
-package com.koishop.entity;
+package com.koishop.models.orderdetails_model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.koishop.entity.KoiFish;
+import com.koishop.entity.Orders;
+import com.koishop.models.fish_model.ViewFish;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Entity
-@Getter
-@Setter
-public class OrderDetails {
-
+@Data
+public class OrderDetailResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -28,8 +27,7 @@ public class OrderDetails {
     @NotNull(message = "Koi ID is required")
     @OneToOne
     @JoinColumn(name = "koifish_id")
-    @JsonIgnore
-    private KoiFish koiFish;
+    ViewFish viewFish;
 
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Quantity must be at least 1")

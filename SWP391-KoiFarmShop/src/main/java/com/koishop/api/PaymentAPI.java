@@ -1,6 +1,7 @@
 package com.koishop.api;
 
 import com.koishop.entity.Payment;
+import com.koishop.models.payment_model.PaymentResponse;
 import com.koishop.service.PaymentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,9 @@ public class PaymentAPI {
 
     // Create new payment
     @PostMapping("add-payment")
-    public Payment createPayment(@RequestBody Payment payment) {
-        return paymentService.createPayment(payment);
+    public ResponseEntity createPayment(@RequestBody PaymentResponse paymentResponse) {
+        PaymentResponse payment = paymentService.createPayment(paymentResponse);
+        return ResponseEntity.ok(payment);
     }
 
     // Update payment by ID

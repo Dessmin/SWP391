@@ -23,6 +23,7 @@ public class Orders {
     @NotNull(message = "User ID is required")
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @NotNull(message = "Order date is required")
@@ -31,18 +32,17 @@ public class Orders {
 
     @NotNull(message = "Total amount is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Total amount must be greater than zero")
-    private BigDecimal totalAmount;
+    private Float totalAmount;
 
     @NotBlank(message = "Order status is required")
     @Size(max = 50, message = "Order status must not exceed 50 characters")
     private String orderStatus;
 
-    @NotNull(message = "Payment ID is required")
+    //@NotNull(message = "Payment ID is required")
     @OneToOne(mappedBy = "orders")
     @JsonIgnore
     private Payment payment;
 
-    @OneToMany(mappedBy = "orders")
-    @JsonIgnore
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderDetails> orderDetails;
 }
