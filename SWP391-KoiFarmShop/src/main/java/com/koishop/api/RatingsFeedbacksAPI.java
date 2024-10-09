@@ -1,6 +1,7 @@
 package com.koishop.api;
 
 import com.koishop.entity.RatingsFeedbacks;
+import com.koishop.models.ratingsFeedback_model.RFView;
 import com.koishop.service.RatingsFeedbacksService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,9 @@ public class RatingsFeedbacksAPI {
 //    }
 
     @PostMapping("add-ratingsfeedback")
-    public ResponseEntity<RatingsFeedbacks> createRatingFeedback(@RequestBody RatingsFeedbacks ratingFeedback) {
-        RatingsFeedbacks createdRatingFeedback = ratingsFeedbacksService.createRatingFeedback(ratingFeedback);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRatingFeedback);
+    public ResponseEntity createRatingFeedback(@RequestBody RFView ratingFeedback) {
+        ratingsFeedbacksService.createRatingFeedback(ratingFeedback);
+        return ResponseEntity.ok(ratingFeedback);
     }
 
     @PutMapping("/{ratingID}")

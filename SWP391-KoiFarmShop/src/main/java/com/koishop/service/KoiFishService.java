@@ -35,7 +35,7 @@ public class KoiFishService {
 
     public FishResponse getAllKoiFish(int page, int size) {
         List<FishForList> fishForLists = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findAll()) {
+        for (KoiFish koiFish : koiFishRepository.findAll(PageRequest.of(page, size))) {
             FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
             fishForList.setBreed(koiFish.getBreed().getBreedName());
             fishForList.setOrigin(koiFish.getOrigin().getOriginName());
