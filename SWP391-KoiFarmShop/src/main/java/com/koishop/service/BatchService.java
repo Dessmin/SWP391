@@ -29,7 +29,7 @@ public class BatchService {
 
     public BatchResponse getAllBatch(int page, int size) {
         List<BatchView> batchViewList = new ArrayList<>();
-        for (Batch batches : batchRepository.findAll()) {
+        for (Batch batches : batchRepository.findAll(PageRequest.of(page, size))) {
             BatchView batch = modelMapper.map(batches, BatchView.class);
             batch.setBreed(batches.getBreed().getBreedName());
             batchViewList.add(batch);
@@ -72,7 +72,7 @@ public class BatchService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Batch> batchPage = batchRepository.findByBreed_BreedName(breed, pageable);
         List<BatchView> batchViewList = new ArrayList<>();
-        for (Batch batches : batchRepository.findAll()) {
+        for (Batch batches : batchRepository.findByBreed_BreedName(breed, pageable)) {
             if (batches.getBreed().getBreedName().equals(breed)) {
                 BatchView batch = modelMapper.map(batches, BatchView.class);
                 batch.setBreed(batches.getBreed().getBreedName());

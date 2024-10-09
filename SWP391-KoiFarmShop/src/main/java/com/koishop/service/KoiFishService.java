@@ -108,11 +108,10 @@ public class KoiFishService {
     }
 
     public FishResponse getKoiFishesByBreed(String breed, int page, int size) {
-
         Pageable pageable = PageRequest.of(page, size);
         Page<KoiFish> koiFishPage = koiFishRepository.findByBreed_BreedName(breed, pageable);
         List<FishForList> fishList = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findAll()) {
+        for (KoiFish koiFish : koiFishRepository.findByBreed_BreedName(breed, pageable)) {
             if(koiFish.getBreed().getBreedName().equals(breed)) {
                 FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
                 fishForList.setBreed(koiFish.getBreed().getBreedName());
