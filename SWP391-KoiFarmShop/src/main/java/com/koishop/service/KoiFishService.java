@@ -134,6 +134,6 @@ public class KoiFishService {
     }
 
     public ViewFish getKoiFishById(int id) {
-        return modelMapper.map(koiFishRepository.findById(id), ViewFish.class);
+        return detailsKoiFish(id);
     }
 }
