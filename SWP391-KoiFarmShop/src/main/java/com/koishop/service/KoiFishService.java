@@ -136,4 +136,13 @@ public class KoiFishService {
     public ViewFish getKoiFishById(int id) {
         return detailsKoiFish(id);
     }
+
+    public FishForList getFishCart(Integer id) {
+        KoiFish koiFish = koiFishRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + id));
+        FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
+        fishForList.setBreed(koiFish.getBreed().getBreedName());
+        fishForList.setOrigin(koiFish.getOrigin().getOriginName());
+        return fishForList;
+    }
 }
