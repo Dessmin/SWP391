@@ -32,6 +32,19 @@ public class OrdersAPI {
         return ResponseEntity.ok(createdOrder);
     }
 
+    @PostMapping("add-to-cart")
+    public ResponseEntity addToCart(@RequestBody OrdersRequest ordersRequest) {
+        Orders cartItem = ordersService.addToCart(ordersRequest);
+        return ResponseEntity.ok(cartItem);
+    }
+
+    @GetMapping("get-order-by-id/{orderId}")
+    public ResponseEntity getOrderById(@PathVariable int orderId){
+        Orders order = ordersService.getOrderById(orderId);
+        return ResponseEntity.ok(order);
+    }
+
+
     @PutMapping("/{orderID}/update")
     public ResponseEntity updateOrder(@PathVariable int orderID, @RequestBody OrdersRequest ordersRequest) {
         Orders updatedOrder = ordersService.updateOrder(orderID, ordersRequest);

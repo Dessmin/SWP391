@@ -74,6 +74,42 @@ public class OrdersService {
         return ordersRepository.save(order);
     }
 
+    public Orders addToCart(OrdersRequest ordersRequest) {
+        User user = userService.getCurrentUser();
+        Orders order = new Orders();
+        List<OrderDetails> orderDetails = new ArrayList<>();
+        Payment payment = paymentRepository.findById(ordersRequest.getPaymentID())
+                .orElseThrow(() -> new RuntimeException("Payment not found!"));
+        float total = 0;
+        order.setUser(user);
+        order.setOrderDate(new Date());
+
+        for (OrderDetailsRequest orderDetailsRequest:ordersRequest.getOrderDetails()) {
+            KoiFish koiFish = koiFishRepository.findById(orderDetailsRequest.getKoiID())
+                    .orElseThrow(() -> new RuntimeException("KoiFish not found!"));
+            OrderDetails orderDetail = new OrderDetails();
+            orderDetail.setQuantity(orderDetailsRequest.getQuantity());
+            orderDetail.setUnitPrice(koiFish.getPrice());
+            orderDetail.setOrders(order);
+            orderDetail.setKoiFish(koiFish);
+
+            orderDetails.add(orderDetail);
+            total += koiFish.getPrice() * orderDetailsRequest.getQuantity();
+        }
+        order.setPayment(payment);
+        order.setOrderStatus("InCart");
+        order.setOrderDetails(orderDetails);
+        order.setTotalAmount(total);
+        return ordersRepository.save(order);
+    }
+
+
+    public Orders getOrderById(int id) {
+        Orders order = ordersRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+    return order;
+    }
+
 
     public Orders updateOrder(Integer orderId, OrdersRequest ordersRequest) {
         // Lấy thông tin đơn hàng hiện tại từ database
