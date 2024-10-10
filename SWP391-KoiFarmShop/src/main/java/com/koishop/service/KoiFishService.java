@@ -3,10 +3,7 @@ package com.koishop.service;
 import com.koishop.entity.Breeds;
 import com.koishop.entity.KoiFish;
 import com.koishop.entity.Origin;
-import com.koishop.models.fish_model.DefaultFish;
-import com.koishop.models.fish_model.FishForList;
-import com.koishop.models.fish_model.FishResponse;
-import com.koishop.models.fish_model.ViewFish;
+import com.koishop.models.fish_model.*;
 import com.koishop.repository.KoiFishRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,12 +134,9 @@ public class KoiFishService {
         return detailsKoiFish(id);
     }
 
-    public FishForList getFishCart(Integer id) {
+    public FishForCart getFishCart(Integer id) {
         KoiFish koiFish = koiFishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + id));
-        FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
-        fishForList.setBreed(koiFish.getBreed().getBreedName());
-        fishForList.setOrigin(koiFish.getOrigin().getOriginName());
-        return fishForList;
+        return modelMapper.map(koiFish, FishForCart.class);
     }
 }

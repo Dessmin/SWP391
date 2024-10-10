@@ -1,14 +1,10 @@
 package com.koishop.api;
 
-import com.koishop.models.fish_model.DefaultFish;
-import com.koishop.models.fish_model.FishForList;
-import com.koishop.models.fish_model.FishResponse;
-import com.koishop.models.fish_model.ViewFish;
+import com.koishop.models.fish_model.*;
 import com.koishop.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,8 +66,8 @@ public class KoiFishAPI {
         return koiFishService.getKoiFishesByBreed(breed, page, 6);
     }
 
-    @GetMapping("{idforcart}")
-    public FishForList getIdforCart(@PathVariable int id) {
+    @GetMapping("/koiFish/cart/{id}")
+    public FishForCart getIdforCart(@PathVariable int id) {
         return koiFishService.getFishCart(id);
     }
 
