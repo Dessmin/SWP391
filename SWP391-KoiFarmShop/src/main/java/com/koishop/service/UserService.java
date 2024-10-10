@@ -181,9 +181,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
 
         existingUser.setRole(updateRoleRequest.getRole());
-
         userRepository.save(existingUser);
-
         return modelMapper.map(existingUser, AdminViewUser.class);
     }
 

@@ -34,16 +34,11 @@ public class ConsignmentRequest {
     private Date requestDate;
 
     @NotNull(message = "Consignment type is required")
-    private boolean consignmentType;
-
-    @NotNull(message = "Agreed price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Agreed price must be greater than zero")
-    private BigDecimal agreedPrice;
+    private ConsignmentType consignmentType;
 
     @NotNull(message = "Status is required")
     private boolean status;
 
-    @NotNull(message = "Shop price is required")
-    private boolean shopPrice;
+    private double shopPrice;
 
 }

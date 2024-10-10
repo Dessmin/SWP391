@@ -11,8 +11,8 @@
 	<groupId>com.example</groupId>
 	<artifactId>SWP391-KoiShop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>KoiShop</name>
+	<description>SWP391 project by Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>

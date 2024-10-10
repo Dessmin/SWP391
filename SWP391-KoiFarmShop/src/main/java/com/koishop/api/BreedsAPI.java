@@ -41,14 +41,14 @@ public class BreedsAPI {
 
     // Cập nhật Breed theo ID
     @PutMapping("/{breedID}")
-    public ResponseEntity<Breeds> updateBreed(@PathVariable(value = "id") Integer breedID, @RequestBody Breeds breedDetails) {
+    public ResponseEntity<Breeds> updateBreed(@PathVariable(value = "breedID") Integer breedID, @RequestBody Breeds breedDetails) {
         Breeds updatedBreed = breedsService.updateBreed(breedID, breedDetails);
         return ResponseEntity.ok(updatedBreed);
     }
 
     // Xóa Breed theo ID
     @DeleteMapping("/{breedID}")
-    public ResponseEntity<Void> deleteBreed(@PathVariable(value = "id") Integer breedID) {
+    public ResponseEntity<Void> deleteBreed(@PathVariable Integer breedID) {
         breedsService.deleteBreed(breedID);
         return ResponseEntity.noContent().build();
     }

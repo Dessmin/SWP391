@@ -34,7 +34,7 @@ public class CertificateAPI {
         return certificateService.updateCertificate(certificateID, certificateDetails);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/{certificateID}/detail")
     public CertificateView getCertificateDetail(@PathVariable int certificateID) {
         return certificateService.getCertificate(certificateID);
     }

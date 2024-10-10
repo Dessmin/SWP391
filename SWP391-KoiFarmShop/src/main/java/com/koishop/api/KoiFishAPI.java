@@ -49,8 +49,14 @@ public class KoiFishAPI {
     }
 
     @GetMapping("/{koiFishName}/koiFish")
-    public ResponseEntity getKoiFish(@PathVariable String koiFishName) {
+    public ResponseEntity getKoiFishByName(@PathVariable String koiFishName) {
         ViewFish koiFish = koiFishService.getKoiFishByName(koiFishName);
+        return ResponseEntity.ok(koiFish);
+    }
+
+    @GetMapping("/koiFish/{id}")
+    public ResponseEntity getKoiFishByID(@PathVariable int id) {
+        ViewFish koiFish = koiFishService.getKoiFishById(id);
         return ResponseEntity.ok(koiFish);
     }
 
@@ -66,7 +72,7 @@ public class KoiFishAPI {
 
     // Xóa KoiFish theo ID
     @DeleteMapping("/{koiId}")
-    public ResponseEntity<Void> deleteKoiFish(@PathVariable(value = "id") Integer koiId) {
+    public ResponseEntity<Void> deleteKoiFish(@PathVariable(value = "koiId") Integer koiId) {
         koiFishService.deleteKoiFish(koiId);
         return ResponseEntity.noContent().build();
     }

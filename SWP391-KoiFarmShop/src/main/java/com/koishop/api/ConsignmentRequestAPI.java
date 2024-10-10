@@ -1,6 +1,8 @@
 package com.koishop.api;
 
 import com.koishop.entity.ConsignmentRequest;
+import com.koishop.models.consignment_modle.ConsignmentRequestForCustomer;
+import com.koishop.models.consignment_modle.ConsignmentView;
 import com.koishop.service.ConsignmentRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +19,31 @@ public class ConsignmentRequestAPI {
 
 
     @Autowired
-    private ConsignmentRequestService service;
+    private ConsignmentRequestService consignmentRequestService;
 
     @GetMapping("list-consignments")
-    public List<ConsignmentRequest> getAllConsignmentRequests() {
-        return service.getAllConsignmentRequests();
+    public List<ConsignmentView> getAllConsignmentRequests() {
+        return consignmentRequestService.getAllConsignmentRequests();
+    }
+
+    @GetMapping("/{consignmentID}/get")
+    public ConsignmentView getConsignmentRequest(@PathVariable int consignmentID) {
+        return consignmentRequestService.getConsignmentRequestById(consignmentID);
     }
 
     @PostMapping("add-consignment")
-    public ConsignmentRequest createConsignmentRequest(@RequestBody ConsignmentRequest request) {
-        return service.createConsignmentRequest(request);
+    public ConsignmentRequestForCustomer createConsignmentRequest(@RequestBody ConsignmentRequestForCustomer request) {
+        return consignmentRequestService.createConsignmentRequest(request);
     }
 
-    @PutMapping("/{consignmentID}")
-    public ResponseEntity<ConsignmentRequest> updateConsignmentRequest(@PathVariable int consignmentID, @RequestBody ConsignmentRequest requestDetails) {
-        return ResponseEntity.ok(service.updateConsignmentRequest(consignmentID, requestDetails));
+    @PutMapping("/{consignmentID}/update")
+    public ConsignmentView updateConsignmentRequest(@PathVariable int consignmentID, @RequestBody ConsignmentView requestDetails) {
+        return consignmentRequestService.updateConsignmentRequest(consignmentID, requestDetails);
     }
 
     @DeleteMapping("/{consignmentID}")
     public ResponseEntity<Void> deleteConsignmentRequest(@PathVariable int consignmentID) {
-        service.deleteConsignmentRequest(consignmentID);
+        consignmentRequestService.deleteConsignmentRequest(consignmentID);
         return ResponseEntity.noContent().build();
     }
 }

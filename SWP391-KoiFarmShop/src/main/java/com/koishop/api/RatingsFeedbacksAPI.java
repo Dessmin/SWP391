@@ -1,6 +1,7 @@
 package com.koishop.api;
 
 import com.koishop.entity.RatingsFeedbacks;
+import com.koishop.models.ratingsFeedback_model.RFRequest;
 import com.koishop.models.ratingsFeedback_model.RFView;
 import com.koishop.service.RatingsFeedbacksService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,27 +20,34 @@ public class RatingsFeedbacksAPI {
     @Autowired
     private RatingsFeedbacksService ratingsFeedbacksService;
 
+    @GetMapping("/{koiId}/list-ratingsfeedbacks")
+    public List<RFView> getAllRatingsFeedbacksByKoi(@PathVariable Integer koiId) {
+        return ratingsFeedbacksService.getAllRatingsFeedbacksByKoiId(koiId);
+    }
+
+    @GetMapping("/{userId}/list-ratingsfeedbacks")
+    public List<RFView> getAllRatingsFeedbacksByUser(@PathVariable long userId) {
+        return ratingsFeedbacksService.getAllRatingsFeedbacksByUserId(userId);
+    }
+
     @GetMapping("list-ratingsfeedbacks")
     public List<RatingsFeedbacks> getAllRatingsFeedbacks() {
         return ratingsFeedbacksService.getAllRatingsFeedbacks();
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<RatingsFeedbacks> getRatingFeedbackById(@PathVariable Long id) {
-//        RatingsFeedbacks ratingFeedback = ratingsFeedbacksService.getRatingFeedbackById(id);
-//        return ResponseEntity.ok(ratingFeedback);
-//    }
+    @GetMapping("/{id}")
+    public RFView getRatingFeedbackById(@PathVariable Integer id) {
+        return ratingsFeedbacksService.getRatingFeedback(id);
+    }
 
     @PostMapping("add-ratingsfeedback")
-    public ResponseEntity createRatingFeedback(@RequestBody RFView ratingFeedback) {
-        ratingsFeedbacksService.createRatingFeedback(ratingFeedback);
-        return ResponseEntity.ok(ratingFeedback);
+    public RFView createRatingFeedback(@RequestBody RFRequest ratingFeedback) {
+        return ratingsFeedbacksService.createRatingFeedback(ratingFeedback);
     }
 
     @PutMapping("/{ratingID}")
-    public ResponseEntity<RatingsFeedbacks> updateRatingFeedback(@PathVariable Integer ratingID, @RequestBody RatingsFeedbacks ratingFeedbackDetails) {
-        RatingsFeedbacks updatedRatingFeedback = ratingsFeedbacksService.updateRatingFeedback(ratingID, ratingFeedbackDetails);
-        return ResponseEntity.ok(updatedRatingFeedback);
+    public RFView updateRatingFeedback(@PathVariable Integer ratingID, @RequestBody RFRequest ratingFeedbackDetails) {
+        return ratingsFeedbacksService.updateRatingFeedback(ratingID, ratingFeedbackDetails);
     }
 
     @DeleteMapping("/{ratingID}")

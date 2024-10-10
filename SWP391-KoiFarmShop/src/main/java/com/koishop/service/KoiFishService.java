@@ -51,7 +51,6 @@ public class KoiFishService {
 
 
     public ViewFish createKoiFish(String breed, String origin, DefaultFish fishCreate) {
-
         KoiFish newKoiFish = modelMapper.map(fishCreate, KoiFish.class);
         Breeds breeds = breedsService.getBreedByName(breed);
         newKoiFish.setBreed(breeds);
@@ -134,4 +133,7 @@ public class KoiFishService {
         koiFishRepository.delete(koiFish);
     }
 
+    public ViewFish getKoiFishById(int id) {
+        return modelMapper.map(koiFishRepository.findById(id), ViewFish.class);
+    }
 }
