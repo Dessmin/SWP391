@@ -26,10 +26,9 @@ public class KoiFishAPI {
     }
 
     // Tạo KoiFish mới
-    @PostMapping("/{breed}/{origin}/add")
-    public ResponseEntity createKoiFish(@PathVariable String breed, @PathVariable String origin, @Valid @RequestBody DefaultFish koiFish) {
-        ViewFish defaultFish = koiFishService.createKoiFish(breed, origin, koiFish);
-        return ResponseEntity.ok(defaultFish);
+    @PostMapping("/add")
+    public ViewFish createKoiFish(@Valid @RequestBody ViewFish koiFish) {
+        return koiFishService.createKoiFish(koiFish);
     }
 
     // Cập nhật KoiFish theo ID

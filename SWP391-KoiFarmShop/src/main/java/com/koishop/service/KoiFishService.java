@@ -47,15 +47,13 @@ public class KoiFishService {
     }
 
 
-    public ViewFish createKoiFish(String breed, String origin, DefaultFish fishCreate) {
+    public ViewFish createKoiFish(ViewFish fishCreate) {
         KoiFish newKoiFish = modelMapper.map(fishCreate, KoiFish.class);
-        Breeds breeds = breedsService.getBreedByName(breed);
-        newKoiFish.setBreed(breeds);
-        Origin origin1 = originService.getOriginByName(origin);
-        newKoiFish.setOrigin(origin1);
+        newKoiFish.setBreed(breedsService.getBreedByName(fishCreate.getBreed()));
+        newKoiFish.setOrigin(originService.getOriginByName(fishCreate.getOrigin()));
         newKoiFish.setIsForSale(false);
-        modelMapper.map(koiFishRepository.save(newKoiFish), DefaultFish.class);
-        return detailsKoiFish(newKoiFish.getKoiID());
+        koiFishRepository.save(newKoiFish);
+        return fishCreate;
     }
 
     public ViewFish updateKoiFish(Integer id,String breed, String origin, DefaultFish koiFishDetails) {

@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class BatchView {
 
+
+
     @NotBlank(message = "Breed is required")
     private String breedName;
 

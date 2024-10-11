@@ -22,7 +22,7 @@ public class ViewFish {
     private Date birthDate;
     private String diet;
     private Double size;
-    private BigDecimal price;
+    private double price;
     private String food;
     private String screeningRate;
     private String image;
