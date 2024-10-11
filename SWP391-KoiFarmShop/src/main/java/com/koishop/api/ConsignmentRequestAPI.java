@@ -31,6 +31,11 @@ public class ConsignmentRequestAPI {
         return consignmentRequestService.getConsignmentRequestById(consignmentID);
     }
 
+    @GetMapping("/getforCustomer")
+    public List<ConsignmentView> getConsignmentRequestForCustomer() {
+        return consignmentRequestService.getAllConsignmentRequestsForCustomer();
+    }
+
     @PostMapping("add-consignment")
     public ConsignmentRequestForCustomer createConsignmentRequest(@RequestBody ConsignmentRequestForCustomer request) {
         return consignmentRequestService.createConsignmentRequest(request);

@@ -8,8 +8,5 @@ import java.util.List;
 @Data
 public class OrdersRequest {
 
-
-    private Integer paymentID ;
-
     private List<OrderDetailsRequest> orderDetails;
 }

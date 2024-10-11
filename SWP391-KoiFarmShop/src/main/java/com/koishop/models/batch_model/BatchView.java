@@ -6,11 +6,9 @@ import lombok.Data;
 
 @Data
 public class BatchView {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
 
     @NotBlank(message = "Breed is required")
-    private String breed;
+    private String breedName;
 
     @NotBlank(message = "Description is required")
     private String description;
@@ -19,5 +17,5 @@ public class BatchView {
 
     private int quantity;
 
-    private String price;
+    private double price;
 }

@@ -47,8 +47,6 @@ public class OrdersService {
         User user = userService.getCurrentUser();
         Orders order = new Orders();
         List<OrderDetails> orderDetails = new ArrayList<>();
-        Payment payment = paymentRepository.findById(ordersRequest.getPaymentID())
-                .orElseThrow(() -> new RuntimeException("Payment not found!"));
         float total = 0;
         order.setUser(user);
         order.setOrderDate(new Date());
@@ -67,7 +65,6 @@ public class OrdersService {
 
             total += koiFish.getPrice() * orderDetailsRequest.getQuantity();
         }
-        order.setPayment(payment);
         order.setOrderStatus("Pending");
         order.setOrderDetails(orderDetails);
         order.setTotalAmount(total);
@@ -81,8 +78,6 @@ public class OrdersService {
         Orders existingOrder = ordersRepository.findOrderByUserAndOrderID(user, orderId);
         if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
 
-        Payment payment = paymentRepository.findById(ordersRequest.getPaymentID())
-                .orElseThrow(() -> new RuntimeException("Payment not found!"));
 
         float total = 0;
 
@@ -119,7 +114,6 @@ public class OrdersService {
         }
 
         // Cập nhật thông tin thanh toán, trạng thái, và tổng số tiền
-        existingOrder.setPayment(payment);
         existingOrder.setTotalAmount(total);
 
         // Lưu đơn hàng đã cập nhật

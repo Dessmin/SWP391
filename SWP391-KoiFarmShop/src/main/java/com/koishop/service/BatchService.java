@@ -31,7 +31,7 @@ public class BatchService {
         List<BatchView> batchViewList = new ArrayList<>();
         for (Batch batches : batchRepository.findAll(PageRequest.of(page, size))) {
             BatchView batch = modelMapper.map(batches, BatchView.class);
-            batch.setBreed(batches.getBreed().getBreedName());
+            batch.setBreedName(batches.getBreed().getBreedName());
             batchViewList.add(batch);
         }
         BatchResponse batchResponse = new BatchResponse();
@@ -45,8 +45,8 @@ public class BatchService {
 
     public BatchView createBatch(BatchView batch) {
         Batch newBatch = modelMapper.map(batch, Batch.class);
-        Breeds breeds = breedsService.getBreedByName(batch.getBreed());
-        newBatch.setBreed(breeds);
+        newBatch.setBreed(breedsService.getBreedByName(batch.getBreedName()));
+        newBatch.setIsSale(false);
         batchRepository.save(newBatch);
         return batch;
     }
@@ -55,7 +55,7 @@ public class BatchService {
         Batch batch1 = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
         modelMapper.map(batch, batch1);
-        Breeds breeds = breedsService.getBreedByName(batch.getBreed());
+        Breeds breeds = breedsService.getBreedByName(batch.getBreedName());
         batch1.setBreed(breeds);
         batchRepository.save(batch1);
         return batch;
@@ -75,7 +75,7 @@ public class BatchService {
         for (Batch batches : batchRepository.findByBreed_BreedName(breed, pageable)) {
             if (batches.getBreed().getBreedName().equals(breed)) {
                 BatchView batch = modelMapper.map(batches, BatchView.class);
-                batch.setBreed(batches.getBreed().getBreedName());
+                batch.setBreedName(batches.getBreed().getBreedName());
                 batchViewList.add(batch);
             }
         }

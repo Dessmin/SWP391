@@ -19,7 +19,7 @@ public class Batch {
 
     @ManyToOne
     @JoinColumn(name = "breed_id")
-    @NotBlank(message = "Breed is required")
+    @NotNull(message = "Breed is required")
     private Breeds breed;
 
     @NotBlank(message = "Description is required")
@@ -29,7 +29,7 @@ public class Batch {
 
     private int quantity;
 
-    private String price;
+    private double price;
 
     private Boolean isSale;
 }

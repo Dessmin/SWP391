@@ -31,7 +31,7 @@ public class BatchAPI {
         return batchService.getAllBatchByBreed(breed, page, 6);
     }
     
-    @PostMapping("create-batch")
+    @PostMapping("/create-batch")
     public BatchView createBatch(@RequestBody BatchView batch) {
         return batchService.createBatch(batch);
     }

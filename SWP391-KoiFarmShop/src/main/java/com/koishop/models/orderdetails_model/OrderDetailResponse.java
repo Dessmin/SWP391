@@ -27,7 +27,7 @@ public class OrderDetailResponse {
     @NotNull(message = "Koi ID is required")
     @OneToOne
     @JoinColumn(name = "koifish_id")
-    ViewFish viewFish;
+    private ViewFish viewFish;
 
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Quantity must be at least 1")
