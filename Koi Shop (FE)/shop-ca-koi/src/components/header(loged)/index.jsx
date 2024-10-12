@@ -18,6 +18,7 @@ function HeaderLoged() {
         // Xóa token khỏi localStorage (nếu bạn đang sử dụng token)
         localStorage.removeItem('user'); // Hoặc xóa cookie nếu bạn lưu trữ ở đó
         sessionStorage.removeItem('user');
+        sessionStorage.removeItem(`cart_${user.id}`);
         // Hiển thị thông báo
         toast.success("Tạm biệt");
     

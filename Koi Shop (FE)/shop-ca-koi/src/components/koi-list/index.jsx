@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Card from "../card";
 import { useSelector } from "react-redux";
 import "./index.scss";
 import apiKoi from "../../config/koi-api";
+import CardKoi from "../card-koi";
 
 function KoiList() {
     const [kois, setKois] = useState([]);
@@ -11,9 +11,9 @@ function KoiList() {
 
     const user = useSelector((state) => state.user);
 
-    const fetchKoi = async (page) => {
+    const fetchKoi = async (page = 0) => {
         try {
-            const response = await apiKoi.get(`list?page=${page}&size=6`, {
+            const response = await apiKoi.get(`list?page=${page}`, {
                 headers: {
                     Authorization: `Bearer ${user.token}`, // Gửi token trong header
                 },
@@ -36,7 +36,7 @@ function KoiList() {
     return (
         <div className="koi-list">
             {kois.map((koi, index) => (
-                <Card key={index} koi={koi} />
+                <CardKoi key={index} koi={koi} />
             ))}
 
             <div>

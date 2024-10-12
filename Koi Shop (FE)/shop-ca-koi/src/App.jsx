@@ -5,6 +5,7 @@ import Home from './pages/home(def)';
 import HomeLoged from './pages/home(loged)';
 import Login from './pages/login';
 import Register from './pages/register';
+import CartPage from './pages/cartPage';
 
 
 function App() {
@@ -33,6 +34,10 @@ function App() {
     {
       path: "/home/dashboard/user",
       element: <User />,
+    },
+    {
+      path: "cart",
+      element: <CartPage/>,
     },
   ]);
 

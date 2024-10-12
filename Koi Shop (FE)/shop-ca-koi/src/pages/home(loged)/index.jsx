@@ -1,6 +1,10 @@
 import { Footer } from "antd/es/layout/layout"
 import KoiList from "../../components/koi-list"
 import HeaderLoged from "../../components/header(loged)"
+import { CartProvider } from "../../helper/CartContext"
+import Cart from "../../components/cart"
+import { Link } from "react-router-dom"
+import BatchList from "../../components/batch-list"
 
 function HomeLoged() {
   return (
@@ -18,8 +22,19 @@ function HomeLoged() {
         </div>
 
       </div>
-      
+<Link to="/cart">cart</Link>
+<h2>Koi list</h2>
+      <CartProvider>
       <KoiList/>
+      <h2>Batch list</h2>
+      <BatchList/>
+      </CartProvider>
+      
+            
+
+
+      
+      
       
       <Footer />
       </div>
