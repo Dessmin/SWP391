@@ -46,6 +46,16 @@ public class KoiFishService {
         return fishResponse;
     }
 
+    public List<FishForList> ListFish() {
+        List<FishForList> fishForLists = new ArrayList<>();
+        for (KoiFish koiFish : koiFishRepository.findAll()) {
+            FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
+            fishForList.setBreed(koiFish.getBreed().getBreedName());
+            fishForList.setOrigin(koiFish.getOrigin().getOriginName());
+            fishForLists.add(fishForList);
+        }
+        return fishForLists;
+    }
 
     public ViewFish createKoiFish(ViewFish fishCreate) {
         KoiFish newKoiFish = modelMapper.map(fishCreate, KoiFish.class);

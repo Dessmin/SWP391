@@ -70,6 +70,9 @@ public class KoiFishAPI {
         return koiFishService.getFishCart(id);
     }
 
+    @GetMapping("listfish")
+    public List<FishForList> ListFish() {return koiFishService.ListFish();}
+
     // Xóa KoiFish theo ID
     @DeleteMapping("/{koiId}")
     public ResponseEntity<Void> deleteKoiFish(@PathVariable(value = "koiId") Integer koiId) {
