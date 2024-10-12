@@ -2,7 +2,6 @@ package com.koishop.models.orderdetails_model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.koishop.entity.KoiFish;
 import com.koishop.entity.Orders;
 import com.koishop.models.fish_model.ViewFish;
 import jakarta.persistence.*;
@@ -12,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class OrderDetailResponse {
+public class OrderDetailsResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

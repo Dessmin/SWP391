@@ -3,10 +3,10 @@ package com.koishop.service;
 import com.koishop.entity.*;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
-import com.koishop.models.orders_model.OrdersRequest;
+import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.repository.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,24 +26,40 @@ public class OrdersService {
     KoiFishRepository koiFishRepository;
     @Autowired
     BatchRepository batchRepository;
+    @Autowired
+    ModelMapper modelMapper;
+
+
+    public Orders getOderById(Integer id) {
+        Orders order = ordersRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found!"));
+        return order;
+    }
+
+    public List<Orders> getAllOrders() {
+        return ordersRepository.findAll();
+
+
+    }
 
     public List<Orders> getAllOrdersByUser() {
         User user = userService.getCurrentUser();
-        List<Orders> orders = ordersRepository.findOrdersByUser(user);
-        return orders;
+        return ordersRepository.findOrdersByUser(user);
+
+
     }
 
 
 
     // Create Order
-    public Orders createOrder(OrdersRequest ordersRequest) {
+    public Orders createOrder(OrderRequest orderRequest) {
         User user = userService.getCurrentUser();
         Orders order = new Orders();
         List<OrderDetails> orderDetails = new ArrayList<>();
         double total = 0;
         order.setUser(user);
         order.setOrderDate(new Date());
-        for (OrderDetailsRequest orderDetailsRequest:ordersRequest.getOrderDetails()) {
+        for (OrderDetailsRequest orderDetailsRequest: orderRequest.getOrderDetails()) {
             OrderDetails orderDetail = new OrderDetails();
             orderDetail.setOrders(order);
             orderDetail.setProductId(orderDetailsRequest.getProductId());
@@ -59,7 +75,7 @@ public class OrdersService {
         return ordersRepository.save(order);
     }
 
-    public Orders updateOrder(Integer orderId, OrdersRequest ordersRequest) {
+    public Orders updateOrder(Integer orderId, OrderRequest orderRequest) {
         // Lấy thông tin đơn hàng hiện tại từ database
         User user = userService.getCurrentUser();
         Orders existingOrder = ordersRepository.findOrderByUserAndOrderID(user, orderId);
@@ -71,7 +87,7 @@ public class OrdersService {
         existingOrder.setOrderDate(new Date());
 
         // Duyệt qua danh sách OrderDetailsRequest mới để cập nhật
-        for (OrderDetailsRequest orderDetailsRequest : ordersRequest.getOrderDetails()) {
+        for (OrderDetailsRequest orderDetailsRequest : orderRequest.getOrderDetails()) {
             if (orderDetailsRequest.getProductType() == ProductType.KoiFish) {
                 KoiFish koiFish = koiFishRepository.findById(orderDetailsRequest.getProductId())
                         .orElseThrow(() -> new RuntimeException("KoiFish not found!"));
