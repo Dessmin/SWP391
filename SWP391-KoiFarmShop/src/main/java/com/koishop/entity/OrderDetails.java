@@ -22,14 +22,11 @@ public class OrderDetails {
     @NotNull(message = "Order ID is required")
     @ManyToOne
     @JoinColumn(name = "order_id")
-    @JsonIgnore
     private Orders orders;
 
-    @NotNull(message = "Koi ID is required")
-    @OneToOne
-    @JoinColumn(name = "koifish_id")
-    @JsonIgnore
-    private KoiFish koiFish;
+    private Integer productId;
+
+    private ProductType productType;
 
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Quantity must be at least 1")
@@ -37,6 +34,6 @@ public class OrderDetails {
 
     @NotNull(message = "Unit price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Unit price must be greater than zero")
-    private Float unitPrice;
+    private Double unitPrice;
 
 }

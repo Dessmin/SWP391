@@ -58,7 +58,7 @@ public class KoiFish {
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
-    private Float price;
+    private Double price;
 
     @NotBlank(message = "Food is required")
     private String food;
@@ -75,10 +75,6 @@ public class KoiFish {
     @JsonIgnore
     @OneToOne(mappedBy = "koiFish")
     private ConsignmentRequest consignmentRequest;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "koiFish")
-    private OrderDetails orderDetails;
 
     @OneToMany(mappedBy = "koiFish")
     @JsonIgnore

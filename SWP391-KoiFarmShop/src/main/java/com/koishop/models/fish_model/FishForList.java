@@ -11,6 +11,6 @@ public class FishForList {
     private String breed;
     private String origin;
     private Double size;
-    private BigDecimal price;
+    private Double price;
     private String image;
 }

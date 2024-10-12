@@ -36,7 +36,7 @@ public class DefaultFish {
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
-    private BigDecimal price;
+    private Double price;
 
     @NotBlank(message = "Food is required")
     private String food;

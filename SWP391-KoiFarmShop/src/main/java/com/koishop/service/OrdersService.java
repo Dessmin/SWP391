@@ -4,10 +4,7 @@ import com.koishop.entity.*;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orders_model.OrdersRequest;
-import com.koishop.repository.KoiFishRepository;
-import com.koishop.repository.OrderDetailsRepository;
-import com.koishop.repository.OrdersRepository;
-import com.koishop.repository.PaymentRepository;
+import com.koishop.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -27,12 +24,8 @@ public class OrdersService {
 
     @Autowired
     KoiFishRepository koiFishRepository;
-
     @Autowired
-    PaymentRepository paymentRepository;
-
-    @Autowired
-    OrderDetailsRepository orderDetailsRepository;
+    BatchRepository batchRepository;
 
     public List<Orders> getAllOrdersByUser() {
         User user = userService.getCurrentUser();
@@ -47,30 +40,24 @@ public class OrdersService {
         User user = userService.getCurrentUser();
         Orders order = new Orders();
         List<OrderDetails> orderDetails = new ArrayList<>();
-        float total = 0;
+        double total = 0;
         order.setUser(user);
         order.setOrderDate(new Date());
-
         for (OrderDetailsRequest orderDetailsRequest:ordersRequest.getOrderDetails()) {
-            KoiFish koiFish = koiFishRepository.findById(orderDetailsRequest.getKoiID())
-                    .orElseThrow(() -> new RuntimeException("KoiFish not found!"));
-
             OrderDetails orderDetail = new OrderDetails();
-            orderDetail.setQuantity(orderDetailsRequest.getQuantity());
-            orderDetail.setUnitPrice(koiFish.getPrice());
             orderDetail.setOrders(order);
-            orderDetail.setKoiFish(koiFish);
-
+            orderDetail.setProductId(orderDetailsRequest.getProductId());
+            orderDetail.setProductType(orderDetailsRequest.getProductType());
+            orderDetail.setQuantity(orderDetailsRequest.getQuantity());
+            orderDetail.setUnitPrice(orderDetailsRequest.getPrice());
+            total += orderDetailsRequest.getQuantity() * orderDetailsRequest.getPrice();
             orderDetails.add(orderDetail);
-
-            total += koiFish.getPrice() * orderDetailsRequest.getQuantity();
         }
-        order.setOrderStatus("Pending");
         order.setOrderDetails(orderDetails);
         order.setTotalAmount(total);
+        order.setOrderStatus("Pending");
         return ordersRepository.save(order);
     }
-
 
     public Orders updateOrder(Integer orderId, OrdersRequest ordersRequest) {
         // Lấy thông tin đơn hàng hiện tại từ database
@@ -78,52 +65,71 @@ public class OrdersService {
         Orders existingOrder = ordersRepository.findOrderByUserAndOrderID(user, orderId);
         if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
 
+        double total = 0;
 
-        float total = 0;
-
-        // Cập nhật thông tin người dùng và ngày đặt hàng
+        // Cập nhật thông tin ngày đặt hàng
         existingOrder.setOrderDate(new Date());
 
         // Duyệt qua danh sách OrderDetailsRequest mới để cập nhật
         for (OrderDetailsRequest orderDetailsRequest : ordersRequest.getOrderDetails()) {
-            KoiFish koiFish = koiFishRepository.findById(orderDetailsRequest.getKoiID())
-                    .orElseThrow(() -> new RuntimeException("KoiFish not found!"));
+            if (orderDetailsRequest.getProductType() == ProductType.KoiFish) {
+                KoiFish koiFish = koiFishRepository.findById(orderDetailsRequest.getProductId())
+                        .orElseThrow(() -> new RuntimeException("KoiFish not found!"));
 
-            // Kiểm tra xem OrderDetails đã tồn tại hay chưa dựa trên KoiID
-            Optional<OrderDetails> existingOrderDetail = existingOrder.getOrderDetails().stream()
-                    .filter(od -> od.getKoiFish().getKoiID().equals(koiFish.getKoiID()))
-                    .findFirst();
+                // Kiểm tra xem OrderDetails đã tồn tại hay chưa
+                Optional<OrderDetails> existingOrderDetail = existingOrder.getOrderDetails().stream()
+                        .filter(od -> od.getProductId().equals(koiFish.getKoiID()) && od.getProductType() == ProductType.KoiFish)
+                        .findFirst();
 
-            if (existingOrderDetail.isPresent()) {
-                // Nếu OrderDetails đã tồn tại, cập nhật số lượng và giá
-                OrderDetails orderDetail = existingOrderDetail.get();
-                orderDetail.setQuantity(orderDetailsRequest.getQuantity());
-                orderDetail.setUnitPrice(koiFish.getPrice());
-            } else {
-                // Nếu chưa tồn tại, tạo OrderDetails mới
-                OrderDetails newOrderDetail = new OrderDetails();
-                newOrderDetail.setKoiFish(koiFish);
-                newOrderDetail.setQuantity(orderDetailsRequest.getQuantity());
-                newOrderDetail.setUnitPrice(koiFish.getPrice());
-                newOrderDetail.setOrders(existingOrder);  // Thiết lập quan hệ với Orders hiện tại
-                existingOrder.getOrderDetails().add(newOrderDetail); // Thêm OrderDetail mới vào danh sách
+                if (existingOrderDetail.isPresent()) {
+                    // Cập nhật giá nếu đã tồn tại
+                    OrderDetails orderDetail = existingOrderDetail.get();
+                    orderDetail.setUnitPrice(koiFish.getPrice());
+                } else {
+                    // Tạo OrderDetails mới
+                    OrderDetails newOrderDetail = new OrderDetails();
+                    newOrderDetail.setProductId(koiFish.getKoiID());
+                    newOrderDetail.setProductType(ProductType.KoiFish);
+                    newOrderDetail.setQuantity(1); // KoiFish luôn có số lượng 1
+                    newOrderDetail.setUnitPrice(koiFish.getPrice());
+                    newOrderDetail.setOrders(existingOrder);
+                    existingOrder.getOrderDetails().add(newOrderDetail);
+                }
+                total += koiFish.getPrice();
+            } else if (orderDetailsRequest.getProductType() == ProductType.Batch) {
+                Batch batch = batchRepository.findById(orderDetailsRequest.getProductId())
+                        .orElseThrow(() -> new RuntimeException("Batch not found!"));
+
+                // Kiểm tra OrderDetails cho Batch
+                Optional<OrderDetails> existingOrderDetail = existingOrder.getOrderDetails().stream()
+                        .filter(od -> od.getProductId().equals(batch.getBatchID()) && od.getProductType() == ProductType.Batch)
+                        .findFirst();
+
+                if (existingOrderDetail.isPresent()) {
+                    // Cập nhật số lượng và giá nếu đã tồn tại
+                    OrderDetails orderDetail = existingOrderDetail.get();
+                    orderDetail.setQuantity(orderDetailsRequest.getQuantity());
+                    orderDetail.setUnitPrice(batch.getPrice());
+                } else {
+                    // Tạo OrderDetails mới cho Batch
+                    OrderDetails newOrderDetail = new OrderDetails();
+                    newOrderDetail.setProductId(batch.getBatchID());
+                    newOrderDetail.setProductType(ProductType.Batch);
+                    newOrderDetail.setQuantity(orderDetailsRequest.getQuantity());
+                    newOrderDetail.setUnitPrice(batch.getPrice());
+                    newOrderDetail.setOrders(existingOrder);
+                    existingOrder.getOrderDetails().add(newOrderDetail);
+                }
+                total += batch.getPrice() * orderDetailsRequest.getQuantity();
             }
-
-            // Tính toán lại tổng số tiền
-            total += koiFish.getPrice() * orderDetailsRequest.getQuantity();
         }
 
-        // Cập nhật thông tin thanh toán, trạng thái, và tổng số tiền
+        // Cập nhật tổng số tiền của đơn hàng
         existingOrder.setTotalAmount(total);
 
         // Lưu đơn hàng đã cập nhật
         return ordersRepository.save(existingOrder);
     }
-
-
-
-
-
 
     public void deleteOrder(int id) {
         Orders order = ordersRepository.findById(id)

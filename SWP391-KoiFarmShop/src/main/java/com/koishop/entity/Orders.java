@@ -32,7 +32,7 @@ public class Orders {
 
     @NotNull(message = "Total amount is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Total amount must be greater than zero")
-    private Float totalAmount;
+    private Double totalAmount;
 
     @NotBlank(message = "Order status is required")
     @Size(max = 50, message = "Order status must not exceed 50 characters")
@@ -44,5 +44,6 @@ public class Orders {
     private Payment payment;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<OrderDetails> orderDetails;
 }

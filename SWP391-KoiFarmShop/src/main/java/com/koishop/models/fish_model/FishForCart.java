@@ -7,6 +7,6 @@ import java.math.BigDecimal;
 public class FishForCart {
     private int id;
     private String fishName;
-    private BigDecimal price;
+    private Double price;
     private String image;
 }

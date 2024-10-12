@@ -35,6 +35,6 @@ public class OrderDetailResponse {
 
     @NotNull(message = "Unit price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Unit price must be greater than zero")
-    private Float unitPrice;
+    private Double unitPrice;
 
 }

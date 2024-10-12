@@ -7,6 +7,5 @@ import java.util.List;
 
 @Data
 public class OrdersRequest {
-
     private List<OrderDetailsRequest> orderDetails;
 }
