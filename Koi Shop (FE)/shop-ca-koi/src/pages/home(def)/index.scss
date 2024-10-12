@@ -1,0 +1,35 @@
+.body{
+    &__banner{
+        background-image: url("https://files.oaiusercontent.com/file-sVre8AmhErCOYw0yyaJkRAJE?se=2024-10-05T19%3A47%3A03Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D52ae4a53-723e-4d4e-a60d-d6b83e1dedd6.webp&sig=x/ooFHdQEpZ67ldFNPFJLmb9cU1OEmhzV89Fpjut9jY%3D");
+        height: 730px;
+        padding-top: 200px ;
+        padding-left: 200px;
+        box-shadow: 0 19px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    &__slogan{
+        text-align: center;
+        background-color: rgba(255, 0, 0, 0.5);
+        border-radius: 50px;
+        width: 220px;
+        border: 3px solid rgba(0, 0, 0, 0.6);
+        height: 475px;
+        backdrop-filter: blur(12px);
+
+        .slogan1{
+            display: block;
+            width: 210px;
+            color: rgb(0, 0, 0);
+            font-size: 70px;
+        }
+
+        .slogan2{
+            text-align: center;
+            display: block;
+            width: 210px;
+            color: rgb(255, 255, 255);
+            font-size: 45px;
+            
+        }
+    }
+}
