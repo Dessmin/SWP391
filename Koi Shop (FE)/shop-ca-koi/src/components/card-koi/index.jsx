@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import "./index.scss";
 import { useContext } from "react";
 import { CartContext } from "../../helper/CartContext";
-import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function CardKoi({ koi }) {
+  const navigate = useNavigate();
+
   const handleAddToCart = () => {
     const product = {
       
@@ -15,7 +16,7 @@ function CardKoi({ koi }) {
       image,
       quantity: 1,
       price,
-      type: "koi", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
+      type: "KoiFish", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
     };
     addToCart(product); // Thêm sản phẩm vào giỏ hàng
   };
@@ -38,6 +39,7 @@ function CardKoi({ koi }) {
         </div>
         <div>Size: {size} cm</div>
       </div>
+      <Button onClick={() => navigate("/detailKoi/"+id)}>Chi tiết</Button>
       <Button
         onClick={handleAddToCart} // Gọi hàm thêm sản phẩm vào giỏ hàng
         style={{ width: "100%", height: "50px" }}
@@ -45,6 +47,7 @@ function CardKoi({ koi }) {
       >
         Thêm
       </Button>
+      
     </div>
   );
 }

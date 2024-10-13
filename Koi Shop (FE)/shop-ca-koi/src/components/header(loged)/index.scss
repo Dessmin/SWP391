@@ -1,5 +1,5 @@
 .header{
-    background-color: rgba(165, 165, 9, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -58,6 +58,10 @@
                 color: rgb(255, 255, 255);
             }
             
+        }
+
+        a{
+            color: white;
         }
     }
 }

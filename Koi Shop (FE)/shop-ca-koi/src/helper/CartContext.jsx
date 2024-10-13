@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
     const currentCart = getCartFromSession(user.id) || cartItems;
     
     // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng dựa trên type và id
-    const isItemInCart = currentCart.some(item => item.id === product.id && item.type === product.type);
+    const isItemInCart = currentCart.some(item =>  item.id === product.id && item.type === product.type);
   
     if (isItemInCart) {
       console.log(`Product with ID ${product.id} and type ${product.type} is already in the cart.`);

@@ -1,11 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { getCartFromSession, saveCartToSession } from "../../helper/helper";
 import { useSelector } from "react-redux";
 import { Table, Button } from "antd";
-import { CartContext } from "../../helper/CartContext";
+import axios from "axios";
+import apiOrder from "../../config/api-order";
+import apiOrderDetails from "../../config/api-orderDetails";
 
 const Cart = () => {
-  
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
   const [cartItems, setCartItems] = useState([]); // State để lưu giỏ hàng từ session
 
@@ -23,14 +24,50 @@ const Cart = () => {
     const updatedCart = cartItems.filter(
       (item) => !(item.id === productId && item.type === productType)
     );
-  
+
     setCartItems(updatedCart);
     saveCartToSession(user.id, updatedCart); // Cập nhật giỏ hàng theo userId
-  
+
     // Tải lại trang sau khi cập nhật giỏ hàng
     window.location.reload();
   };
+
   
+
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+  
+    // Tạo đối tượng orderRequest chứa danh sách orderDetails từ cartItems
+    const orderRequest = {
+      orderDetails: cartItems.map((item) => ({
+        productId: item.id,
+        productType: item.type, // "KoiFish" hoặc "Batch"
+        quantity: item.type === "Batch" ? item.quantity : 1, // Batch có số lượng, KoiFish mặc định là 1
+        price: item.price,
+      })),
+    };
+  
+    try {
+      const response = await apiOrder.post("add-order", orderRequest, {
+        headers: {
+          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+        },
+      });
+  
+      alert("Order created successfully");
+      setCartItems([]); // Xóa giỏ hàng sau khi thanh toán thành công
+      saveCartToSession(user.id, []); // Xóa giỏ hàng trong session
+    } catch (error) {
+      console.error("There was an error processing the order!", error);
+      alert("Error creating order. Please try again.");
+    }
+  };
+  
+
+
 
   // Định nghĩa các cột cho bảng
   const columns = [
@@ -61,7 +98,7 @@ const Cart = () => {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
-      render: (quantity, record) => (record.type === "batch" ? quantity : 1), // Chỉ hiện số lượng cho batch
+      render: (quantity, record) => (record.type === "Batch" ? quantity : 1), // Chỉ hiện số lượng cho batch
     },
     {
       title: "Action",
@@ -79,11 +116,22 @@ const Cart = () => {
 
   return (
     <div>
+      
       <h2>Your Cart</h2>
       {cartItems.length === 0 ? (
         <p>No items in cart</p>
       ) : (
-        <Table columns={columns} dataSource={cartItems} rowKey="id" />
+        <div>
+          <Table columns={columns} dataSource={cartItems} rowKey="id" />
+          {/* Nút Checkout */}
+          <Button
+            type="primary"
+            onClick={handleCheckout}
+            style={{ marginTop: "20px" }}
+          >
+            Checkout
+          </Button>
+        </div>
       )}
     </div>
   );

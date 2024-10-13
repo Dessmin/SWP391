@@ -6,6 +6,8 @@ import HomeLoged from './pages/home(loged)';
 import Login from './pages/login';
 import Register from './pages/register';
 import CartPage from './pages/cartPage';
+import DetailKoi from './pages/detailKoi';
+import DetailUser from './pages/detaiUser';
 
 
 function App() {
@@ -38,6 +40,14 @@ function App() {
     {
       path: "cart",
       element: <CartPage/>,
+    },
+    {
+      path: "/detailKoi/:id",
+      element: <DetailKoi />,
+    },
+    {
+      path: "/detailUser/:id",
+      element: <DetailUser />,
     },
   ]);
 

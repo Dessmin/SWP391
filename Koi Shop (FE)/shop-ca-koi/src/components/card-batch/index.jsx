@@ -14,7 +14,7 @@ function CardBatch({ batch }) {
       image,
       quantity,
       price,
-      type: "batch", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
+      type: "Batch", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
     };
     addToCart(product); // Thêm sản phẩm vào giỏ hàng
   };
@@ -25,6 +25,7 @@ function CardBatch({ batch }) {
 
       <div className="batch-card__content">
         <div className="batch-card__info1">
+        
           <span>Name: {breedName}</span>
           <span>Price: {price}.000</span>
         </div>

@@ -3,11 +3,10 @@ import { Link, useNavigate } from "react-router-dom"
 import { logout } from "../../redux/features/userSlice";
 import { toast } from "react-toastify";
 import "./index.scss"
+import { ShoppingCartOutlined } from '@ant-design/icons';
 
 function HeaderLoged() {
-
     const user = useSelector((state) => state.user);// Lấy thông tin người dùng từ Redux store
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -34,14 +33,17 @@ function HeaderLoged() {
             </div>
             <div className="header__navigate">
                 <ul>
-                    <Link to="/"><li>Trang chủ</li></Link>
+                
+                    <Link to="/home"><li>Trang chủ</li></Link>
                     <Link to=""><li>Giới thiệu</li></Link>
                     <Link to=""><li>Cá Koi</li></Link>
                 </ul>
             </div>
             <div className="header__welcome-logout">
                 <ul className="logout-box">
-                    <li>Welcome, {user.username}</li>
+                <Link to="/cart"><ShoppingCartOutlined /></Link>
+                
+                <li onClick={() => navigate(`/detailUser/${user.userId}`)}>Welcome, {user.username}</li>
                     <li onClick={handleLogout}>Log out</li>
                 </ul>
             </div>
