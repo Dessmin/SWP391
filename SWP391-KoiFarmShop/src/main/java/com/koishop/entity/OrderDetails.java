@@ -22,6 +22,7 @@ public class OrderDetails {
     @NotNull(message = "Order ID is required")
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Orders orders;
 
     private Integer productId;

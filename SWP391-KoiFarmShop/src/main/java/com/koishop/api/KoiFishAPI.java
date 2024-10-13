@@ -32,9 +32,9 @@ public class KoiFishAPI {
     }
 
     // Cập nhật KoiFish theo ID
-    @PutMapping("/{koiId}/{breed}/{origin}/update")
-    public ResponseEntity updateKoiFish(@PathVariable Integer koiId, @PathVariable String breed, @PathVariable String origin, @RequestBody DefaultFish koiFishDetails) {
-        ViewFish defaultFish = koiFishService.updateKoiFish(koiId, breed, origin, koiFishDetails);
+    @PutMapping("/{koiId}/update")
+    public ResponseEntity updateKoiFish(@PathVariable Integer koiId, @RequestBody ViewFish koiFishDetails) {
+        ViewFish defaultFish = koiFishService.updateKoiFish(koiId, koiFishDetails);
         return ResponseEntity.ok(defaultFish);
     }
     @PutMapping("/{koiId}/updateIsForSale")

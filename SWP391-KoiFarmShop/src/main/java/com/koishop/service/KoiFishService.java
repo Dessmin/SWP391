@@ -66,16 +66,13 @@ public class KoiFishService {
         return fishCreate;
     }
 
-    public ViewFish updateKoiFish(Integer id,String breed, String origin, DefaultFish koiFishDetails) {
+    public ViewFish updateKoiFish(Integer id, ViewFish koiFishDetails) {
         KoiFish koiFish = koiFishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + id));
-
         modelMapper.map(koiFishDetails, koiFish);
-        Breeds breeds = breedsService.getBreedByName(breed);
-        koiFish.setBreed(breeds);
-        Origin origin1 = originService.getOriginByName(origin);
-        koiFish.setOrigin(origin1);
-        modelMapper.map(koiFishRepository.save(koiFish), DefaultFish.class);
+        koiFish.setBreed(breedsService.getBreedByName(koiFishDetails.getBreed()));
+        koiFish.setOrigin(originService.getOriginByName(koiFishDetails.getOrigin()));
+        koiFishRepository.save(koiFish);
         return detailsKoiFish(koiFish.getKoiID());
     }
 
