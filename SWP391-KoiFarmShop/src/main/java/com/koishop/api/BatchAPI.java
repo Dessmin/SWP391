@@ -1,6 +1,7 @@
 package com.koishop.api;
 
 import com.koishop.entity.Batch;
+import com.koishop.models.batch_model.BatchDetailUpdate;
 import com.koishop.models.batch_model.BatchResponse;
 import com.koishop.models.batch_model.BatchView;
 import com.koishop.service.BatchService;
@@ -20,7 +21,6 @@ public class BatchAPI {
     @Autowired
     private BatchService batchService;
 
-
     @GetMapping("/list-batch")
     public BatchResponse getAllBatch(@RequestParam int page) {
         return batchService.getAllBatch(page, 6);
@@ -32,15 +32,18 @@ public class BatchAPI {
     }
     
     @PostMapping("/create-batch")
-    public BatchView createBatch(@RequestBody BatchView batch) {
+    public BatchDetailUpdate createBatch(@RequestBody BatchDetailUpdate batch) {
         return batchService.createBatch(batch);
     }
 
+    @GetMapping("/{id}/detail")
+    public BatchDetailUpdate getBatchDetail(@PathVariable int id) {
+        return batchService.detailBatch(id);
+    }
 
-    @PutMapping("/{batchId}")
-    public ResponseEntity updateBatch(@PathVariable int batchId, @RequestBody BatchView batchDetails) {
-        BatchView updatedBatch = batchService.updateBatch(batchId, batchDetails);
-        return ResponseEntity.ok(updatedBatch);
+    @PutMapping("/{batchId}/update")
+    public BatchDetailUpdate updateBatch(@PathVariable int batchId, @RequestBody BatchDetailUpdate batchDetails) {
+        return batchService.updateBatch(batchId, batchDetails);
     }
 
 

@@ -73,7 +73,7 @@ public class UserAPI {
         return ResponseEntity.ok("Success sent request to reset password");
     }
 
-    @GetMapping("/reset-password")
+    @PutMapping("/reset-password")
     public ResponseEntity resetPasswordByEmail(@Valid @RequestBody ResetPasswordRequest oldPassword, @Valid @RequestBody ResetPasswordRequest newPassword) {
         userService.resetPassword(oldPassword, newPassword);
         return ResponseEntity.ok("Success sent request to reset password");

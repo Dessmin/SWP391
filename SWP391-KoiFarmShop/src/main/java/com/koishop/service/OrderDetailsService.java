@@ -2,6 +2,7 @@ package com.koishop.service;
 
 import com.koishop.entity.OrderDetails;
 import com.koishop.repository.OrderDetailsRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,8 @@ import java.util.List;
 public class OrderDetailsService {
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
+    @Autowired
+    private ModelMapper modelMap;
 
     public List<OrderDetails> getAllOrderDetails() {
         return orderDetailsRepository.findAll();
@@ -23,10 +26,7 @@ public class OrderDetailsService {
 
     public OrderDetails updateOrderDetail(int id, OrderDetails orderDetailsDetails) {
         OrderDetails orderDetails = orderDetailsRepository.findById(id).orElseThrow(() -> new RuntimeException("Order Detail not found"));
-//        orderDetails.setOrderID(orderDetailsDetails.getOrderID());
-//        orderDetails.setKoiID(orderDetailsDetails.getKoiID());
-//        orderDetails.setQuantity(orderDetailsDetails.getQuantity());
-//        orderDetails.setUnitPrice(orderDetailsDetails.getUnitPrice());
+        modelMap.map(orderDetailsDetails, orderDetails);
         return orderDetailsRepository.save(orderDetails);
     }
 

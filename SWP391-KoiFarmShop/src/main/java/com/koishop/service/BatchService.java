@@ -2,6 +2,7 @@ package com.koishop.service;
 
 import com.koishop.entity.Batch;
 import com.koishop.entity.Breeds;
+import com.koishop.models.batch_model.BatchDetailUpdate;
 import com.koishop.models.batch_model.BatchResponse;
 import com.koishop.models.batch_model.BatchView;
 import com.koishop.repository.BatchRepository;
@@ -43,19 +44,27 @@ public class BatchService {
     }
 
 
-    public BatchView createBatch(BatchView batch) {
+    public BatchDetailUpdate createBatch(BatchDetailUpdate batch) {
         Batch newBatch = modelMapper.map(batch, Batch.class);
-        newBatch.setBreed(breedsService.getBreedByName(batch.getBreedName()));
+        newBatch.setBreed(breedsService.getBreedByName(batch.getBreed()));
         newBatch.setIsSale(false);
         batchRepository.save(newBatch);
         return batch;
     }
 
-    public BatchView updateBatch(int id, BatchView batch) {
+    public BatchDetailUpdate detailBatch(int id) {
+        Batch batch1 = batchRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
+        BatchDetailUpdate batchDetailUpdate = modelMapper.map(batch1, BatchDetailUpdate.class);
+        batchDetailUpdate.setBreed(batch1.getBreed().getBreedName());
+        return batchDetailUpdate;
+    }
+
+    public BatchDetailUpdate updateBatch(int id, BatchDetailUpdate batch) {
         Batch batch1 = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
         modelMapper.map(batch, batch1);
-        Breeds breeds = breedsService.getBreedByName(batch.getBreedName());
+        Breeds breeds = breedsService.getBreedByName(batch.getBreed());
         batch1.setBreed(breeds);
         batchRepository.save(batch1);
         return batch;

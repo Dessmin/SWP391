@@ -5,7 +5,6 @@ import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.repository.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +25,6 @@ public class OrdersService {
     KoiFishRepository koiFishRepository;
     @Autowired
     BatchRepository batchRepository;
-    @Autowired
-    ModelMapper modelMapper;
 
 
     public Orders getOderById(Integer id) {
@@ -45,8 +42,6 @@ public class OrdersService {
     public List<Orders> getAllOrdersByUser() {
         User user = userService.getCurrentUser();
         return ordersRepository.findOrdersByUser(user);
-
-
     }
 
 
