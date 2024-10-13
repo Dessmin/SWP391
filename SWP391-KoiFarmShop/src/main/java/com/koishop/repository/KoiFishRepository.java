@@ -10,6 +10,8 @@ public interface KoiFishRepository extends JpaRepository<KoiFish, Integer> {
 
     KoiFish findKoiFishByFishName(String name);
 
+    KoiFish findKoiFishByKoiID(Integer koiID);
+
     KoiFish findKoiFishByFishNameContains(String name);
 
     Page<KoiFish> findAll(Pageable pageable);

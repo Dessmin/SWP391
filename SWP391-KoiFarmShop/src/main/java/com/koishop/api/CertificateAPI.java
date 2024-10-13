@@ -24,9 +24,9 @@ public class CertificateAPI {
     }
 
 
-    @PostMapping("add-cetificate")
-    public CertificateView createCertificate(@RequestBody CertificateView certificate) {
-        return certificateService.createCertificate(certificate);
+    @PostMapping("/{koiId}/add-cetificate")
+    public CertificateView createCertificate(@PathVariable Integer koiId , @RequestBody CertificateView certificate) {
+        return certificateService.createCertificate(koiId, certificate);
     }
 
     @PutMapping("/{certificateID}")
@@ -39,9 +39,9 @@ public class CertificateAPI {
         return certificateService.getCertificate(certificateID);
     }
 
-    @GetMapping("/{fishName}/fish-certificate")
-    public List<String> getCertificatesByFishName(@PathVariable String fishName) {
-        return certificateService.getCertificatesByFish(fishName);
+    @GetMapping("/{fishId}/fish-certificate")
+    public List<CertificateView> getCertificatesByFishName(@PathVariable Integer fishId) {
+        return certificateService.getCertificatesByFish(fishId);
     }
 
     @DeleteMapping("/{certificateID}")

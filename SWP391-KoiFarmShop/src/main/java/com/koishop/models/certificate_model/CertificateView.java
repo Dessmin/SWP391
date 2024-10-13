@@ -10,7 +10,4 @@ public class CertificateView {
     private int id;
     @NotBlank(message = "Link is required")
     private String link;
-
-    @NotBlank(message = "koiFish is required")
-    private String koiFish;
 }

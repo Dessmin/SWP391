@@ -33,9 +33,9 @@ public class CertificateService {
         return certificateViews;
     }
 
-    public CertificateView createCertificate(CertificateView certificate) {
+    public CertificateView createCertificate(Integer id, CertificateView certificate) {
         Certificate newCertificate = modelMapper.map(certificate, Certificate.class);
-        KoiFish koiFish = koiFishRepository.findKoiFishByFishName(certificate.getKoiFish());
+        KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(id);
         newCertificate.setKoiFish(koiFish);
         certificateRepository.save(newCertificate);
         return certificate;
@@ -55,11 +55,11 @@ public class CertificateService {
         return modelMapper.map(certificate, CertificateView.class);
     }
 
-    public List<String> getCertificatesByFish(String fishName) {
-        List<String> certificateViews = new ArrayList<>();
+    public List<CertificateView> getCertificatesByFish(Integer fishId) {
+        List<CertificateView> certificateViews = new ArrayList<>();
         for (Certificate certificate : certificateRepository.findAll()) {
-            if (certificate.getKoiFish().getFishName().equals(fishName)) {
-                certificateViews.add(certificate.getLink());
+            if (certificate.getKoiFish().getKoiID().equals(fishId)) {
+                certificateViews.add(modelMapper.map(certificate, CertificateView.class));
             }
         }
         return certificateViews;
