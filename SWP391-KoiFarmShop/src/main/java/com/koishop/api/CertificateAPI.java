@@ -24,8 +24,8 @@ public class CertificateAPI {
     }
 
 
-    @PostMapping("/{koiId}/add-cetificate")
-    public CertificateView createCertificate(@PathVariable Integer koiId , @RequestBody CertificateView certificate) {
+    @PostMapping("/{koiId}/{certificate}/add-certificate")
+    public CertificateView createCertificate(@PathVariable Integer koiId , @PathVariable String certificate) {
         return certificateService.createCertificate(koiId, certificate);
     }
 

@@ -22,9 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -119,6 +117,19 @@ public class UserService implements UserDetailsService {
         Type listType = new TypeToken<List<UserForList>>() {}.getType();
         return modelMapper.map(users, listType);
     }
+
+    public List<Integer> userPerMonth() {
+        List<Integer> usersPerMonth = new ArrayList<>(Collections.nCopies(12, 0));
+
+        for (User user : userRepository.findAll()) {
+            if (user.getRole() == Role.Customer) {
+                int month = user.getJoinDate().getMonth();
+                usersPerMonth.set(month - 1, usersPerMonth.get(month - 1) + 1);
+            }
+        }
+        return usersPerMonth;
+    }
+
     public AdminViewUser detail(long id) {
         return modelMapper.map(userRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("User not found!")), AdminViewUser.class);
@@ -188,5 +199,10 @@ public class UserService implements UserDetailsService {
     public CustomerRequest detailForUser() {
         User currentUser = getCurrentUser();
         return modelMapper.map(currentUser, CustomerRequest.class);
+    }
+
+    public Double getPointsUser() {
+        User user = getCurrentUser();
+        return user.getPointsBalance();
     }
 }

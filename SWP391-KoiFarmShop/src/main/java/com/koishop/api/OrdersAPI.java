@@ -36,6 +36,10 @@ public class OrdersAPI {
         return ResponseEntity.ok(orders);
     }
 
+    @GetMapping("/Income")
+    public List<Integer> getIncomePerMonth() {
+        return ordersService.IncomePerMonth();
+    }
 
     @PostMapping("add-order")
     public ResponseEntity createOrder(@RequestBody OrderRequest orderRequest) {

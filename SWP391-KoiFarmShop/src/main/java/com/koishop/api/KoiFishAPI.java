@@ -73,6 +73,9 @@ public class KoiFishAPI {
     @GetMapping("listfish")
     public List<FishForList> ListFish() {return koiFishService.ListFish();}
 
+    @GetMapping("/{koiId}/fishName")
+    public String getFishName(@PathVariable Integer koiId) {return koiFishService.getFishName(koiId);}
+
     // Xóa KoiFish theo ID
     @DeleteMapping("/{koiId}")
     public ResponseEntity<Void> deleteKoiFish(@PathVariable(value = "koiId") Integer koiId) {

@@ -41,6 +41,11 @@ public class BatchAPI {
         return batchService.detailBatch(id);
     }
 
+    @GetMapping("/{batchId}/getbreed")
+    public String getBreedByBatchId(@PathVariable int batchId) {
+        return batchService.getBreedByBatchId(batchId);
+    }
+
     @PutMapping("/{batchId}/update")
     public BatchDetailUpdate updateBatch(@PathVariable int batchId, @RequestBody BatchDetailUpdate batchDetails) {
         return batchService.updateBatch(batchId, batchDetails);

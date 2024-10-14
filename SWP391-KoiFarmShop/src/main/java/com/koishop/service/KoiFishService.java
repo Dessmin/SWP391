@@ -144,4 +144,9 @@ public class KoiFishService {
                 .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + id));
         return modelMapper.map(koiFish, FishForCart.class);
     }
+
+    public String getFishName(Integer id) {
+        KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(id);
+        return koiFish.getFishName();
+    }
 }

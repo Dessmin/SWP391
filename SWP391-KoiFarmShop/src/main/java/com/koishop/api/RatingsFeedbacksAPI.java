@@ -20,12 +20,12 @@ public class RatingsFeedbacksAPI {
     @Autowired
     private RatingsFeedbacksService ratingsFeedbacksService;
 
-    @GetMapping("/{koiId}/list-ratingsfeedbacks")
+    @GetMapping("/{koiId}/list-ratingsfeedbacksbykoi")
     public List<RFView> getAllRatingsFeedbacksByKoi(@PathVariable Integer koiId) {
         return ratingsFeedbacksService.getAllRatingsFeedbacksByKoiId(koiId);
     }
 
-    @GetMapping("/{userId}/list-ratingsfeedbacks")
+    @GetMapping("/{userId}/list-ratingsfeedbacksbyuser")
     public List<RFView> getAllRatingsFeedbacksByUser(@PathVariable long userId) {
         return ratingsFeedbacksService.getAllRatingsFeedbacksByUserId(userId);
     }

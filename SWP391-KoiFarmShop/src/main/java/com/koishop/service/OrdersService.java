@@ -8,10 +8,7 @@ import com.koishop.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrdersService {
@@ -43,8 +40,6 @@ public class OrdersService {
         User user = userService.getCurrentUser();
         return ordersRepository.findOrdersByUser(user);
     }
-
-
 
     // Create Order
     public Orders createOrder(OrderRequest orderRequest) {
@@ -147,4 +142,14 @@ public class OrdersService {
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
         ordersRepository.delete(order);
     }
+
+    public List<Integer> IncomePerMonth() {
+        List<Integer> incomePerMonth = new ArrayList<>(Collections.nCopies(12, 0));
+        for (Orders order : ordersRepository.findAll()) {
+            int month = order.getOrderDate().getMonth();
+            incomePerMonth.set(month - 1, incomePerMonth.get(month - 1) + order.getTotalAmount().intValue());
+        }
+        return incomePerMonth;
+    }
+
 }

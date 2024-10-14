@@ -40,10 +40,6 @@ public class BreedsService {
         return breedsRepository.save(breed);
     }
 
-    public Breeds breedDetails(String name) {
-        return breedsRepository.getBreedsByBreedName(name);
-    }
-
     public void deleteBreed(Integer id) {
         Breeds breed = breedsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Breed not found for this id :: " + id));

@@ -40,4 +40,9 @@ public class PromotionsService {
                 .orElseThrow(() -> new EntityNotFoundException("Promotion not found"));
         promotionsRepository.delete(promotion);
     }
+
+    public Integer getCode(String code) {
+        Promotions promotions = promotionsRepository.findPromotionsByPromotionName(code);
+        return promotions.getDiscountPercentage();
+    }
 }

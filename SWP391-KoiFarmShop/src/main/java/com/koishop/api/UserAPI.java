@@ -33,6 +33,9 @@ public class UserAPI {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/UserPerMonth")
+    public List<Integer> getUserPerMonth(){return userService.userPerMonth();}
+
     // Login API
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -96,5 +99,9 @@ public class UserAPI {
         CustomerRequest detailUser = userService.detailForUser();
         return ResponseEntity.ok(detailUser);
     }
-}
 
+    @GetMapping("/customer-point")
+    public Double getCustomerPoints() {
+        return userService.getPointsUser();
+    }
+}

@@ -33,18 +33,19 @@ public class CertificateService {
         return certificateViews;
     }
 
-    public CertificateView createCertificate(Integer id, CertificateView certificate) {
-        Certificate newCertificate = modelMapper.map(certificate, Certificate.class);
+    public CertificateView createCertificate(Integer id, String certificate) {
+        Certificate newCertificate = new Certificate();
         KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(id);
         newCertificate.setKoiFish(koiFish);
+        newCertificate.setImage(certificate);
         certificateRepository.save(newCertificate);
-        return certificate;
+        return modelMapper.map(newCertificate, CertificateView.class);
     }
 
     public CertificateView updateCertificate(int id, CertificateView certificateDetails) {
         Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Certificate not found"));
-        certificate.setLink(certificateDetails.getLink());
+        certificate.setImage(certificateDetails.getImage());
         certificateRepository.save(certificate);
         return certificateDetails;
     }

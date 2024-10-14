@@ -15,8 +15,8 @@ public class Certificate {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer certificateID;
 
-    @NotBlank(message = "Link is required")
-    private String link;
+    @NotBlank(message = "image is required")
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "koifish_id")

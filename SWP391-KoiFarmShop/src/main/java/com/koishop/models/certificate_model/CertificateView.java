@@ -8,6 +8,6 @@ import lombok.Data;
 public class CertificateView {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
-    @NotBlank(message = "Link is required")
-    private String link;
+    @NotBlank(message = "image is required")
+    private String image;
 }

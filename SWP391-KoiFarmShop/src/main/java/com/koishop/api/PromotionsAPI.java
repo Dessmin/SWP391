@@ -23,12 +23,15 @@ public class PromotionsAPI {
         return promotionsService.getAllPromotions();
     }
 
-
-
     @PostMapping("add-promotion")
     public ResponseEntity<Promotions> createPromotion(@RequestBody Promotions promotion) {
         Promotions createdPromotion = promotionsService.createPromotion(promotion);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPromotion);
+    }
+
+    @GetMapping("/{code}/discount")
+    public Integer getDiscountPromotions(@PathVariable String code) {
+        return promotionsService.getCode(code);
     }
 
     @PutMapping("/{promotionID}")

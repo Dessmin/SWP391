@@ -95,4 +95,9 @@ public class BatchService {
         batchResponse.setContent(batchViewList);
         return batchResponse;
     }
+
+    public String getBreedByBatchId(int batchId) {
+        Batch batch = batchRepository.getReferenceById(batchId);
+        return batch.getBreed().getBreedName();
+    }
 }
