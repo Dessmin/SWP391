@@ -1,5 +1,6 @@
 package com.koishop.api;
 
+import com.koishop.models.certificate_model.CertificateRequest;
 import com.koishop.models.certificate_model.CertificateView;
 import com.koishop.service.CertificateService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -24,8 +25,8 @@ public class CertificateAPI {
     }
 
 
-    @PostMapping("/{koiId}/{certificate}/add-certificate")
-    public CertificateView createCertificate(@PathVariable Integer koiId , @PathVariable String certificate) {
+    @PostMapping("/{koiId}/add-certificate")
+    public CertificateView createCertificate(@PathVariable Integer koiId , CertificateRequest certificate) {
         return certificateService.createCertificate(koiId, certificate);
     }
 

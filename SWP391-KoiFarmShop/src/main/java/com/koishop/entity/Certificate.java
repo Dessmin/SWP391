@@ -15,7 +15,8 @@ public class Certificate {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer certificateID;
 
-    @NotBlank(message = "image is required")
+    @Column(unique = true)
+    @NotBlank(message = "Image is required")
     private String image;
 
     @ManyToOne

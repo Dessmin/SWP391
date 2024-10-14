@@ -2,6 +2,7 @@ package com.koishop.service;
 
 import com.koishop.entity.Certificate;
 import com.koishop.entity.KoiFish;
+import com.koishop.models.certificate_model.CertificateRequest;
 import com.koishop.models.certificate_model.CertificateView;
 import com.koishop.repository.CertificateRepository;
 import com.koishop.repository.KoiFishRepository;
@@ -33,11 +34,10 @@ public class CertificateService {
         return certificateViews;
     }
 
-    public CertificateView createCertificate(Integer id, String certificate) {
-        Certificate newCertificate = new Certificate();
+    public CertificateView createCertificate(Integer id, CertificateRequest certificate) {
+        Certificate newCertificate = modelMapper.map(certificate, Certificate.class);
         KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(id);
         newCertificate.setKoiFish(koiFish);
-        newCertificate.setImage(certificate);
         certificateRepository.save(newCertificate);
         return modelMapper.map(newCertificate, CertificateView.class);
     }
