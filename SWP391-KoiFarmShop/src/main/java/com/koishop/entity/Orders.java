@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,7 +41,6 @@ public class Orders {
 
     //@NotNull(message = "Payment ID is required")
     @OneToOne(mappedBy = "orders")
-    @JsonIgnore
     private Payment payment;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)

@@ -3,6 +3,7 @@ package com.koishop.service;
 import com.koishop.entity.Breeds;
 import com.koishop.entity.KoiFish;
 import com.koishop.entity.Origin;
+import com.koishop.entity.User;
 import com.koishop.models.fish_model.*;
 import com.koishop.repository.KoiFishRepository;
 import org.modelmapper.ModelMapper;
@@ -29,6 +30,8 @@ public class KoiFishService {
     @Autowired
     @Lazy
     ModelMapper modelMapper;
+    @Autowired
+    UserService userService;
 
     public FishResponse getAllKoiFish(int page, int size) {
         List<FishForList> fishForLists = new ArrayList<>();
@@ -59,6 +62,7 @@ public class KoiFishService {
 
     public ViewFish createKoiFish(ViewFish fishCreate) {
         KoiFish newKoiFish = modelMapper.map(fishCreate, KoiFish.class);
+        newKoiFish.setManager(userService.getCurrentUser());
         newKoiFish.setBreed(breedsService.getBreedByName(fishCreate.getBreed()));
         newKoiFish.setOrigin(originService.getOriginByName(fishCreate.getOrigin()));
         newKoiFish.setIsForSale(false);

@@ -79,4 +79,8 @@ public class KoiFish {
     @OneToMany(mappedBy = "koiFish")
     @JsonIgnore
     private List<RatingsFeedbacks> ratingsFeedbacks;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User manager;
 }

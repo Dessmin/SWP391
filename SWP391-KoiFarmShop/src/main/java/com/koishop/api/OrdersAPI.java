@@ -41,10 +41,16 @@ public class OrdersAPI {
         return ordersService.IncomePerMonth();
     }
 
+    @PostMapping("transaction")
+    public ResponseEntity creater(@RequestParam Integer id) throws Exception {
+        ordersService.createTransactions(id);
+        return ResponseEntity.ok("Success");
+    }
+
     @PostMapping("add-order")
-    public ResponseEntity createOrder(@RequestBody OrderRequest orderRequest) {
-        Orders createdOrder = ordersService.createOrder(orderRequest);
-        return ResponseEntity.ok(createdOrder);
+    public ResponseEntity createOrder(@RequestBody OrderRequest orderRequest) throws Exception {
+        String vnPayURL = ordersService.createUrl(orderRequest);
+        return ResponseEntity.ok(vnPayURL);
     }
 
     @PutMapping("/{orderID}/update")

@@ -1,5 +1,6 @@
 package com.koishop.repository;
 
+import com.koishop.entity.Role;
 import com.koishop.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,4 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserName(String userName);
     User findByEmail(String email);
     Page<User> findAll(Pageable pageable);
+    User findUserByRole(Role role);
+
 }

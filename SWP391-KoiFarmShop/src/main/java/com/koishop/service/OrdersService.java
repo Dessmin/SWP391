@@ -5,9 +5,18 @@ import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.repository.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -20,8 +29,19 @@ public class OrdersService {
 
     @Autowired
     KoiFishRepository koiFishRepository;
+
     @Autowired
     BatchRepository batchRepository;
+
+    @Autowired
+    ModelMapper modelMapper;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PaymentRepository paymentRepository;
+
 
 
     public Orders getOderById(Integer id) {
@@ -150,6 +170,167 @@ public class OrdersService {
             incomePerMonth.set(month - 1, incomePerMonth.get(month - 1) + order.getTotalAmount().intValue());
         }
         return incomePerMonth;
+    }
+
+
+    public String createUrl(OrderRequest orderRequest) throws  Exception {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime createDate = LocalDateTime.now();
+        String formattedCreateDate = createDate.format(formatter);
+
+        // Code của mình
+        Orders orders = createOrder(orderRequest);
+        Double money = orders.getTotalAmount() * 100;
+        String amount = String.valueOf((int) Math.round(money));
+
+
+
+        String tmnCode = "KOLWEJSF";
+        String secretKey = "FEX7L057BY7A7V4Z039PWVBSYS4IC461";
+        String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        String returnUrl = "https://chatgpt.com/" + orders.getOrderID();
+        String currCode = "VND";
+
+        Map<String, String> vnpParams = new TreeMap<>();
+        vnpParams.put("vnp_Version", "2.1.0");
+        vnpParams.put("vnp_Command", "pay");
+        vnpParams.put("vnp_TmnCode", tmnCode);
+        vnpParams.put("vnp_Locale", "vn");
+        vnpParams.put("vnp_CurrCode", currCode);
+        vnpParams.put("vnp_TxnRef", orders.getOrderID().toString());
+        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + orders.getOrderID());
+        vnpParams.put("vnp_OrderType", "other");
+        vnpParams.put("vnp_Amount",amount);
+
+        vnpParams.put("vnp_ReturnUrl", returnUrl);
+        vnpParams.put("vnp_CreateDate", formattedCreateDate);
+        vnpParams.put("vnp_IpAddr", "128.199.178.23");
+
+        StringBuilder signDataBuilder = new StringBuilder();
+        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {
+            signDataBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+            signDataBuilder.append("=");
+            signDataBuilder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
+            signDataBuilder.append("&");
+        }
+        signDataBuilder.deleteCharAt(signDataBuilder.length() - 1); // Remove last '&'
+
+        String signData = signDataBuilder.toString();
+        String signed = generateHMAC(secretKey, signData);
+
+        vnpParams.put("vnp_SecureHash", signed);
+
+        StringBuilder urlBuilder = new StringBuilder(vnpUrl);
+        urlBuilder.append("?");
+        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {
+            urlBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+            urlBuilder.append("=");
+            urlBuilder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
+            urlBuilder.append("&");
+        }
+        urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
+
+        return urlBuilder.toString();
+    }
+
+
+
+    private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {
+        Mac hmacSha512 = Mac.getInstance("HmacSHA512");
+        SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
+        hmacSha512.init(keySpec);
+        byte[] hmacBytes = hmacSha512.doFinal(signData.getBytes(StandardCharsets.UTF_8));
+
+        StringBuilder result = new StringBuilder();
+        for (byte b : hmacBytes) {
+            result.append(String.format("%02x", b));
+        }
+        return result.toString();
+    }
+
+
+
+    public void createTransactions(Integer id) {
+        // Tìm order
+        Orders orders = ordersRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found!"));
+
+        // Tạo payment
+        Payment payment = new Payment();
+        payment.setOrders(orders);
+        payment.setCreateAt(new Date());
+        payment.setPaymentMethod(PaymentMethod.Banking);
+        payment.setDescription("Hello!");
+
+        Set<Transactions> setTransactions = new HashSet<>();
+
+        // Tạo transactions
+        Transactions transactions1 = new Transactions();
+        // VNPAY to customer
+        User customer = userService.getCurrentUser();
+        transactions1.setFrom(null);
+        transactions1.setTo(customer);
+        transactions1.setPayment(payment);
+        transactions1.setStatus(TransactionsStatus.Success);
+        transactions1.setDescription("VNPAY to Customer");
+        double point = customer.getPointsBalance() + orders.getTotalAmount() * 0.01;
+        customer.setPointsBalance(point);
+        setTransactions.add(transactions1);
+
+
+//        Transactions transactions2 = new Transactions();
+//        // Customer to Admin
+//        User admin = userRepository.findUserByRole(Role.Admin);
+//        transactions2.setFrom(customer);
+//        transactions2.setTo(admin);
+//        transactions2.setPayment(payment);
+//        transactions2.setStatus(TransactionsStatus.Success);
+//        transactions2.setDescription("Customer to Admin");
+//        double newBalance = admin.getBalance() + orders.getTotalAmount()*0.1;
+//        admin.setBalance(newBalance);
+//        setTransactions.add(transactions2);
+
+
+        Transactions transactions3 = new Transactions();
+        // Customer to Manager
+
+        // Lấy productType từ OrderDetails
+        OrderDetails orderDetail = orders.getOrderDetails().get(0);
+        ProductType productType = orderDetail.getProductType();
+        User manager;
+
+// Kiểm tra loại sản phẩm để tìm Manager
+        if (productType == ProductType.KoiFish) {
+            // Tìm manger dựa trên sản phẩm cá thể
+            KoiFish koiFish = koiFishRepository.findById(orderDetail.getProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("KoiFish not found!"));
+            manager = koiFish.getManager();
+        } else if (productType == ProductType.Batch) {
+            // Tìm manager dựa trên batch
+            Batch batch = batchRepository.findById(orderDetail.getProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("Batch not found!"));
+            manager = batch.getManager();
+        } else {
+            throw new IllegalArgumentException("Unknown product type");
+        }
+
+
+        transactions3.setFrom(customer);
+        transactions3.setTo(manager);
+        transactions3.setPayment(payment);
+        transactions3.setStatus(TransactionsStatus.Success);
+        transactions3.setDescription("Customer to Manager");
+        double newShopBalance = manager.getBalance() + orders.getTotalAmount() ;
+        manager.setBalance(newShopBalance);
+        setTransactions.add(transactions3);
+
+
+        payment.setTransactions(setTransactions);
+
+
+        userRepository.save(customer);
+        userRepository.save(manager);
+        paymentRepository.save(payment);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.koishop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -32,4 +33,9 @@ public class Batch {
     private double price;
 
     private Boolean isSale;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    User manager;
 }

@@ -14,10 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -51,7 +48,7 @@ public class User implements UserDetails {
     private String address;
 
     @PositiveOrZero(message = "PointsBalance không thể âm")
-    private Double pointsBalance;
+    private double pointsBalance = 0;
 
     @Temporal(TemporalType.DATE)
     private Date joinDate;
@@ -82,4 +79,23 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<RatingsFeedbacks> ratingsFeedbacks;
+
+    @OneToMany(mappedBy = "from")
+    @JsonIgnore
+    Set<Transactions> transactionsFrom;
+
+    @OneToMany(mappedBy = "to")
+    @JsonIgnore
+    Set<Transactions> transactionsTo;
+
+    @OneToMany(mappedBy = "manager")
+    @JsonIgnore
+    Set<KoiFish> koiFishs;
+
+    @OneToMany(mappedBy = "manager")
+    @JsonIgnore
+    Set<Batch> batches;
+
+    private double balance = 0;
+
 }
