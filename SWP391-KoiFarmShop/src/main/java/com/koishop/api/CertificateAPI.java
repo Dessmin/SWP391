@@ -4,6 +4,7 @@ import com.koishop.models.certificate_model.CertificateRequest;
 import com.koishop.models.certificate_model.CertificateView;
 import com.koishop.service.CertificateService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class CertificateAPI {
 
 
     @PostMapping("/{koiId}/add-certificate")
-    public CertificateView createCertificate(@PathVariable Integer koiId , CertificateRequest certificate) {
+    public CertificateView createCertificate(@PathVariable Integer koiId , @Valid @RequestBody CertificateRequest certificate) {
         return certificateService.createCertificate(koiId, certificate);
     }
 
