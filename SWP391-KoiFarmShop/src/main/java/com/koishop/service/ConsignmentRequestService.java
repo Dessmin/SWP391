@@ -75,11 +75,12 @@ public class ConsignmentRequestService {
 
     public ConsignmentView updateConsignmentRequest(int id, ConsignmentView requestDetails) {
         ConsignmentRequest request = requestRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
-        modelMapper.map(requestDetails, request);
         KoiFish koiFish = koiFishRepository.findKoiFishByFishName(requestDetails.getFishName());
         request.setKoiFish(koiFish);
         User user = userRepository.findByUserName(requestDetails.getUserName());
         request.setUser(user);
+        request.setStatus(requestDetails.isStatus());
+        request.setShopPrice(requestDetails.getShopPrice());
         requestRepository.save(request);
         return requestDetails;
     }

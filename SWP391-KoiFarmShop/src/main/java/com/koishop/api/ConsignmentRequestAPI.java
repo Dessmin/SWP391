@@ -1,6 +1,5 @@
 package com.koishop.api;
 
-import com.koishop.entity.ConsignmentRequest;
 import com.koishop.models.consignment_modle.ConsignmentRequestForCustomer;
 import com.koishop.models.consignment_modle.ConsignmentView;
 import com.koishop.service.ConsignmentRequestService;
@@ -45,7 +44,7 @@ public class ConsignmentRequestAPI {
     public ConsignmentView updateConsignmentRequest(@PathVariable int consignmentID, @RequestBody ConsignmentView requestDetails) {
         return consignmentRequestService.updateConsignmentRequest(consignmentID, requestDetails);
     }
-    
+
     @DeleteMapping("/{consignmentID}")
     public ResponseEntity<Void> deleteConsignmentRequest(@PathVariable int consignmentID) {
         consignmentRequestService.deleteConsignmentRequest(consignmentID);

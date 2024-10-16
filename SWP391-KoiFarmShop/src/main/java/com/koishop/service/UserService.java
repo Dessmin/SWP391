@@ -208,6 +208,7 @@ public class UserService implements UserDetailsService {
     public Double usePoint(Point point) {
         User user = getCurrentUser();
         user.setPointsBalance(user.getPointsBalance()-point.getPoint());
+        userRepository.save(user);
         return user.getPointsBalance();
     }
 }
