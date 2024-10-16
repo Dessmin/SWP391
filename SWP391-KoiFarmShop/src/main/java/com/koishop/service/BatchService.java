@@ -60,6 +60,14 @@ public class BatchService {
         return batchDetailUpdate;
     }
 
+    public boolean updateIsSale(Integer id) {
+        Batch batch = batchRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
+        batch.setIsSale(!batch.getIsSale());
+        batchRepository.save(batch);
+        return batch.getIsSale();
+    }
+
     public BatchDetailUpdate updateBatch(int id, BatchDetailUpdate batch) {
         Batch batch1 = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));

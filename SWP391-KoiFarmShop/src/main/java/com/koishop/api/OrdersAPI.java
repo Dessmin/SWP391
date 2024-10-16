@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8080/")
 @SecurityRequirement(name = "api")
@@ -20,13 +21,10 @@ public class OrdersAPI {
     @Autowired
     private OrdersService ordersService;
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> getOrderById(@PathVariable("orderId") Integer id) {
-        Orders order = ordersService.getOderById(id);
-        if (order == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(order);
+    @GetMapping("{id}/get-order")
+    public ResponseEntity getOrderById(@PathVariable Integer id) {
+        Orders orders = ordersService.getOrderById(id);
+        return  ResponseEntity.ok(orders);
     }
 
     @GetMapping("list-all-orders")
@@ -50,6 +48,23 @@ public class OrdersAPI {
     public ResponseEntity creater(@RequestParam Integer id) throws Exception {
         ordersService.createTransactions(id);
         return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping("/vnpay-return")
+    public ResponseEntity<String> handleVnpayReturn(@RequestParam Map<String, String> params) throws Exception {
+        String responseCode = params.get("vnp_ResponseCode");
+        String txnRef = params.get("vnp_TxnRef");
+
+        // Kiểm tra mã phản hồi từ VNPay
+        if ("00".equals(responseCode)) {
+            // Nếu thanh toán thành công, cập nhật trạng thái đơn hàng
+            ordersService.updateOrderStatus(txnRef, "PAID");
+            return ResponseEntity.ok("Thanh toán thành công");
+        } else {
+            // Nếu thanh toán thất bại, cập nhật trạng thái đơn hàng
+            ordersService.updateOrderStatus(txnRef, "FAILED");
+            return ResponseEntity.ok("Thanh toán thất bại");
+        }
     }
 
     @PostMapping("add-order")
