@@ -45,13 +45,9 @@ public class OrdersService {
 
 
 
-    public OrderResponse getOderById(Integer id) {
-        Orders order = ordersRepository.findById(id)
+    public Orders getOderById(Integer id) {
+        return ordersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found!"));
-        OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
-        orderResponse.setUserName(order.getUser().getUsername());
-        orderResponse.setPaymentId(order.getPayment().getPaymentID());
-        return orderResponse;
     }
 
     public List<OrderResponse> getAllOrders() {
@@ -206,7 +202,7 @@ public class OrdersService {
         String tmnCode = "KOLWEJSF";
         String secretKey = "FEX7L057BY7A7V4Z039PWVBSYS4IC461";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "https://chatgpt.com/" + orders.getOrderID();
+        String returnUrl = "http://localhost:5173/success/" + orders.getOrderID();
         String currCode = "VND";
 
         Map<String, String> vnpParams = new TreeMap<>();

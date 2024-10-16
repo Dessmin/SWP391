@@ -21,8 +21,12 @@ public class OrdersAPI {
     private OrdersService ordersService;
 
     @GetMapping("/{orderId}")
-    public OrderResponse getOrderById(@PathVariable("orderId") Integer id) {
-        return ordersService.getOderById(id);
+    public ResponseEntity<Orders> getOrderById(@PathVariable("orderId") Integer id) {
+        Orders order = ordersService.getOderById(id);
+        if (order == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(order);
     }
 
     @GetMapping("list-all-orders")
