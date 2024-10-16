@@ -47,7 +47,7 @@ public class BatchService {
     public BatchDetailUpdate createBatch(BatchDetailUpdate batch) {
         Batch newBatch = modelMapper.map(batch, Batch.class);
         newBatch.setBreed(breedsService.getBreedByName(batch.getBreed()));
-        newBatch.setIsSale(false);
+        newBatch.setIsSale(true);
         batchRepository.save(newBatch);
         return batch;
     }

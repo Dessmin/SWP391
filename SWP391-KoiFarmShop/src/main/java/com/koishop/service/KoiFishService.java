@@ -36,10 +36,12 @@ public class KoiFishService {
     public FishResponse getAllKoiFish(int page, int size) {
         List<FishForList> fishForLists = new ArrayList<>();
         for (KoiFish koiFish : koiFishRepository.findAll(PageRequest.of(page, size))) {
-            FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
-            fishForList.setBreed(koiFish.getBreed().getBreedName());
-            fishForList.setOrigin(koiFish.getOrigin().getOriginName());
-            fishForLists.add(fishForList);
+            if (koiFish.getIsForSale().equals(true)) {
+                FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
+                fishForList.setBreed(koiFish.getBreed().getBreedName());
+                fishForList.setOrigin(koiFish.getOrigin().getOriginName());
+                fishForLists.add(fishForList);
+            }
         }
         FishResponse fishResponse = new FishResponse();
         fishResponse.setTotalPages(koiFishRepository.findAll(PageRequest.of(page, size)).getTotalPages());
@@ -65,7 +67,7 @@ public class KoiFishService {
         newKoiFish.setManager(userService.getCurrentUser());
         newKoiFish.setBreed(breedsService.getBreedByName(fishCreate.getBreed()));
         newKoiFish.setOrigin(originService.getOriginByName(fishCreate.getOrigin()));
-        newKoiFish.setIsForSale(false);
+        newKoiFish.setIsForSale(true);
         koiFishRepository.save(newKoiFish);
         return fishCreate;
     }
@@ -117,7 +119,7 @@ public class KoiFishService {
         Page<KoiFish> koiFishPage = koiFishRepository.findByBreed_BreedName(breed, pageable);
         List<FishForList> fishList = new ArrayList<>();
         for (KoiFish koiFish : koiFishRepository.findByBreed_BreedName(breed, pageable)) {
-            if(koiFish.getBreed().getBreedName().equals(breed)) {
+            if(koiFish.getBreed().getBreedName().equals(breed) && koiFish.getIsForSale().equals(true)) {
                 FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
                 fishForList.setBreed(koiFish.getBreed().getBreedName());
                 fishForList.setOrigin(koiFish.getOrigin().getOriginName());

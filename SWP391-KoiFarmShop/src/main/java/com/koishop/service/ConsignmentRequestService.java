@@ -42,11 +42,14 @@ public class ConsignmentRequestService {
 
     public List<ConsignmentView> getAllConsignmentRequestsForCustomer() {
         List<ConsignmentView> consignmentViews = new ArrayList<>();
+        User user = userService.getCurrentUser();
         for (ConsignmentRequest consignmentRequest : requestRepository.findAll()) {
-            ConsignmentView consignmentView = modelMapper.map(consignmentRequest, ConsignmentView.class);
-            consignmentView.setUserName(consignmentRequest.getUser().getUsername());
-            consignmentView.setFishName(consignmentRequest.getKoiFish().getFishName());
-            consignmentViews.add(consignmentView);
+            if (consignmentRequest.getUser().getUsername().equals(user.getUsername())) {
+                ConsignmentView consignmentView = modelMapper.map(consignmentRequest, ConsignmentView.class);
+                consignmentView.setUserName(consignmentRequest.getUser().getUsername());
+                consignmentView.setFishName(consignmentRequest.getKoiFish().getFishName());
+                consignmentViews.add(consignmentView);
+            }
         }
         return consignmentViews;
     }
@@ -57,6 +60,7 @@ public class ConsignmentRequestService {
         KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(request.getFishId());
         newRequest.setKoiFish(koiFish);
         newRequest.setRequestDate(new Date());
+        newRequest.setStatus(false);
         requestRepository.save(newRequest);
         return request;
     }

@@ -45,7 +45,7 @@ public class ConsignmentRequestAPI {
     public ConsignmentView updateConsignmentRequest(@PathVariable int consignmentID, @RequestBody ConsignmentView requestDetails) {
         return consignmentRequestService.updateConsignmentRequest(consignmentID, requestDetails);
     }
-
+    
     @DeleteMapping("/{consignmentID}")
     public ResponseEntity<Void> deleteConsignmentRequest(@PathVariable int consignmentID) {
         consignmentRequestService.deleteConsignmentRequest(consignmentID);
