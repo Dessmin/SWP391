@@ -104,4 +104,9 @@ public class UserAPI {
     public Double getCustomerPoints() {
         return userService.getPointsUser();
     }
+
+    @PutMapping("/usePoint")
+    public Double usePoint(@RequestBody Point point) {
+        return userService.usePoint(point);
+    }
 }

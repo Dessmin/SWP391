@@ -24,7 +24,6 @@ public class Orders {
     @NotNull(message = "User ID is required")
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     @NotNull(message = "Order date is required")

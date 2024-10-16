@@ -54,7 +54,7 @@ public class ConsignmentRequestService {
     public ConsignmentRequestForCustomer createConsignmentRequest(ConsignmentRequestForCustomer request) {
         ConsignmentRequest newRequest = modelMapper.map(request, ConsignmentRequest.class);
         newRequest.setUser(userService.getCurrentUser());
-        KoiFish koiFish = koiFishRepository.findKoiFishByFishName(request.getFishName());
+        KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(request.getFishId());
         newRequest.setKoiFish(koiFish);
         newRequest.setRequestDate(new Date());
         requestRepository.save(newRequest);

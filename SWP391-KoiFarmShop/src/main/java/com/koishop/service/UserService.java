@@ -6,7 +6,6 @@ import com.koishop.exception.DuplicateEntity;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.user_model.*;
 import com.koishop.repository.UserRepository;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +85,7 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(long id) {
         Optional<User> existingUser = userRepository.findById(id);
-        if (!existingUser.isPresent()) throw new EntityNotFoundException("User not found!");
+        if (existingUser.isEmpty()) throw new EntityNotFoundException("User not found!");
         userRepository.deleteById(id);
     }
 
@@ -124,7 +123,7 @@ public class UserService implements UserDetailsService {
         for (User user : userRepository.findAll()) {
             if (user.getRole() == Role.Customer) {
                 int month = user.getJoinDate().getMonth();
-                usersPerMonth.set(month - 1, usersPerMonth.get(month - 1) + 1);
+                usersPerMonth.set(month, usersPerMonth.get(month) + 1);
             }
         }
         return usersPerMonth;
@@ -203,6 +202,12 @@ public class UserService implements UserDetailsService {
 
     public Double getPointsUser() {
         User user = getCurrentUser();
+        return user.getPointsBalance();
+    }
+
+    public Double usePoint(Point point) {
+        User user = getCurrentUser();
+        user.setPointsBalance(user.getPointsBalance()-point.getPoint());
         return user.getPointsBalance();
     }
 }

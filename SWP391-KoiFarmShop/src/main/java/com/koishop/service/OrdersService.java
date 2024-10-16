@@ -4,6 +4,7 @@ import com.koishop.entity.*;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orders_model.OrderRequest;
+import com.koishop.models.orders_model.OrderResponse;
 import com.koishop.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +45,38 @@ public class OrdersService {
 
 
 
-    public Orders getOderById(Integer id) {
+    public OrderResponse getOderById(Integer id) {
         Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found!"));
-        return order;
+        OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
+        orderResponse.setUserName(order.getUser().getUsername());
+        orderResponse.setPaymentId(order.getPayment().getPaymentID());
+        return orderResponse;
     }
 
-    public List<Orders> getAllOrders() {
-        return ordersRepository.findAll();
-
-
+    public List<OrderResponse> getAllOrders() {
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Orders order : ordersRepository.findAll()) {
+            OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
+            orderResponse.setUserName(order.getUser().getUsername());
+            orderResponse.setPaymentId(order.getPayment().getPaymentID());
+            orderResponses.add(orderResponse);
+        }
+        return orderResponses;
     }
 
-    public List<Orders> getAllOrdersByUser() {
+    public List<OrderResponse> getAllOrdersByUser() {
         User user = userService.getCurrentUser();
-        return ordersRepository.findOrdersByUser(user);
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Orders order : ordersRepository.findAll()) {
+            if (order.getUser().getUsername().equals(user.getUsername())) {
+                OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
+                orderResponse.setUserName(order.getUser().getUsername());
+                orderResponse.setPaymentId(order.getPayment().getPaymentID());
+                orderResponses.add(orderResponse);
+            }
+        }
+        return orderResponses;
     }
 
     // Create Order
@@ -167,7 +185,7 @@ public class OrdersService {
         List<Integer> incomePerMonth = new ArrayList<>(Collections.nCopies(12, 0));
         for (Orders order : ordersRepository.findAll()) {
             int month = order.getOrderDate().getMonth();
-            incomePerMonth.set(month - 1, incomePerMonth.get(month - 1) + order.getTotalAmount().intValue());
+            incomePerMonth.set(month, incomePerMonth.get(month) + order.getTotalAmount().intValue());
         }
         return incomePerMonth;
     }

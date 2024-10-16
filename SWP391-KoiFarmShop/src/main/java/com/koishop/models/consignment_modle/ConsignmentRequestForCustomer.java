@@ -9,7 +9,7 @@ import java.util.Date;
 public class ConsignmentRequestForCustomer {
 
     @NotNull(message = "Koi is required")
-    private String fishName;
+    private Integer fishId;
 
     @NotNull(message = "Request date is required")
     private Date requestDate;
