@@ -43,11 +43,17 @@ public class OrdersService {
     @Autowired
     PaymentRepository paymentRepository;
 
+    @Autowired
+    KoiFishService koiFishService;
+
+    @Autowired
+    BatchService batchService;
 
 
-    public Orders getOderById(Integer id) {
-        return ordersRepository.findById(id)
+    public Orders getOrderById(Integer id) {
+        Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found!"));
+        return order;
     }
 
     public List<OrderResponse> getAllOrders() {
@@ -91,12 +97,28 @@ public class OrdersService {
             orderDetail.setQuantity(orderDetailsRequest.getQuantity());
             orderDetail.setUnitPrice(orderDetailsRequest.getPrice());
             total += orderDetailsRequest.getQuantity() * orderDetailsRequest.getPrice();
+
+            if (orderDetailsRequest.getProductType() == ProductType.KoiFish) {
+                koiFishService.updateIsForSale(orderDetailsRequest.getProductId());
+            } else if (orderDetailsRequest.getProductType() == ProductType.Batch){
+                batchService.updateIsSale(orderDetailsRequest.getProductId());
+            } else {
+                throw new IllegalArgumentException("Unknown product type");
+            }
+
             orderDetails.add(orderDetail);
         }
         order.setOrderDetails(orderDetails);
         order.setTotalAmount(total);
         order.setOrderStatus("Pending");
         return ordersRepository.save(order);
+    }
+
+    public void updateOrderStatus(String orderId, String status) {
+        Orders order = ordersRepository.findById(Integer.parseInt(orderId))
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setOrderStatus(status); // Cập nhật trạng thái đơn hàng
+        ordersRepository.save(order); // Lưu đơn hàng đã cập nhật
     }
 
     public Orders updateOrder(Integer orderId, OrderRequest orderRequest) {
