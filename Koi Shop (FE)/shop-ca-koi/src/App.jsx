@@ -1,40 +1,38 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Dashboard from './components/dashboard';
-import User from './pages/admin/management-user';
-import Home from './pages/home(def)';
-import HomeLoged from './pages/home(loged)';
-import Login from './pages/login';
-import Register from './pages/register';
-import CartPage from './pages/cartPage';
-import DetailKoi from './pages/detailKoi';
-import DetailUser from './pages/detaiUser';
-import KoiDetail from './pages/koi-detail-page';
-import UserDetail from './pages/user-detail-management';
-import Breed from './pages/admin/breed-management';
-import Origin from './pages/admin/origin-management';
-import Koi from './pages/admin/koi-management';
-import PaymentSuccess from './components/successPayment';
-import FailPayment from './components/failPayment';
-import OrderDetailsPage from './components/orderDetailPage';
-import Consignment from './pages/consignment';
-import ConsignmentManagement from './pages/admin/consignment-management';
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Dashboard from "./components/dashboard";
+import User from "./pages/admin/management-user";
+import Home from "./pages/home(def)";
+import HomeLoged from "./pages/home(loged)";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import CartPage from "./pages/cartPage";
+import DetailKoi from "./pages/detailKoi";
+import DetailUser from "./pages/detaiUser";
+import KoiDetail from "./pages/koi-detail-page";
+import UserDetail from "./pages/user-detail-management";
+import Breed from "./pages/admin/breed-management";
+import Origin from "./pages/admin/origin-management";
+import Koi from "./pages/admin/koi-management";
+import PaymentSuccess from "./components/successPayment";
+import FailPayment from "./components/failPayment";
+import OrderDetailsPage from "./components/orderDetailPage";
+import Consignment from "./pages/consignment";
+import ConsignmentManagement from "./pages/admin/consignment-management";
+import Certificate from "./pages/certificate-detail-page";
 
 function App() {
-
-
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home/>,
+      element: <Home />,
     },
     {
       path: "/login",
-      element: <Login/>,
+      element: <Login />,
     },
     {
       path: "/register",
-      element: <Register/>,
+      element: <Register />,
     },
     {
       path: "/home",
@@ -54,7 +52,7 @@ function App() {
     },
     {
       path: "cart",
-      element: <CartPage/>,
+      element: <CartPage />,
     },
     {
       path: "/detailKoi/:id",
@@ -100,14 +98,13 @@ function App() {
       path: "/consignment",
       element: <Consignment />,
     },
-    
-
-
+    {
+      path: "/home/dashboard/koi/certificate/:koiId",
+      element: <Certificate />,
+    },
   ]);
 
-  return (
-    <RouterProvider router={router} />
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
