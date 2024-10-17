@@ -48,6 +48,7 @@ public class UserService implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(originpassword));
             user.setJoinDate(new Date());
             user.setRole(Role.Customer);
+            user.setPointsBalance(0.0);
             User savedUser = userRepository.save(user);
 
             EmailDetail emailDetail = new EmailDetail();

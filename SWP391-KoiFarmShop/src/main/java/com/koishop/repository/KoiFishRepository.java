@@ -12,8 +12,7 @@ public interface KoiFishRepository extends JpaRepository<KoiFish, Integer> {
 
     KoiFish findKoiFishByKoiID(Integer koiID);
 
-    KoiFish findKoiFishByFishNameContains(String name);
-
     Page<KoiFish> findAll(Pageable pageable);
-    Page<KoiFish> findByBreed_BreedName(String breedName, Pageable pageable);
+    Page<KoiFish> findByIsForSale(Boolean isforsale, Pageable pageable);
+    Page<KoiFish> findByBreed_BreedNameAndIsForSale(String breedName, Boolean isforsale, Pageable pageable);
 }

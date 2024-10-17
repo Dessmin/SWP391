@@ -48,7 +48,7 @@ public class User implements UserDetails {
     private String address;
 
     @PositiveOrZero(message = "PointsBalance không thể âm")
-    private double pointsBalance = 0;
+    private double pointsBalance;
 
     @Temporal(TemporalType.DATE)
     private Date joinDate;

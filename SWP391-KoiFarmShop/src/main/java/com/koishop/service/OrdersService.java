@@ -50,7 +50,7 @@ public class OrdersService {
     BatchService batchService;
 
 
-    public Orders getOrderById(Integer id) {
+    public Orders getOderById(Integer id) {
         Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found!"));
         return order;

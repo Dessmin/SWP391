@@ -35,13 +35,11 @@ public class KoiFishService {
 
     public FishResponse getAllKoiFish(int page, int size) {
         List<FishForList> fishForLists = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findAll(PageRequest.of(page, size))) {
-            if (koiFish.getIsForSale().equals(true)) {
+        for (KoiFish koiFish : koiFishRepository.findByIsForSale( true, PageRequest.of(page, size))) {
                 FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
                 fishForList.setBreed(koiFish.getBreed().getBreedName());
                 fishForList.setOrigin(koiFish.getOrigin().getOriginName());
                 fishForLists.add(fishForList);
-            }
         }
         FishResponse fishResponse = new FishResponse();
         fishResponse.setTotalPages(koiFishRepository.findAll(PageRequest.of(page, size)).getTotalPages());
@@ -116,15 +114,13 @@ public class KoiFishService {
 
     public FishResponse getKoiFishesByBreed(String breed, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<KoiFish> koiFishPage = koiFishRepository.findByBreed_BreedName(breed, pageable);
+        Page<KoiFish> koiFishPage = koiFishRepository.findByBreed_BreedNameAndIsForSale(breed, true, pageable);
         List<FishForList> fishList = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findByBreed_BreedName(breed, pageable)) {
-            if(koiFish.getBreed().getBreedName().equals(breed) && koiFish.getIsForSale().equals(true)) {
+        for (KoiFish koiFish : koiFishRepository.findByBreed_BreedNameAndIsForSale(breed, true, pageable)) {
                 FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
                 fishForList.setBreed(koiFish.getBreed().getBreedName());
                 fishForList.setOrigin(koiFish.getOrigin().getOriginName());
                 fishList.add(fishForList);
-            }
         }
         FishResponse fishResponse = new FishResponse();
         fishResponse.setTotalPages(koiFishPage.getTotalPages());
