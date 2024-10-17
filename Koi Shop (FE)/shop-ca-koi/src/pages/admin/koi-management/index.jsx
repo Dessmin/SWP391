@@ -157,6 +157,9 @@ function Koi() {
           >
             Delete
           </Button>
+          <Link to={`/home/dashboard/koi/certificate/${record.id}`}>
+            <Button type="default">Certificate</Button>
+          </Link>
         </div>
       ),
     },
