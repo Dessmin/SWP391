@@ -29,14 +29,15 @@ function HeaderLoged() {
         <header className="header">
             <div className="header__logo">
                 <img src="https://gudlogo.com/wp-content/uploads/2019/05/logo-ca-Koi-37.png"
-                    alt="" width={100} />
+                    alt="" width={70} height={70} />
             </div>
             <div className="header__navigate">
                 <ul>
                 
                     <Link to="/home"><li>Trang chủ</li></Link>
                     <Link to=""><li>Giới thiệu</li></Link>
-                    <Link to=""><li>Cá Koi</li></Link>
+                    <Link to="/consignment"><li>Ký gửi cá Koi</li></Link>
+                    <Link to="/home/dashboard"><li>Dashboard</li></Link>
                 </ul>
             </div>
             <div className="header__welcome-logout">

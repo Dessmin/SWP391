@@ -32,12 +32,15 @@ function BatchList() {
     setPage(newPage); // Cập nhật số trang
   };
   return (
-    <div className="batch-list">
+    <div className="batch">
+      <div className="batch__list">
       {batches.map((batch, index) => (
         <CardBatch key={index} batch={batch} />
       ))}
+      </div>
+      
 
-      <div>
+      <div className="batch__page">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}

@@ -2,11 +2,10 @@ import {  useEffect, useState } from "react";
 import { getCartFromSession, saveCartToSession } from "../../helper/helper";
 import { useSelector } from "react-redux";
 import { Table, Button } from "antd";
-import axios from "axios";
 import apiOrder from "../../config/api-order";
-import apiOrderDetails from "../../config/api-orderDetails";
 
 const Cart = () => {
+  
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
   const [cartItems, setCartItems] = useState([]); // State để lưu giỏ hàng từ session
 
@@ -51,20 +50,28 @@ const Cart = () => {
     };
   
     try {
+      // Gọi API tạo đơn hàng và lấy URL thanh toán
       const response = await apiOrder.post("add-order", orderRequest, {
         headers: {
           Authorization: `Bearer ${user.token}`, // Gửi token trong header
         },
       });
   
-      alert("Order created successfully");
-      setCartItems([]); // Xóa giỏ hàng sau khi thanh toán thành công
-      saveCartToSession(user.id, []); // Xóa giỏ hàng trong session
+      const paymentUrl = response.data; // Giả sử backend trả về paymentUrl
+  
+      // Chuyển hướng sang trang thanh toán
+      window.location.href = paymentUrl;
+      
+  
+      // Xóa giỏ hàng sau khi thanh toán thành công
+      setCartItems([]);
+      saveCartToSession(user.id, []);
     } catch (error) {
       console.error("There was an error processing the order!", error);
       alert("Error creating order. Please try again.");
     }
   };
+  
   
 
 

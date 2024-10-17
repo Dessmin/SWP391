@@ -21,13 +21,13 @@ function CardBatch({ batch }) {
 
   return (
     <div className="batch-card">
-      <img height={350} src={image} alt={breedName} />
+      <img height={290} src={image} alt={breedName} />
 
       <div className="batch-card__content">
         <div className="batch-card__info1">
         
-          <span>Name: {breedName}</span>
-          <span>Price: {price}.000</span>
+          <span>Breed: {breedName}</span>
+          <span>Price: {price}</span>
         </div>
         <div className="batch-card__info2">
           <span>Quantity: {quantity}</span>

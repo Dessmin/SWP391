@@ -1,5 +1,17 @@
-.koi-list{
+.koi{
     display: flex;
-    gap: 20px;
-    padding: 10px;
+    flex-direction: column;
+
+    &__list{
+        display: flex;
+    }
+
+    &__page{
+        margin-top: 10px;
+        text-align: center;
+
+        button{
+            border-radius: 10px;
+        }
+    }
 }

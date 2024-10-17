@@ -17,11 +17,13 @@
 
     &__info1{
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
     }
 
     &__info2{
         display: flex;
+         flex-direction: column;
         justify-content: space-between;
     }
 
@@ -30,6 +32,7 @@
     }
 
     Button{
+        margin-bottom: 0;
         border-radius: 50px;
     }
 }

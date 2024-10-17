@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import { getCartFromSession, saveCartToSession } from "./helper";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 export const CartContext = createContext();
 
@@ -19,11 +20,14 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product) => {
     // Lấy giỏ hàng từ session dựa trên user id, nếu chưa có thì sử dụng giá trị hiện tại của cartItems
     const currentCart = getCartFromSession(user.id) || cartItems;
-    
+    toast.success("Thêm thành công")
     // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng dựa trên type và id
     const isItemInCart = currentCart.some(item =>  item.id === product.id && item.type === product.type);
+    
   
     if (isItemInCart) {
+      
+      
       console.log(`Product with ID ${product.id} and type ${product.type} is already in the cart.`);
       return; // Nếu đã tồn tại, không thêm sản phẩm vào giỏ hàng
     }

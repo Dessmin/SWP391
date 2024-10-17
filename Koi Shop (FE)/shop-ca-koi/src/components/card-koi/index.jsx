@@ -26,12 +26,12 @@ function CardKoi({ koi }) {
 
   return (
     <div className="koi-card">
-      <img height={350} src={image} alt="" />
+      <img height={290} src={image} alt="" />
 
       <div className="koi-card__content">
         <div className="koi-card__info1">
           <span>Name: {fishName}</span>
-          <span>Price: {price}.000</span>
+          <span>Price: {price}</span>
         </div>
         <div className="koi-card__info2">
           <span>Origin: {origin}</span>

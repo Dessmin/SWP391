@@ -7,7 +7,7 @@ function Header() {
     <header className="header">
       <div className="header__logo">
         <img src="https://gudlogo.com/wp-content/uploads/2019/05/logo-ca-Koi-37.png"
-          alt="" width={100} />
+          alt=""width={70} height={70} />
       </div>
       <div className="header__navigate">
         <ul>

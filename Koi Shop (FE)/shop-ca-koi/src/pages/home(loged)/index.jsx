@@ -1,4 +1,3 @@
-
 import KoiList from "../../components/koi-list";
 import HeaderLoged from "../../components/header(loged)";
 import { CartProvider } from "../../helper/CartContext";
@@ -6,7 +5,6 @@ import { Link } from "react-router-dom";
 import BatchList from "../../components/batch-list";
 import "./index.scss";
 import Footer from "../../components/footer";
-
 
 function HomeLoged() {
   return (
@@ -23,15 +21,15 @@ function HomeLoged() {
           <span className="slogan2">thịnh vượng</span>
         </div>
       </div>
-      
-      <h2>Koi list</h2>
-      <CartProvider>
+
+      <CartProvider >
+        <h2>Koi list</h2>
         <KoiList />
         <h2>Batch list</h2>
         <BatchList />
       </CartProvider>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 }
