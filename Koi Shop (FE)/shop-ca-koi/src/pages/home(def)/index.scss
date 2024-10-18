@@ -35,4 +35,31 @@
             
         }
     }
+
+    &__content{
+        margin-top: 50px;
+        padding: 0 100px;
+
+        h2{
+            text-align: center;
+        }
+    }
+
+    &__description{
+        font-size: large;
+        font-weight: 500;
+    }
+
+    &__carousel{
+        margin-top: 100px;
+        margin-bottom: 50px;
+
+        h2{
+            margin-bottom: 20px;
+        }
+    }
+
+    &__info{
+        margin-bottom: 100px;
+    }
 }

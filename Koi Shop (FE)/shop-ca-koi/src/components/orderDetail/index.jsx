@@ -104,21 +104,25 @@ const OrderDetails = () => {
                 <p>Sản phẩm: {item.productType}</p>
                 <p>Số lượng: {item.quantity}</p>
                 <p>Giá: {item.unitPrice} VND</p>
-                <Radio.Group
-                  onChange={(e) => setConsignmentType(e.target.value)}
-                  value={consignmentType}
-                  style={{ marginBottom: "10px" }}
-                >
-                  <Radio value="Online">Online</Radio>
-                  <Radio value="Offline">Offline</Radio>
-                </Radio.Group>
-                <Button
-                  type="default"
-                  onClick={() => handleConsignment(item.productId)}
-                  style={{ marginTop: "10px" }}
-                >
-                  Ký gửi
-                </Button>
+                {item.productType === "KoiFish" && (
+                  <>
+                    <Radio.Group
+                      onChange={(e) => setConsignmentType(e.target.value)}
+                      value={consignmentType}
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <Radio value="Online">Online</Radio>
+                      <Radio value="Offline">Offline</Radio>
+                    </Radio.Group>
+                    <Button
+                      type="default"
+                      onClick={() => handleConsignment(item.productId)}
+                      style={{ marginTop: "10px" }}
+                    >
+                      Ký gửi
+                    </Button>
+                  </>
+                )}
                 <hr />
               </div>
             ))}
