@@ -19,6 +19,7 @@ import OrderDetailsPage from "./components/orderDetailPage";
 import Consignment from "./pages/consignment";
 import ConsignmentManagement from "./pages/admin/consignment-management";
 import Certificate from "./pages/certificate-detail-page";
+import CompareKoi from "./pages/comparison";
 
 function App() {
   const router = createBrowserRouter([
@@ -101,6 +102,10 @@ function App() {
     {
       path: "/home/dashboard/koi/certificate/:koiId",
       element: <Certificate />,
+    },
+    {
+      path: "/koi-comparison/:id/:compareId",
+      element: <CompareKoi />,
     },
   ]);
 
