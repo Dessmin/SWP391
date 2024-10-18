@@ -25,17 +25,18 @@ public class Payment {
     @Size(max = 255, message = "Description must not exceed 255 characters")
     private String description;
 
-    Date createAt;
+    private Date createAt;
 
     @Enumerated(EnumType.STRING)
-    PaymentMethod paymentMethod;
+    private PaymentMethod paymentMethod;
 
     @OneToOne
     @JoinColumn(name = "order_id")
-    @JsonIgnore
     private Orders orders;
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
-    Set<Transactions> transactions;
+    private Set<Transactions> transactions;
+
+    private boolean isDeleted;
 
 }

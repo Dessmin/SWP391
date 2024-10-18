@@ -37,10 +37,15 @@ public class KoiFishAPI {
         ViewFish defaultFish = koiFishService.updateKoiFish(koiId, koiFishDetails);
         return ResponseEntity.ok(defaultFish);
     }
+
+    @GetMapping("/{koiId}/checkIsForSale")
+    public boolean checkIsForSale(@PathVariable Integer koiId) {
+        return koiFishService.getIsForSale(koiId);
+    }
+
     @PutMapping("/{koiId}/updateIsForSale")
-    public ResponseEntity updateIsForSale(@PathVariable Integer koiId) {
-        koiFishService.updateIsForSale(koiId);
-        return ResponseEntity.ok("Set successful");
+    public boolean updateIsForSale(@PathVariable Integer koiId) {
+        return koiFishService.updateIsForSale(koiId);
     }
 
     @GetMapping("/{koiFishName}/koiFish")

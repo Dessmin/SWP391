@@ -35,4 +35,6 @@ public class Breeds {
     @OneToMany(mappedBy = "breed")
     @JsonIgnore
     private List<KoiFish> koiFishList;
+
+    private boolean deleted;
 }

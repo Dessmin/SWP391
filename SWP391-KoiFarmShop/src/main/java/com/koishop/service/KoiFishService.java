@@ -1,16 +1,13 @@
 package com.koishop.service;
 
-import com.koishop.entity.Breeds;
 import com.koishop.entity.KoiFish;
-import com.koishop.entity.Origin;
-import com.koishop.entity.User;
+import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.fish_model.*;
 import com.koishop.repository.KoiFishRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,11 +32,11 @@ public class KoiFishService {
 
     public FishResponse getAllKoiFish(int page, int size) {
         List<FishForList> fishForLists = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findByIsForSale( true, PageRequest.of(page, size))) {
-                FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
-                fishForList.setBreed(koiFish.getBreed().getBreedName());
-                fishForList.setOrigin(koiFish.getOrigin().getOriginName());
-                fishForLists.add(fishForList);
+        for (KoiFish koiFish : koiFishRepository.findByIsForSaleAndDeletedIsFalse( true, PageRequest.of(page, size))) {
+            FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
+            fishForList.setBreed(koiFish.getBreed().getBreedName());
+            fishForList.setOrigin(koiFish.getOrigin().getOriginName());
+            fishForLists.add(fishForList);
         }
         FishResponse fishResponse = new FishResponse();
         fishResponse.setTotalPages(koiFishRepository.findAll(PageRequest.of(page, size)).getTotalPages());
@@ -52,10 +49,12 @@ public class KoiFishService {
     public List<FishForList> ListFish() {
         List<FishForList> fishForLists = new ArrayList<>();
         for (KoiFish koiFish : koiFishRepository.findAll()) {
-            FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
-            fishForList.setBreed(koiFish.getBreed().getBreedName());
-            fishForList.setOrigin(koiFish.getOrigin().getOriginName());
-            fishForLists.add(fishForList);
+            if (!koiFish.isDeleted()) {
+                FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
+                fishForList.setBreed(koiFish.getBreed().getBreedName());
+                fishForList.setOrigin(koiFish.getOrigin().getOriginName());
+                fishForLists.add(fishForList);
+            }
         }
         return fishForLists;
     }
@@ -66,6 +65,7 @@ public class KoiFishService {
         newKoiFish.setBreed(breedsService.getBreedByName(fishCreate.getBreed()));
         newKoiFish.setOrigin(originService.getOriginByName(fishCreate.getOrigin()));
         newKoiFish.setIsForSale(true);
+        newKoiFish.setDeleted(false);
         koiFishRepository.save(newKoiFish);
         return fishCreate;
     }
@@ -99,13 +99,15 @@ public class KoiFishService {
 
     public ViewFish getKoiFishByName(String name) {
         KoiFish koiFish = koiFishRepository.findKoiFishByFishName(name);
-        return detailsKoiFish(koiFish.getKoiID());
+        if (!koiFish.isDeleted()) {
+            return detailsKoiFish(koiFish.getKoiID());
+        }else throw new EntityNotFoundException("KoiFish not found for this name :: " + name);
     }
 
     public List<String> searchKoiFishByName(String name) {
         List<String> koiFishNames = new ArrayList<>();
         for (KoiFish koiFish : koiFishRepository.findAll()) {
-            if (koiFish.getFishName().toLowerCase().contains(name.toLowerCase())) {
+            if (koiFish.getFishName().toLowerCase().contains(name.toLowerCase()) && !koiFish.isDeleted()) {
                 koiFishNames.add(koiFish.getFishName());
             }
         }
@@ -114,9 +116,9 @@ public class KoiFishService {
 
     public FishResponse getKoiFishesByBreed(String breed, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<KoiFish> koiFishPage = koiFishRepository.findByBreed_BreedNameAndIsForSale(breed, true, pageable);
+        Page<KoiFish> koiFishPage = koiFishRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalse(breed, true, pageable);
         List<FishForList> fishList = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findByBreed_BreedNameAndIsForSale(breed, true, pageable)) {
+        for (KoiFish koiFish : koiFishRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalse(breed, true, pageable)) {
                 FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
                 fishForList.setBreed(koiFish.getBreed().getBreedName());
                 fishForList.setOrigin(koiFish.getOrigin().getOriginName());
@@ -134,7 +136,8 @@ public class KoiFishService {
     public void deleteKoiFish(Integer id) {
         KoiFish koiFish = koiFishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + id));
-        koiFishRepository.delete(koiFish);
+        koiFish.setDeleted(true);
+        koiFishRepository.save(koiFish);
     }
 
     public ViewFish getKoiFishById(int id) {
@@ -150,5 +153,11 @@ public class KoiFishService {
     public String getFishName(Integer id) {
         KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(id);
         return koiFish.getFishName();
+    }
+
+    public boolean getIsForSale(Integer koiId) {
+        KoiFish koiFish = koiFishRepository.findById(koiId)
+                .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + koiId));
+        return koiFish.getIsForSale();
     }
 }

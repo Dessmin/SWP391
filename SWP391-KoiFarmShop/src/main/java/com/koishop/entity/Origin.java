@@ -31,4 +31,6 @@ public class Origin {
     @OneToMany(mappedBy = "origin")
     @JsonIgnore
     private List<KoiFish> koiFish;
+
+    private boolean deleted;
 }

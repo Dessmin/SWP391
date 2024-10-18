@@ -15,18 +15,19 @@ public class BreedsService {
     private BreedsRepository breedsRepository;
 
     public List<Breeds> getAllBreeds() {
-        return breedsRepository.findAll();
+        return breedsRepository.findAllByDeletedIsFalse();
     }
 
     public List<String> listBreedNames() {
         List<String> list = new ArrayList<>();
-        for (Breeds breeds : breedsRepository.findAll()) {
+        for (Breeds breeds : breedsRepository.findAllByDeletedIsFalse()) {
             list.add(breeds.getBreedName());
         }
         return list;
     }
 
     public Breeds createBreed(Breeds breed) {
+        breed.setDeleted(false);
         return breedsRepository.save(breed);
     }
 
@@ -43,10 +44,13 @@ public class BreedsService {
     public void deleteBreed(Integer id) {
         Breeds breed = breedsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Breed not found for this id :: " + id));
-        breedsRepository.delete(breed);
+        breed.setDeleted(true);
+        breedsRepository.save(breed);
     }
 
     public Breeds getBreedByName(String breed) {
-        return breedsRepository.getBreedsByBreedName(breed);
+        Breeds breeds = breedsRepository.getBreedsByBreedName(breed);
+        if (breeds == null || breeds.isDeleted()) throw new RuntimeException("Breed not found for this name :: " + breed);
+        return breeds;
     }
 }

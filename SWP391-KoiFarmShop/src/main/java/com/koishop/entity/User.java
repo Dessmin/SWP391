@@ -56,6 +56,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private boolean deleted;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -82,20 +84,19 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "from")
     @JsonIgnore
-    Set<Transactions> transactionsFrom;
+    private Set<Transactions> transactionsFrom;
 
     @OneToMany(mappedBy = "to")
     @JsonIgnore
-    Set<Transactions> transactionsTo;
+    private Set<Transactions> transactionsTo;
 
     @OneToMany(mappedBy = "manager")
     @JsonIgnore
-    Set<KoiFish> koiFishs;
+    private Set<KoiFish> koiFishs;
 
     @OneToMany(mappedBy = "manager")
     @JsonIgnore
-    Set<Batch> batches;
+    private Set<Batch> batches;
 
     private double balance = 0;
-
 }

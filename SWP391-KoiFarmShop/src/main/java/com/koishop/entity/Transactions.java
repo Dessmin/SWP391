@@ -11,23 +11,23 @@ import lombok.Setter;
 public class Transactions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "from_id")
-    User from;
+    private User from;
 
     @ManyToOne
     @JoinColumn(name = "to_id")
-    User to;
+    private User to;
 
     @ManyToOne
     @JoinColumn(name = "payment_id")
     @JsonIgnore
-    Payment payment;
+    private Payment payment;
 
     @Enumerated(EnumType.STRING)
-    TransactionsStatus status;
+    private TransactionsStatus status;
 
-    String description;
+    private String description;
 }

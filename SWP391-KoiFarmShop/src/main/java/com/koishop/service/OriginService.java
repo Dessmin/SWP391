@@ -2,6 +2,7 @@ package com.koishop.service;
 
 import com.koishop.entity.Origin;
 import com.koishop.repository.OriginRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,12 @@ public class OriginService {
     private OriginRepository originRepository;
 
     public List<Origin> getAllOrigins() {
-        return originRepository.findAll();
+        return originRepository.findAllByDeletedIsFalse();
     }
 
     public List<String> listOriginNames() {
         List<String> list = new ArrayList<>();
-        for (Origin origin : originRepository.findAll()) {
+        for (Origin origin : originRepository.findAllByDeletedIsFalse()) {
             list.add(origin.getOriginName());
         }
         return list;
@@ -31,6 +32,7 @@ public class OriginService {
     }
 
     public Origin createOrigin(Origin origin) {
+        origin.setDeleted(false);
         return originRepository.save(origin);
     }
 
@@ -47,10 +49,15 @@ public class OriginService {
     }
 
     public void deleteOrigin(Integer id) {
-        originRepository.deleteById(id);
+        Origin existingOrigin = getOriginById(id);
+        existingOrigin.setDeleted(true);
+        originRepository.save(existingOrigin);
     }
 
     public Origin getOriginByName(String origin) {
-        return originRepository.getOriginByOriginName(origin);
+        Origin existingOrigin = originRepository.getOriginByOriginName(origin);
+        if (existingOrigin != null && !existingOrigin.isDeleted()) {
+            return existingOrigin;
+        }else throw new EntityNotFoundException("Origin not found");
     }
 }

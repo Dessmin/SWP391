@@ -49,6 +49,7 @@ public class UserService implements UserDetailsService {
             user.setJoinDate(new Date());
             user.setRole(Role.Customer);
             user.setPointsBalance(0.0);
+            user.setDeleted(false);
             User savedUser = userRepository.save(user);
 
             EmailDetail emailDetail = new EmailDetail();
@@ -87,7 +88,8 @@ public class UserService implements UserDetailsService {
     public void deleteUser(long id) {
         Optional<User> existingUser = userRepository.findById(id);
         if (existingUser.isEmpty()) throw new EntityNotFoundException("User not found!");
-        userRepository.deleteById(id);
+        existingUser.get().setDeleted(true);
+        userRepository.save(existingUser.get());
     }
 
     public UserResponse login(LoginRequest loginRequest) {
@@ -102,6 +104,7 @@ public class UserService implements UserDetailsService {
 
             // Lấy thông tin người dùng sau khi xác thực thành công
             User user = (User) authentication.getPrincipal();
+            if (user.isDeleted()) throw new EntityNotFoundException("User not found!");
             UserResponse userResponse = modelMapper.map(user, UserResponse.class);
             userResponse.setToken(tokenService.generateToken(user));
             return userResponse;
@@ -113,7 +116,7 @@ public class UserService implements UserDetailsService {
 
 
     public List<UserForList> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByDeletedIsFalse();
         Type listType = new TypeToken<List<UserForList>>() {}.getType();
         return modelMapper.map(users, listType);
     }
@@ -121,7 +124,7 @@ public class UserService implements UserDetailsService {
     public List<Integer> userPerMonth() {
         List<Integer> usersPerMonth = new ArrayList<>(Collections.nCopies(12, 0));
 
-        for (User user : userRepository.findAll()) {
+        for (User user : userRepository.findAllByDeletedIsFalse()) {
             if (user.getRole() == Role.Customer) {
                 int month = user.getJoinDate().getMonth();
                 usersPerMonth.set(month, usersPerMonth.get(month) + 1);
@@ -148,7 +151,7 @@ public class UserService implements UserDetailsService {
     public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         User user = userRepository.findByEmail(forgotPasswordRequest.getEmail());
 
-        if (user == null) throw new EntityNotFoundException("User not found!");
+        if (user == null || user.isDeleted()) throw new EntityNotFoundException("User not found!");
         else {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(user);

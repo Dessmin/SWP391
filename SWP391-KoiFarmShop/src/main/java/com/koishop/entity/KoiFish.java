@@ -83,4 +83,6 @@ public class KoiFish {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User manager;
+
+    private boolean deleted;
 }
