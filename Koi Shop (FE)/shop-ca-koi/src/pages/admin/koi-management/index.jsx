@@ -7,6 +7,8 @@ import {
   Radio,
   Table,
   Button,
+  Switch,
+  message,
 } from "antd";
 import Dashboard from "../../../components/dashboard";
 import { useEffect, useState } from "react";
@@ -33,7 +35,6 @@ function Koi() {
           },
         }
       );
-      // Cập nhật lại dataSource với con cá mới
       setDatasource([...dataSource, response.data]);
       loadKoiList();
     } catch (error) {
@@ -52,10 +53,17 @@ function Koi() {
           },
         }
       );
-      // Cập nhật state với dữ liệu nhận được từ server
-      setDatasource(response.data);
+      const koiList = response.data.map((koi) => ({
+        ...koi,
+        isForSale: getSaleStatusFromLocalStorage(koi.id), // Lấy trạng thái bán từ Local Storage
+      }));
+      setDatasource(koiList);
     } catch (error) {
       console.error("Error fetching koi list:", error);
+      notification.error({
+        message: "Lỗi",
+        description: "Không thể tải danh sách cá Koi.",
+      });
     }
   }
 
@@ -67,45 +75,54 @@ function Koi() {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      // Sau khi xóa, cập nhật lại danh sách
       setDatasource(dataSource.filter((koi) => koi.id !== id));
     } catch (error) {
       console.error("Error deleting koi fish:", error);
     }
   }
 
-  // Hàm để lấy chi tiết một con cá Koi
-  async function getKoiDetail(id) {
+  // Hàm để cập nhật trạng thái IsForSale
+  // Hàm cập nhật trạng thái bán
+  async function updateIsForSale(id, isForSale) {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/koi-fishes/koiFish/${id}`,
+      // Truyền giá trị isForSale mới vào payload của API
+      await axios.put(
+        `http://localhost:8080/api/koi-fishes/${id}/updateIsForSale`,
+        { isForSale: isForSale }, // Truyền đúng giá trị mới
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      console.log("Koi Detail:", response.data); // In chi tiết con cá ra console (bạn có thể hiển thị modal với dữ liệu này nếu muốn)
+      // Lưu giá trị mới vào Local Storage
+      saveSaleStatusToLocalStorage(id, isForSale);
+      // Tải lại danh sách sau khi cập nhật
+      loadKoiList();
+      message.success("Đã cập nhật trạng thái bán!");
     } catch (error) {
-      console.error("Error fetching koi detail:", error);
+      console.error("Error updating sale status:", error);
+      message.error("Không thể cập nhật trạng thái bán.");
     }
   }
 
-  // Gọi loadKoiList khi component được tải lần đầu
-  useEffect(() => {
-    loadKoiList();
-  }, []); // Chỉ gọi một lần khi component mount
-
-  const handleHideModel = () => {
-    setIsModalOpen(false);
+  // Hàm xử lý khi người dùng bật/tắt switch
+  const handleSwitchChange = async (checked, record) => {
+    await updateIsForSale(record.id, checked); // Truyền đúng giá trị checked vào hàm
+  };
+  // Hàm để lưu trạng thái bán vào Local Storage
+  const saveSaleStatusToLocalStorage = (id, isForSale) => {
+    const saleStatus = JSON.parse(localStorage.getItem("koiSaleStatus")) || {};
+    saleStatus[id] = isForSale;
+    localStorage.setItem("koiSaleStatus", JSON.stringify(saleStatus));
   };
 
-  const handleSubmit = (values) => {
-    fetchKoi(values); // Thêm cá mới
-    form.resetFields();
-    handleHideModel();
+  // Hàm để lấy trạng thái bán từ Local Storage
+  const getSaleStatusFromLocalStorage = (id) => {
+    const saleStatus = JSON.parse(localStorage.getItem("koiSaleStatus")) || {};
+    return saleStatus[id] !== undefined ? saleStatus[id] : true; // Đảm bảo trả về false nếu không có
   };
-
+  // Cột mới cho trạng thái IsForSale
   const columns = [
     {
       title: "Fish Name:",
@@ -139,16 +156,24 @@ function Koi() {
       render: (image) => <img src={image} width={150} alt="Koi fish" />,
     },
     {
+      title: "For Sale",
+      key: "isForSale",
+      render: (text, record) => (
+        <Switch
+          checked={record.isForSale} // Đảm bảo sử dụng đúng giá trị từ server
+          onChange={(checked) => handleSwitchChange(checked, record)}
+        />
+      ),
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (text, record) => (
         <div>
-          {/* Nút chi tiết */}
           <Link to={`/home/dashboard/koi/koidetail/${record.id}`}>
             <Button type="default">Detail</Button>
           </Link>
 
-          {/* Nút xóa */}
           <Button
             type="primary"
             danger
@@ -157,6 +182,7 @@ function Koi() {
           >
             Delete
           </Button>
+
           <Link to={`/home/dashboard/koi/certificate/${record.id}`}>
             <Button type="default">Certificate</Button>
           </Link>
@@ -170,15 +196,30 @@ function Koi() {
     setIsModalOpen(true);
   };
 
+  const handleHideModel = () => {
+    setIsModalOpen(false);
+  };
+
   // Đóng modal
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
   // Submit form thêm cá mới
-  function handleOk() {
+  const handleSubmit = (values) => {
+    fetchKoi(values);
+    form.resetFields();
+    handleHideModel();
+  };
+
+  const handleOk = () => {
     form.submit();
-  }
+  };
+
+  // Tải danh sách cá Koi khi component được mount
+  useEffect(() => {
+    loadKoiList();
+  }, []);
 
   return (
     <div>
@@ -188,8 +229,7 @@ function Koi() {
             Add new koi
           </Button>
         </div>
-        <Table dataSource={dataSource} columns={columns} />{" "}
-        {/* Hiển thị danh sách cá Koi */}
+        <Table dataSource={dataSource} columns={columns} />
         <Modal
           title={<div style={{ textAlign: "center" }}>Add New Koi</div>}
           open={isModalOpen}
@@ -298,7 +338,7 @@ function Koi() {
 
             <Form.Item
               label="Hình ảnh"
-              name="image" // Phải khớp với dataIndex trong bảng
+              name="image"
               rules={[
                 { required: true, message: "Vui lòng nhập URL hình ảnh" },
               ]}

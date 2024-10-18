@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table, Modal, Form, Input } from "antd";
+import { Button, Table, Modal, Form, Input, message } from "antd"; // Import thêm message
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -46,7 +46,8 @@ function Certificate() {
           },
         }
       );
-      setDataSource([...dataSource, response.data]); // Cập nhật danh sách chứng chỉ
+      setDataSource((prevData) => [...prevData, response.data]); // Cập nhật danh sách chứng chỉ
+      message.success("Added new certificate successfully");
     } catch (error) {
       console.error("Error adding certificate:", error.response || error);
       if (error.response) {
@@ -64,9 +65,13 @@ function Certificate() {
         },
       });
       // Cập nhật lại danh sách sau khi xóa
-      setDataSource(dataSource.filter((certificate) => certificate.id !== id));
+      setDataSource((prevData) =>
+        prevData.filter((certificate) => certificate.certificateID !== id)
+      );
+      message.success("Deleted certificate successfully"); // Hiển thị thông báo khi xóa thành công
     } catch (error) {
       console.error("Error deleting certificate:", error);
+      message.error("Failed to delete certificate");
     }
   }
 
@@ -95,7 +100,7 @@ function Certificate() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "id",
+      dataIndex: "certificateID",
       key: "id",
     },
     {
@@ -114,7 +119,7 @@ function Certificate() {
         <Button
           type="primary"
           danger
-          onClick={() => deleteCertificate(record.id)}
+          onClick={() => deleteCertificate(record.certificateID)}
         >
           Delete
         </Button>
@@ -128,7 +133,7 @@ function Certificate() {
       <Button type="primary" onClick={showAddCertificateModal}>
         Add New Certificate
       </Button>
-      <Table dataSource={dataSource} columns={columns} rowKey="id" />
+      <Table dataSource={dataSource} columns={columns} rowKey="certificateID" />
 
       {/* Modal thêm chứng chỉ */}
       <Modal
