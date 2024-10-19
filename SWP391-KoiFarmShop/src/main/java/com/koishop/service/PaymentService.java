@@ -1,6 +1,11 @@
 package com.koishop.service;
 
+import com.koishop.entity.OrderDetails;
+import com.koishop.entity.Orders;
 import com.koishop.entity.Payment;
+import com.koishop.entity.User;
+import com.koishop.exception.EntityNotFoundException;
+import com.koishop.models.orderdetails_model.OrderDetailsResponse;
 import com.koishop.models.payment_model.PaymentResponse;
 import com.koishop.repository.OrdersRepository;
 import com.koishop.repository.PaymentRepository;
@@ -8,7 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentService {
@@ -16,33 +23,103 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
     @Autowired
     OrdersRepository ordersRepository;
-
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    UserService userService;
+    @Autowired
+    OrdersService ordersService;
 
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
+    public PaymentResponse getPaymentById(Integer id) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Payment not found with id: " + id));
+
+        // Ánh xạ từ Payment sang PaymentResponse
+        return modelMapper.map(payment, PaymentResponse.class);
+    }
+    public List<PaymentResponse> getAllPayments() {
+        List<Payment> paymentList = paymentRepository.findAll();
+        List<PaymentResponse> paymentResponseList = new ArrayList<>();
+
+        // Ánh xạ từ Payment sang PaymentResponse
+        for (Payment payment : paymentList) {
+            PaymentResponse response = modelMapper.map(payment, PaymentResponse.class);
+
+            // Kiểm tra nếu Orders không null trước khi lấy orderId
+            if (payment.getOrders() != null) {
+                response.setOrderId(payment.getOrders().getOrderID());
+            }
+
+            paymentResponseList.add(response);
+        }
+
+        return paymentResponseList;
     }
 
 
 
-    public PaymentResponse createPayment(PaymentResponse paymentResponse) {
+    public List<PaymentResponse> getPaymentByOrder(Integer orderId) {
+        // Lấy danh sách thanh toán dựa trên orderId
+        List<Payment> payments = paymentRepository.findByOrders_OrderID(orderId);
 
-        Payment payment = modelMapper.map(paymentResponse, Payment.class);
+        if (payments.isEmpty()) {
+            throw new EntityNotFoundException("No payments found for Order ID: " + orderId);
+        }
 
-        return modelMapper.map(paymentRepository.save(payment), PaymentResponse.class);
-    }
-
-    public Payment updatePayment(int id, Payment updatedPayment) {
-        return paymentRepository.findById(id)
+        // Ánh xạ danh sách Payment thành danh sách PaymentResponse
+        return payments.stream()
                 .map(payment -> {
-//                    payment.setDescription(updatedPayment.getDescription());
-                    return paymentRepository.save(payment);
+                    PaymentResponse response = modelMapper.map(payment, PaymentResponse.class);
+                    // Lấy orderId từ Orders và thiết lập cho PaymentResponse
+                    response.setOrderId(payment.getOrders() != null ? payment.getOrders().getOrderID() : null);
+                    return response;
                 })
-                .orElseThrow(() -> new RuntimeException("Payment not found with id " + id));
+                .collect(Collectors.toList());
     }
 
-    public void deletePayment(int id) {
+    public List<PaymentResponse> getPaymentByUser() {
+        // Lấy người dùng hiện tại
+        User currentUser = userService.getCurrentUser();
+
+        // Lấy các đơn hàng của người dùng hiện tại
+        List<Orders> userOrders = ordersRepository.findOrdersByUser(currentUser);
+
+        List<PaymentResponse> paymentResponseList = new ArrayList<>();
+
+        // Lọc các thanh toán liên quan đến các đơn hàng của người dùng
+        for (Orders order : userOrders) {
+            Payment payment = paymentRepository.findByOrders(order);
+            if (payment != null) {
+                PaymentResponse response = modelMapper.map(payment, PaymentResponse.class);
+                response.setOrderId(payment.getOrders().getOrderID()); // Ánh xạ orderId
+                paymentResponseList.add(response);
+            }
+        }
+
+        return paymentResponseList;
+    }
+
+
+
+//    public PaymentResponse createPayment(PaymentResponse paymentResponse) {
+//
+//        Payment payment = modelMapper.map(paymentResponse, Payment.class);
+//
+//        return modelMapper.map(paymentRepository.save(payment), PaymentResponse.class);
+//    }
+//
+//    public Payment updatePayment(int id, Payment updatedPayment) {
+//        return paymentRepository.findById(id)
+//                .map(payment -> {
+//                    payment.setDescription(updatedPayment.getDescription());
+//                    return paymentRepository.save(payment);
+//                })
+//                .orElseThrow(() -> new RuntimeException("Payment not found with id " + id));
+//    }
+
+    public void deletePayment(Integer id) {
         paymentRepository.deleteById(id);
     }
+
+
 }

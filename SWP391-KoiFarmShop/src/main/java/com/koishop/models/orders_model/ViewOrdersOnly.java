@@ -1,14 +1,12 @@
 package com.koishop.models.orders_model;
 
-import com.koishop.entity.OrderDetails;
-import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
-public class OrderResponse {
+public class ViewOrdersOnly {
     private Integer orderID;
 
     private String userName;
@@ -18,8 +16,4 @@ public class OrderResponse {
     private Double totalAmount;
 
     private String orderStatus;
-
-
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
-    private List<OrderDetails> orderDetails;
 }

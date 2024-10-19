@@ -37,6 +37,6 @@ public class Payment {
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
     private Set<Transactions> transactions;
 
-    private boolean isDeleted;
+
 
 }

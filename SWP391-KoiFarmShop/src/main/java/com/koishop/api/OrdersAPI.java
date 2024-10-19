@@ -3,6 +3,7 @@ package com.koishop.api;
 import com.koishop.entity.Orders;
 import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.models.orders_model.OrderResponse;
+import com.koishop.models.orders_model.ViewOrdersOnly;
 import com.koishop.service.OrdersService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,18 @@ public class OrdersAPI {
     @GetMapping("list-all-orders")
     public ResponseEntity getAllOrders() {
         List<OrderResponse> orders = ordersService.getAllOrders();
+        return  ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/list-user-orders/summary")
+    public ResponseEntity getOrdersSummaryByUser() {
+        List<ViewOrdersOnly> orders = ordersService.getOrdersSummaryByUser();
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/list-orders/summary")
+    public ResponseEntity getOrdersSummary() {
+        List<ViewOrdersOnly> orders = ordersService.getOrdersSummary();
         return  ResponseEntity.ok(orders);
     }
 
@@ -78,7 +91,7 @@ public class OrdersAPI {
 
     @PutMapping("/{orderID}/update")
     public ResponseEntity updateOrder(@PathVariable int orderID, @RequestBody OrderRequest orderRequest) {
-        Orders updatedOrder = ordersService.updateOrder(orderID, orderRequest);
+        OrderResponse updatedOrder = ordersService.updateOrder(orderID, orderRequest);
         return ResponseEntity.ok(updatedOrder);
     }
 

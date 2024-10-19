@@ -38,6 +38,7 @@ public class Orders {
     @Size(max = 50, message = "Order status must not exceed 50 characters")
     private String orderStatus;
 
+
     @OneToOne(mappedBy = "orders")
     @JsonIgnore
     private Payment payment;
@@ -45,5 +46,7 @@ public class Orders {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderDetails> orderDetails;
 
+
     private boolean deleted;
+
 }

@@ -5,6 +5,7 @@ import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.models.orders_model.OrderResponse;
+import com.koishop.models.orders_model.ViewOrdersOnly;
 import com.koishop.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class OrdersService {
         for (Orders order : ordersRepository.findAll()) {
             OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
             orderResponse.setUserName(order.getUser().getUsername());
-            orderResponse.setPaymentId(order.getPayment().getPaymentID());
+
             orderResponses.add(orderResponse);
         }
         return orderResponses;
@@ -70,16 +71,74 @@ public class OrdersService {
     public List<OrderResponse> getAllOrdersByUser() {
         User user = userService.getCurrentUser();
         List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Orders order : ordersRepository.findAll()) {
+        for (Orders order : ordersRepository.findByDeletedFalse()) {
             if (order.getUser().getUsername().equals(user.getUsername())) {
                 OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
                 orderResponse.setUserName(order.getUser().getUsername());
-                orderResponse.setPaymentId(order.getPayment().getPaymentID());
+
                 orderResponses.add(orderResponse);
             }
         }
         return orderResponses;
     }
+
+    public List<ViewOrdersOnly> getOrdersSummary() {
+        // Lấy danh sách tất cả các đơn hàng
+        List<Orders> ordersList = ordersRepository.findAll();
+        List<ViewOrdersOnly> viewOrdersOnlyList = new ArrayList<>();
+
+        // Duyệt qua từng đơn hàng trong danh sách
+        for (Orders order : ordersList) {
+            // Sử dụng ModelMapper để ánh xạ các field chung giữa Orders và ViewOrdersOnly
+            ViewOrdersOnly ordersOnly = modelMapper.map(order, ViewOrdersOnly.class);
+
+            // Kiểm tra nếu User là null, vứt ra ngoại lệ
+            if (order.getUser() == null) {
+                throw new RuntimeException("User not found for Order ID: " + order.getOrderID());
+            }
+            // Thiết lập userName từ entity User
+            ordersOnly.setUserName(order.getUser().getUsername());
+
+
+            // Thêm đối tượng đã ánh xạ vào danh sách kết quả
+            viewOrdersOnlyList.add(ordersOnly);
+        }
+
+        return viewOrdersOnlyList;
+    }
+
+
+    public List<ViewOrdersOnly> getOrdersSummaryByUser() {
+        // Lấy user hiện tại
+        User currentUser = userService.getCurrentUser();
+
+        // Danh sách để chứa các ViewOrdersOnly DTO
+        List<ViewOrdersOnly> viewOrdersOnlyList = new ArrayList<>();
+
+        // Lấy danh sách tất cả các đơn hàng và lọc theo user hiện tại
+        for (Orders order : ordersRepository.findByDeletedFalse()) {
+            // Kiểm tra nếu đơn hàng thuộc về user hiện tại
+            if (order.getUser() != null && order.getUser().getUsername().equals(currentUser.getUsername())) {
+                // Ánh xạ đối tượng Orders sang ViewOrdersOnly DTO
+                ViewOrdersOnly viewOrder = modelMapper.map(order, ViewOrdersOnly.class);
+
+                // Thiết lập userName từ entity User (kiểm tra user có null không)
+                if (order.getUser() != null) {
+                    viewOrder.setUserName(order.getUser().getUsername());
+                } else {
+                    throw new RuntimeException("User không tồn tại cho đơn hàng này.");
+                }
+
+
+
+                // Thêm đối tượng ViewOrdersOnly vào danh sách
+                viewOrdersOnlyList.add(viewOrder);
+            }
+        }
+
+        return viewOrdersOnlyList;
+    }
+
 
     // Create Order
     public Orders createOrder(OrderRequest orderRequest) {
@@ -95,8 +154,8 @@ public class OrdersService {
             orderDetail.setProductId(orderDetailsRequest.getProductId());
             orderDetail.setProductType(orderDetailsRequest.getProductType());
             orderDetail.setQuantity(orderDetailsRequest.getQuantity());
-            orderDetail.setUnitPrice(orderDetailsRequest.getPrice());
-            total += orderDetailsRequest.getQuantity() * orderDetailsRequest.getPrice();
+            orderDetail.setUnitPrice(orderDetailsRequest.getUnitPrice());
+            total += orderDetailsRequest.getQuantity() * orderDetailsRequest.getUnitPrice();
 
             if (orderDetailsRequest.getProductType() == ProductType.KoiFish) {
                 koiFishService.updateIsForSale(orderDetailsRequest.getProductId());
@@ -107,10 +166,12 @@ public class OrdersService {
             }
 
             orderDetails.add(orderDetail);
+
         }
         order.setOrderDetails(orderDetails);
         order.setTotalAmount(total);
         order.setOrderStatus("Pending");
+        order.setDeleted(false);
         return ordersRepository.save(order);
     }
 
@@ -121,7 +182,7 @@ public class OrdersService {
         ordersRepository.save(order); // Lưu đơn hàng đã cập nhật
     }
 
-    public Orders updateOrder(Integer orderId, OrderRequest orderRequest) {
+    public OrderResponse updateOrder(Integer orderId, OrderRequest orderRequest) {
         // Lấy thông tin đơn hàng hiện tại từ database
         User user = userService.getCurrentUser();
         Orders existingOrder = ordersRepository.findOrderByUserAndOrderID(user, orderId);
@@ -190,13 +251,25 @@ public class OrdersService {
         existingOrder.setTotalAmount(total);
 
         // Lưu đơn hàng đã cập nhật
-        return ordersRepository.save(existingOrder);
+        Orders updatedOrder = ordersRepository.save(existingOrder);
+
+        // Tạo OrderResponse để trả về
+        OrderResponse orderResponse = modelMapper.map(updatedOrder, OrderResponse.class);
+        orderResponse.setUserName(updatedOrder.getUser().getUsername()); // Giả sử có trường User trong Orders
+
+        return orderResponse;
     }
 
-    public void deleteOrder(int id) {
-        Orders order = ordersRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        ordersRepository.delete(order);
+
+
+
+
+
+    public void deleteOrder(Integer id) {
+        Orders orders = ordersRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found for this id :: " + id));
+        orders.setDeleted(true);
+        ordersRepository.save(orders);
     }
 
     public List<Integer> IncomePerMonth() {

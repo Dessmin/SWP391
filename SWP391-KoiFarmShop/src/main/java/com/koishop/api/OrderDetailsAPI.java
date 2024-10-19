@@ -1,6 +1,8 @@
 package com.koishop.api;
 
 import com.koishop.entity.OrderDetails;
+import com.koishop.models.orderdetails_model.OrderDetailsRequest;
+import com.koishop.models.orderdetails_model.OrderDetailsResponse;
 import com.koishop.service.OrderDetailsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,36 @@ public class OrderDetailsAPI {
     @Autowired
     private OrderDetailsService orderDetailService;
 
-    @GetMapping
-    public List<OrderDetails> getAllOrderDetails() {
-        return orderDetailService.getAllOrderDetails();
+    @GetMapping("/{orderDetailId}/get-orderDetail")
+    public ResponseEntity getOrderDetailsById(@PathVariable Integer orderDetailId) {
+        OrderDetailsResponse response = orderDetailService.getOrderDetailsById(orderDetailId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list-all-orderDetails")
+    public ResponseEntity getAllOrderDetails() {
+        List<OrderDetailsResponse> response = orderDetailService.getAllOrderDetails();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{orderId}/list-order-orderDetails")
+    public ResponseEntity getOrderDetailsByOrder(@PathVariable Integer orderId) {
+        List<OrderDetailsResponse> response = orderDetailService.getOrderDetailsByOrder(orderId);
+        return ResponseEntity.ok(response);
     }
 
 
 
-    @PostMapping("create-orderdetail")
-    public OrderDetails createOrderDetail(@RequestBody OrderDetails orderDetail) {
-        return orderDetailService.createOrderDetail(orderDetail);
-    }
+//    @PostMapping("create-orderdetail")
+//    public OrderDetails createOrderDetail(@RequestBody OrderDetails orderDetail) {
+//        return orderDetailService.createOrderDetail(orderDetail);
+//    }
+//
 
     @PutMapping("/{orderDetailID}")
-    public ResponseEntity<OrderDetails> updateOrderDetail(@PathVariable int orderDetailID, @RequestBody OrderDetails orderDetailDetails) {
+    public ResponseEntity<OrderDetailsResponse> updateOrderDetail(@PathVariable int orderDetailID, @RequestBody OrderDetailsRequest orderDetailsRequest) {
         try {
-            OrderDetails updatedOrderDetail = orderDetailService.updateOrderDetail(orderDetailID, orderDetailDetails);
+            OrderDetailsResponse updatedOrderDetail = orderDetailService.updateOrderDetail(orderDetailID, orderDetailsRequest);
             return ResponseEntity.ok(updatedOrderDetail);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

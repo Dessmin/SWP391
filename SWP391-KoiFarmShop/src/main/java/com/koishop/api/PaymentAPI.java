@@ -18,30 +18,50 @@ public class PaymentAPI {
     @Autowired
     private PaymentService paymentService;
 
-    // Get all payments
-    @GetMapping("list-payments")
-    public List<Payment> getAllPayments() {
-        return paymentService.getAllPayments();
+    @GetMapping("/{paymentId}/get-payment")
+    public ResponseEntity getPaymentById(Integer paymentId) {
+        PaymentResponse response = paymentService.getPaymentById(paymentId);
+        return ResponseEntity.ok(response);
     }
 
 
-    // Create new payment
-    @PostMapping("add-payment")
-    public ResponseEntity createPayment(@RequestBody PaymentResponse paymentResponse) {
-        PaymentResponse payment = paymentService.createPayment(paymentResponse);
-        return ResponseEntity.ok(payment);
+    @GetMapping("/list-payments")
+    public ResponseEntity getAllPayments() {
+        List<PaymentResponse> response = paymentService.getAllPayments();
+        return ResponseEntity.ok(response);
     }
 
-    // Update payment by ID
-    @PutMapping("/{paymentID}")
-    public ResponseEntity<Payment> updatePayment(@PathVariable int paymentID, @RequestBody Payment updatedPayment) {
-        try {
-            Payment payment = paymentService.updatePayment(paymentID, updatedPayment);
-            return ResponseEntity.ok(payment);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/list-user-payments")
+    public ResponseEntity getPaymentByUser() {
+        List<PaymentResponse> response = paymentService.getPaymentByUser();
+        return ResponseEntity.ok(response);
     }
+
+
+    @GetMapping("/{orderId}/list-order-payments")
+    public ResponseEntity getPaymentByOrder(@PathVariable Integer orderId) {
+        List<PaymentResponse> response = paymentService.getPaymentByOrder(orderId);
+        return ResponseEntity.ok(response);
+    }
+
+
+//    // Create new payment
+//    @PostMapping("add-payment")
+//    public ResponseEntity createPayment(@RequestBody PaymentResponse paymentResponse) {
+//        PaymentResponse payment = paymentService.createPayment(paymentResponse);
+//        return ResponseEntity.ok(payment);
+//    }
+//
+//    // Update payment by ID
+//    @PutMapping("/{paymentID}")
+//    public ResponseEntity<Payment> updatePayment(@PathVariable int paymentID, @RequestBody Payment updatedPayment) {
+//        try {
+//            Payment payment = paymentService.updatePayment(paymentID, updatedPayment);
+//            return ResponseEntity.ok(payment);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     // Delete payment by ID
     @DeleteMapping("/{paymentID}")

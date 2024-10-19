@@ -9,6 +9,6 @@ import java.util.List;
 public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     List<Orders> findOrdersByUser(User user);
     Orders findOrderByUserAndOrderID(User user, Integer OrderID);
-
+    List<Orders> findByDeletedFalse();
 
 }
