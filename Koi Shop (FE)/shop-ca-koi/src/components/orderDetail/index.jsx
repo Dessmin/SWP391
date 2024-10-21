@@ -91,12 +91,12 @@ const OrderDetails = () => {
           <Descriptions.Item label="Tổng tiền">
             {order.totalAmount} VND
           </Descriptions.Item>
-          <Descriptions.Item label="Ngày tạo">
+          {/* <Descriptions.Item label="Ngày tạo">
             {new Date(order.createDate).toLocaleString()}
-          </Descriptions.Item>
-          <Descriptions.Item label="Trạng thái">
+          </Descriptions.Item> */}
+          {/* <Descriptions.Item label="Trạng thái">
             {order.status}
-          </Descriptions.Item>
+          </Descriptions.Item> */}
           <Descriptions.Item label="Chi tiết sản phẩm">
             {order.orderDetails.map((item, index) => (
               <div key={index}>

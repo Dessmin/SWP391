@@ -45,7 +45,7 @@ const Cart = () => {
         productId: item.id,
         productType: item.type, // "KoiFish" hoặc "Batch"
         quantity: item.type === "Batch" ? item.quantity : 1, // Batch có số lượng, KoiFish mặc định là 1
-        price: item.price,
+        unitPrice: item.price,
       })),
     };
   
@@ -124,9 +124,9 @@ const Cart = () => {
   return (
     <div>
       
-      <h2>Your Cart</h2>
+      <h1 style={{textAlign: "center"}}>Your cart</h1>
       {cartItems.length === 0 ? (
-        <p>No items in cart</p>
+        <p style={{textAlign: "center"}} >No items in cart</p>
       ) : (
         <div>
           <Table columns={columns} dataSource={cartItems} rowKey="id" />

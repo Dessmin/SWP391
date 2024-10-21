@@ -23,9 +23,9 @@ function HomeLoged() {
       </div>
 
       <CartProvider >
-        <h2>Koi list</h2>
+        <h2 style={{textAlign: "center"}}>Koi list</h2>
         <KoiList />
-        <h2>Batch list</h2>
+        <h2 style={{textAlign: "center"}}>Batch list</h2>
         <BatchList />
       </CartProvider>
 

@@ -22,6 +22,7 @@ const items = [
     getItem("Koi", "2-3", <FileOutlined />), // Mục con cho Koi
   ]),
   getItem("Consignment", "3", <UserOutlined />),
+  getItem("Order", "4", <UserOutlined />),
 ];
 
 const Dashboard = ({ children }) => {
@@ -48,6 +49,9 @@ const Dashboard = ({ children }) => {
     }
     if (item.key === "3") {
       navigate("/home/dashboard/consignment");
+    }
+    if (item.key === "4") {
+      navigate("/home/dashboard/order");
     }
   };
 

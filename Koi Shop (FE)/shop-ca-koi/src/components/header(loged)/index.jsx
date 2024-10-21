@@ -9,6 +9,7 @@ function HeaderLoged() {
     const user = useSelector((state) => state.user);// Lấy thông tin người dùng từ Redux store
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    // const u = sessionStorage.getItem('user')
 
     const handleLogout = () => {
         // Xóa thông tin người dùng khỏi Redux
@@ -45,6 +46,8 @@ function HeaderLoged() {
                 <Link to="/cart"><ShoppingCartOutlined /></Link>
                 
                 <li onClick={() => navigate(`/detailUser/${user.userId}`)}>Welcome, {user.username}</li>
+                
+                
                     <li onClick={handleLogout}>Log out</li>
                 </ul>
             </div>

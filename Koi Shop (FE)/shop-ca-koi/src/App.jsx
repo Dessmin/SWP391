@@ -20,6 +20,9 @@ import Consignment from "./pages/consignment";
 import ConsignmentManagement from "./pages/admin/consignment-management";
 import Certificate from "./pages/certificate-detail-page";
 import CompareKoi from "./pages/comparison";
+import OrderManagement from "./pages/admin/order-management";
+import OrderDetailAdmin from "./pages/admin/orderDetail-management";
+import PaymentAdmin from "./pages/admin/payment-management";
 
 function App() {
   const router = createBrowserRouter([
@@ -50,6 +53,10 @@ function App() {
     {
       path: "/home/dashboard/consignment",
       element: <ConsignmentManagement />,
+    },
+    {
+      path: "/home/dashboard/order",
+      element: <OrderManagement />,
     },
     {
       path: "cart",
@@ -106,6 +113,14 @@ function App() {
     {
       path: "/koi-comparison/:id/:compareId",
       element: <CompareKoi />,
+    },
+    {
+      path: "/orderDetail/:id",
+      element: <OrderDetailAdmin />,
+    },
+    {
+      path: "/payment/:id",
+      element: <PaymentAdmin />,
     },
   ]);
 

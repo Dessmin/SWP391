@@ -31,7 +31,7 @@ function CardKoi({ koi }) {
       <div className="koi-card__content">
         <div className="koi-card__info1">
           <span><strong>Name:</strong> {fishName}</span>
-          <span><strong>Price:</strong> {price}</span>
+          <span><strong>Price:</strong> {price.toLocaleString()}VND</span>
         </div>
         <div className="koi-card__info2">
           <span><strong>Origin:</strong> {origin}</span>
