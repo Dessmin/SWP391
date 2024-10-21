@@ -46,17 +46,20 @@ const PaymentSuccess = () => {
 
     const addTransaction = async () => {
       try {
-        await apiOrder.post(`${orderId}/transaction`, {}, {
-          headers: {
-            Authorization: `Bearer ${user.token}`, // Gửi token trong header
-          },
-        });
+        await apiOrder.post(
+          `${orderId}/transaction`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`, // Gửi token trong header
+            },
+          }
+        );
       } catch (error) {
         console.log("Error adding transaction:", error);
         // Có thể thêm thông báo lỗi nếu cần
       }
     };
-    
 
     // Fetch order details only if payment was successful
     fetchOrder();

@@ -23,6 +23,8 @@ import CompareKoi from "./pages/comparison";
 import OrderManagement from "./pages/admin/order-management";
 import OrderDetailAdmin from "./pages/admin/orderDetail-management";
 import PaymentAdmin from "./pages/admin/payment-management";
+import Batch from "./pages/admin/batch-management";
+import Promotion from "./pages/admin/promotion-management";
 
 function App() {
   const router = createBrowserRouter([
@@ -121,6 +123,14 @@ function App() {
     {
       path: "/payment/:id",
       element: <PaymentAdmin />,
+    },
+    {
+      path: "/home/dashboard/batch",
+      element: <Batch />,
+    },
+    {
+      path: "/home/dashboard/promotion",
+      element: <Promotion />,
     },
   ]);
 
