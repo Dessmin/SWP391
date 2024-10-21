@@ -49,6 +49,11 @@ public class OrderDetailsService {
 
         // Ánh xạ từ OrderDetails sang OrderDetailsResponse bằng vòng lặp for
         for (OrderDetails orderDetails : orderDetailsList) {
+            // Kiểm tra xem đơn hàng có bị xóa không
+            if (orderDetails.getOrders().isDeleted()) {
+                throw new RuntimeException("Order with ID " + orderDetails.getOrders().getOrderID() + " has been deleted!");
+            }
+
             OrderDetailsResponse response = modelMapper.map(orderDetails, OrderDetailsResponse.class);
             response.setOrderId(orderDetails.getOrders().getOrderID());
             orderDetailsResponseList.add(response);
@@ -58,12 +63,18 @@ public class OrderDetailsService {
     }
 
 
+
     public List<OrderDetailsResponse> getOrderDetailsByOrder(Integer orderId) {
         // Lấy danh sách OrderDetails theo orderId
         List<OrderDetails> orderDetailsList = orderDetailsRepository.findByOrders_OrderID(orderId);
         if (orderDetailsList.isEmpty()) {
             throw new EntityNotFoundException("No OrderDetails found for Order ID: " + orderId);
         }
+
+        if (orderDetailsList.get(0).getOrders().isDeleted()) {
+            throw new RuntimeException("Order with ID " + orderId + " has been deleted!");
+        }
+
         List<OrderDetailsResponse> orderDetailsResponses = new ArrayList<>();
 
         // Ánh xạ từ OrderDetails sang OrderDetailsResponse
@@ -149,6 +160,12 @@ public class OrderDetailsService {
         // Tìm OrderDetails theo id, nếu không tồn tại thì ném lỗi
         OrderDetails orderDetails = orderDetailsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order Detail not found"));
+
+        // Kiểm tra xem đơn hàng liên kết có bị xóa không
+        if (orderDetails.getOrders().isDeleted()) {
+            throw new RuntimeException("Cannot update Order Detail. The order with ID "
+                    + orderDetails.getOrders().getOrderID() + " has been deleted.");
+        }
 
         // Ánh xạ từ OrderDetailsRequest vào thực thể orderDetails hiện tại
         modelMapper.map(orderDetailsRequest, orderDetails);

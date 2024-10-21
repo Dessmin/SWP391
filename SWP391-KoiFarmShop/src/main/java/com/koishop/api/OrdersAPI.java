@@ -66,7 +66,7 @@ public class OrdersAPI {
         return ResponseEntity.ok("Success");
     }
 
-    @PutMapping("/vnpay-return")
+    @GetMapping("/vnpay-return")
     public ResponseEntity<String> handleVnpayReturn(@RequestParam Map<String, String> params) throws Exception {
         String responseCode = params.get("vnp_ResponseCode");
         String txnRef = params.get("vnp_TxnRef");

@@ -54,7 +54,7 @@ public class OrdersService {
 
     public List<OrderResponse> getAllOrders() {
         List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Orders order : ordersRepository.findAll()) {
+        for (Orders order : ordersRepository.findByDeletedFalse()) {
             OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
             orderResponse.setUserName(order.getUser().getUsername());
 
@@ -74,12 +74,13 @@ public class OrdersService {
                 orderResponses.add(orderResponse);
             }
         }
+
         return orderResponses;
     }
 
     public List<ViewOrdersOnly> getOrdersSummary() {
         // Lấy danh sách tất cả các đơn hàng
-        List<Orders> ordersList = ordersRepository.findAll();
+        List<Orders> ordersList = ordersRepository.findByDeletedFalse();
         List<ViewOrdersOnly> viewOrdersOnlyList = new ArrayList<>();
 
         // Duyệt qua từng đơn hàng trong danh sách
@@ -362,7 +363,6 @@ public class OrdersService {
 
 
         payment.setTransactions(setTransactions);
-
 
         userRepository.save(customer);
         userRepository.save(manager);

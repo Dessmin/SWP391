@@ -19,7 +19,8 @@ import java.util.List;
 
 @Service
 public class BatchService {
-
+    @Autowired
+    UserService userService;
     @Autowired
     BatchRepository batchRepository;
     @Autowired
@@ -57,6 +58,7 @@ public class BatchService {
     public BatchDetailUpdate createBatch(BatchDetailUpdate batch) {
         Batch newBatch = modelMapper.map(batch, Batch.class);
         newBatch.setBreed(breedsService.getBreedByName(batch.getBreed()));
+        newBatch.setManager(userService.getCurrentUser());
         newBatch.setIsSale(true);
         batchRepository.save(newBatch);
         return batch;
