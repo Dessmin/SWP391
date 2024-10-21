@@ -9,7 +9,6 @@ import {
   Button,
   Switch,
   message,
-  notification,
 } from "antd";
 import Dashboard from "../../../components/dashboard";
 import { useEffect, useState } from "react";
@@ -19,8 +18,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Koi() {
-  // Dữ liệu mẫu
-  const [dataSource, setDatasource] = useState([]);
+  const [dataSource, setDatasource] = useState([]); // State lưu trữ danh sách Koi
   const [form] = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useSelector((state) => state.user);
@@ -44,7 +42,7 @@ function Koi() {
     }
   }
 
-  // Hàm để tải danh sách các con cá Koi từ API
+  // Hàm để tải danh sách các con cá Koi
   async function loadKoiList() {
     try {
       const response = await axios.get(
@@ -55,7 +53,11 @@ function Koi() {
           },
         }
       );
-      setDatasource(response.data);
+      const koiList = response.data.map((koi) => ({
+        ...koi,
+        isForSale: getSaleStatusFromLocalStorage(koi.id), // Lấy trạng thái bán từ Local Storage
+      }));
+      setDatasource(koiList);
     } catch (error) {
       console.error("Error fetching koi list:", error);
       notification.error({
@@ -66,62 +68,64 @@ function Koi() {
   }
 
   // Hàm để xóa một con cá Koi
-  // Hàm để xóa một con cá Koi
-  const handleDeleteKoi = async (id) => {
+  async function deleteKoi(id) {
     try {
-      // Thay đổi từ axios.delete sang axios.put để cập nhật trạng thái deleted
-      await axios.put(
-        `http://localhost:8080/api/koi-fishes/${id}/delete`,
-        {}, // body rỗng vì chỉ cập nhật trạng thái
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      // Cập nhật lại dataSource sau khi cập nhật trạng thái deleted
-      setDatasource((prevData) =>
-        prevData.map(
-          (koi) => (koi.id === id ? { ...koi, deleted: true } : koi) // Đánh dấu cá là đã xóa
-        )
-      );
-      message.success("Xóa cá Koi thành công!");
+      await axios.delete(`http://localhost:8080/api/koi-fishes/${id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      setDatasource(dataSource.filter((koi) => koi.id !== id));
     } catch (error) {
       console.error("Error deleting koi fish:", error);
-      message.error("Không thể xóa cá Koi.");
     }
-  };
+  }
 
-  // Hàm để cập nhật trạng thái bán
-  const handleIsForSaleChange = async (id, currentStatus) => {
+  // Hàm để cập nhật trạng thái IsForSale
+  // Hàm cập nhật trạng thái bán
+  async function updateIsForSale(id, isForSale) {
     try {
-      // Gửi yêu cầu cập nhật trạng thái isForSale
+      // Truyền giá trị isForSale mới vào payload của API
       await axios.put(
         `http://localhost:8080/api/koi-fishes/${id}/updateIsForSale`,
-        {},
+        { isForSale: isForSale }, // Truyền đúng giá trị mới
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      // Cập nhật trạng thái mới trên giao diện
-      setDatasource((prevFishes) =>
-        prevFishes.map((fish) =>
-          fish.id === id ? { ...fish, isForSale: !currentStatus } : fish
-        )
-      );
-      message.success("Cập nhật trạng thái thành công!");
-    } catch (err) {
-      console.error("Error updating sale status:", err);
+      // Lưu giá trị mới vào Local Storage
+      saveSaleStatusToLocalStorage(id, isForSale);
+      // Tải lại danh sách sau khi cập nhật
+      loadKoiList();
+      message.success("Đã cập nhật trạng thái bán!");
+    } catch (error) {
+      console.error("Error updating sale status:", error);
       message.error("Không thể cập nhật trạng thái bán.");
     }
+  }
+
+  // Hàm xử lý khi người dùng bật/tắt switch
+  const handleSwitchChange = async (checked, record) => {
+    await updateIsForSale(record.id, checked); // Truyền đúng giá trị checked vào hàm
+  };
+  // Hàm để lưu trạng thái bán vào Local Storage
+  const saveSaleStatusToLocalStorage = (id, isForSale) => {
+    const saleStatus = JSON.parse(localStorage.getItem("koiSaleStatus")) || {};
+    saleStatus[id] = isForSale;
+    localStorage.setItem("koiSaleStatus", JSON.stringify(saleStatus));
   };
 
-  // Cột cho bảng cá Koi
+  // Hàm để lấy trạng thái bán từ Local Storage
+  const getSaleStatusFromLocalStorage = (id) => {
+    const saleStatus = JSON.parse(localStorage.getItem("koiSaleStatus")) || {};
+    return saleStatus[id] !== undefined ? saleStatus[id] : true; // Đảm bảo trả về false nếu không có
+  };
+  // Cột mới cho trạng thái IsForSale
   const columns = [
     {
-      title: "Fish Name",
+      title: "Fish Name:",
       dataIndex: "fishName",
       key: "fishName",
     },
@@ -153,12 +157,11 @@ function Koi() {
     },
     {
       title: "For Sale",
-      dataIndex: "isForSale",
       key: "isForSale",
-      render: (isForSale, record) => (
+      render: (text, record) => (
         <Switch
-          checked={isForSale}
-          onChange={() => handleIsForSaleChange(record.id, isForSale)}
+          checked={record.isForSale} // Đảm bảo sử dụng đúng giá trị từ server
+          onChange={(checked) => handleSwitchChange(checked, record)}
         />
       ),
     },
@@ -171,21 +174,14 @@ function Koi() {
             <Button type="default">Detail</Button>
           </Link>
 
-          {/* Hiển thị trạng thái đã xóa hoặc nút xóa */}
-          {record.deleted ? (
-            <Button>
-              <span style={{ color: "red" }}>Is Delete</span>
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              danger
-              onClick={() => handleDeleteKoi(record.id)} // Gọi hàm update deleted
-              style={{ marginRight: 8 }}
-            >
-              Delete
-            </Button>
-          )}
+          <Button
+            type="primary"
+            danger
+            onClick={() => deleteKoi(record.id)}
+            style={{ marginRight: 8 }}
+          >
+            Delete
+          </Button>
 
           <Link to={`/home/dashboard/koi/certificate/${record.id}`}>
             <Button type="default">Certificate</Button>
@@ -195,6 +191,7 @@ function Koi() {
     },
   ];
 
+  // Hiển thị modal thêm cá mới
   const handleshowModal = () => {
     setIsModalOpen(true);
   };
@@ -203,10 +200,12 @@ function Koi() {
     setIsModalOpen(false);
   };
 
+  // Đóng modal
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  // Submit form thêm cá mới
   const handleSubmit = (values) => {
     fetchKoi(values);
     form.resetFields();
@@ -217,6 +216,7 @@ function Koi() {
     form.submit();
   };
 
+  // Tải danh sách cá Koi khi component được mount
   useEffect(() => {
     loadKoiList();
   }, []);
@@ -229,7 +229,7 @@ function Koi() {
             Add new koi
           </Button>
         </div>
-        <Table dataSource={dataSource} columns={columns} rowKey="id" />
+        <Table dataSource={dataSource} columns={columns} />
         <Modal
           title={<div style={{ textAlign: "center" }}>Add New Koi</div>}
           open={isModalOpen}
@@ -289,9 +289,17 @@ function Koi() {
             <Form.Item
               label="Birth Date"
               name="birthDate"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: "Please select birth date!" }]}
             >
               <DatePicker />
+            </Form.Item>
+
+            <Form.Item
+              label="Diet"
+              name="diet"
+              rules={[{ required: true, message: "Please input diet!" }]}
+            >
+              <Input />
             </Form.Item>
 
             <Form.Item
@@ -299,7 +307,7 @@ function Koi() {
               name="size"
               rules={[{ required: true, message: "Please input size!" }]}
             >
-              <InputNumber />
+              <InputNumber min={0} />
             </Form.Item>
 
             <Form.Item
@@ -307,7 +315,35 @@ function Koi() {
               name="price"
               rules={[{ required: true, message: "Please input price!" }]}
             >
-              <InputNumber />
+              <InputNumber min={0} />
+            </Form.Item>
+
+            <Form.Item
+              label="Food"
+              name="food"
+              rules={[{ required: true, message: "Please input food type!" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Screening Rate"
+              name="screeningRate"
+              rules={[
+                { required: true, message: "Please input screening rate!" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Hình ảnh"
+              name="image"
+              rules={[
+                { required: true, message: "Vui lòng nhập URL hình ảnh" },
+              ]}
+            >
+              <Input placeholder="Nhập URL hình ảnh" />
             </Form.Item>
           </Form>
         </Modal>

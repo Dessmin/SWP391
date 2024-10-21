@@ -22,8 +22,7 @@ const items = [
     getItem("Koi", "2-3", <FileOutlined />), // Mục con cho Koi
   ]),
   getItem("Consignment", "3", <UserOutlined />),
-  getItem("Promotion", "4", <FileOutlined />),
-  getItem("Batch", "5", <FileOutlined />),
+  getItem("Order", "4", <UserOutlined />),
 ];
 
 const Dashboard = ({ children }) => {
@@ -52,10 +51,7 @@ const Dashboard = ({ children }) => {
       navigate("/home/dashboard/consignment");
     }
     if (item.key === "4") {
-      navigate("/home/dashboard/promotion");
-    }
-    if (item.key === "5") {
-      navigate("/home/dashboard/batch");
+      navigate("/home/dashboard/order");
     }
   };
 
@@ -79,10 +75,10 @@ const Dashboard = ({ children }) => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         {children}
-        <Link to="/home">
-          <Button>Trở về</Button>
-        </Link>
+        <Link to="/home"><Button>Trở về</Button></Link>
+        
       </Layout>
+      
     </Layout>
   );
 };

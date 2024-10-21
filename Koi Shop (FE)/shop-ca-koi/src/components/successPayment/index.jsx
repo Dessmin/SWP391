@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button, Spin, Alert } from "antd";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import apiOrder from "../../config/api-order";
 
 const PaymentSuccess = () => {
   const user = useSelector((state) => state.user);
@@ -35,14 +36,27 @@ const PaymentSuccess = () => {
         setOrder(response.data);
         setLoading(false);
 
-        // if (location.search) {
-        //     navigate(`/success/${orderId}`, { replace: true });
-        //   }
+        // Gọi hàm thêm giao dịch
+        await addTransaction(); // Gọi hàm thêm giao dịch sau khi nhận được đơn hàng
       } catch (err) {
         setError("Không thể tải thông tin đơn hàng.");
         setLoading(false);
       }
     };
+
+    const addTransaction = async () => {
+      try {
+        await apiOrder.post(`${orderId}/transaction`, {}, {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          },
+        });
+      } catch (error) {
+        console.log("Error adding transaction:", error);
+        // Có thể thêm thông báo lỗi nếu cần
+      }
+    };
+    
 
     // Fetch order details only if payment was successful
     fetchOrder();
