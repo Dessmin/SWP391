@@ -7,6 +7,7 @@ import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.models.orders_model.OrderResponse;
 import com.koishop.models.orders_model.ViewOrdersOnly;
 import com.koishop.repository.*;
+import org.hibernate.query.Order;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,30 +26,24 @@ import java.util.*;
 public class OrdersService {
     @Autowired
     private OrdersRepository ordersRepository;
-
     @Autowired
     UserService userService;
-
     @Autowired
     KoiFishRepository koiFishRepository;
-
     @Autowired
     BatchRepository batchRepository;
-
     @Autowired
     ModelMapper modelMapper;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     PaymentRepository paymentRepository;
-
     @Autowired
     KoiFishService koiFishService;
-
     @Autowired
     BatchService batchService;
+    @Autowired
+    OrderDetailsRepository orderDetailsRepository;
 
 
     public Orders getOderById(Integer id) {
@@ -145,7 +140,7 @@ public class OrdersService {
         User user = userService.getCurrentUser();
         Orders order = new Orders();
         List<OrderDetails> orderDetails = new ArrayList<>();
-        double total = 0;
+        double total = orderRequest.getTotalAmount();
         order.setUser(user);
         order.setOrderDate(new Date());
         for (OrderDetailsRequest orderDetailsRequest: orderRequest.getOrderDetails()) {
@@ -155,8 +150,6 @@ public class OrdersService {
             orderDetail.setProductType(orderDetailsRequest.getProductType());
             orderDetail.setQuantity(orderDetailsRequest.getQuantity());
             orderDetail.setUnitPrice(orderDetailsRequest.getUnitPrice());
-            total += orderDetailsRequest.getQuantity() * orderDetailsRequest.getUnitPrice();
-
             if (orderDetailsRequest.getProductType() == ProductType.KoiFish) {
                 koiFishService.updateIsForSale(orderDetailsRequest.getProductId());
             } else if (orderDetailsRequest.getProductType() == ProductType.Batch){
@@ -172,8 +165,11 @@ public class OrdersService {
         order.setTotalAmount(total);
         order.setOrderStatus("Pending");
         order.setDeleted(false);
+
+
         return ordersRepository.save(order);
     }
+
 
     public void updateOrderStatus(String orderId, String status) {
         Orders order = ordersRepository.findById(Integer.parseInt(orderId))
@@ -182,95 +178,26 @@ public class OrdersService {
         ordersRepository.save(order); // Lưu đơn hàng đã cập nhật
     }
 
-    public OrderResponse updateOrder(Integer orderId, OrderRequest orderRequest) {
+    public ViewOrdersOnly updateOrderStatus(Integer orderId, String status) {
         // Lấy thông tin đơn hàng hiện tại từ database
         User user = userService.getCurrentUser();
         Orders existingOrder = ordersRepository.findOrderByUserAndOrderID(user, orderId);
         if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
 
-        double total = 0;
-
-        // Cập nhật thông tin ngày đặt hàng
-        existingOrder.setOrderDate(new Date());
-
-        // Duyệt qua danh sách OrderDetailsRequest mới để cập nhật
-        for (OrderDetailsRequest orderDetailsRequest : orderRequest.getOrderDetails()) {
-            if (orderDetailsRequest.getProductType() == ProductType.KoiFish) {
-                KoiFish koiFish = koiFishRepository.findById(orderDetailsRequest.getProductId())
-                        .orElseThrow(() -> new RuntimeException("KoiFish not found!"));
-
-                // Kiểm tra xem OrderDetails đã tồn tại hay chưa
-                Optional<OrderDetails> existingOrderDetail = existingOrder.getOrderDetails().stream()
-                        .filter(od -> od.getProductId().equals(koiFish.getKoiID()) && od.getProductType() == ProductType.KoiFish)
-                        .findFirst();
-
-                if (existingOrderDetail.isPresent()) {
-                    // Cập nhật giá nếu đã tồn tại
-                    OrderDetails orderDetail = existingOrderDetail.get();
-                    orderDetail.setUnitPrice(koiFish.getPrice());
-                } else {
-                    // Tạo OrderDetails mới
-                    OrderDetails newOrderDetail = new OrderDetails();
-                    newOrderDetail.setProductId(koiFish.getKoiID());
-                    newOrderDetail.setProductType(ProductType.KoiFish);
-                    newOrderDetail.setQuantity(1); // KoiFish luôn có số lượng 1
-                    newOrderDetail.setUnitPrice(koiFish.getPrice());
-                    newOrderDetail.setOrders(existingOrder);
-                    existingOrder.getOrderDetails().add(newOrderDetail);
-                }
-                total += koiFish.getPrice();
-            } else if (orderDetailsRequest.getProductType() == ProductType.Batch) {
-                Batch batch = batchRepository.findById(orderDetailsRequest.getProductId())
-                        .orElseThrow(() -> new RuntimeException("Batch not found!"));
-
-                // Kiểm tra OrderDetails cho Batch
-                Optional<OrderDetails> existingOrderDetail = existingOrder.getOrderDetails().stream()
-                        .filter(od -> od.getProductId().equals(batch.getBatchID()) && od.getProductType() == ProductType.Batch)
-                        .findFirst();
-
-                if (existingOrderDetail.isPresent()) {
-                    // Cập nhật số lượng và giá nếu đã tồn tại
-                    OrderDetails orderDetail = existingOrderDetail.get();
-                    orderDetail.setQuantity(orderDetailsRequest.getQuantity());
-                    orderDetail.setUnitPrice(batch.getPrice());
-                } else {
-                    // Tạo OrderDetails mới cho Batch
-                    OrderDetails newOrderDetail = new OrderDetails();
-                    newOrderDetail.setProductId(batch.getBatchID());
-                    newOrderDetail.setProductType(ProductType.Batch);
-                    newOrderDetail.setQuantity(orderDetailsRequest.getQuantity());
-                    newOrderDetail.setUnitPrice(batch.getPrice());
-                    newOrderDetail.setOrders(existingOrder);
-                    existingOrder.getOrderDetails().add(newOrderDetail);
-                }
-                total += batch.getPrice() * orderDetailsRequest.getQuantity();
-            }
-        }
-
-        // Cập nhật tổng số tiền của đơn hàng
-        existingOrder.setTotalAmount(total);
+        // Cập nhật trạng thái của đơn hàng
+        existingOrder.setOrderStatus(status);
 
         // Lưu đơn hàng đã cập nhật
         Orders updatedOrder = ordersRepository.save(existingOrder);
 
         // Tạo OrderResponse để trả về
-        OrderResponse orderResponse = modelMapper.map(updatedOrder, OrderResponse.class);
-        orderResponse.setUserName(updatedOrder.getUser().getUsername()); // Giả sử có trường User trong Orders
+        ViewOrdersOnly viewOrdersOnly = modelMapper.map(updatedOrder, ViewOrdersOnly.class);
+        viewOrdersOnly.setUserName(updatedOrder.getUser().getUsername());
 
-        return orderResponse;
+        return viewOrdersOnly;
     }
 
 
-
-
-
-
-    public void deleteOrder(Integer id) {
-        Orders orders = ordersRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found for this id :: " + id));
-        orders.setDeleted(true);
-        ordersRepository.save(orders);
-    }
 
     public List<Integer> IncomePerMonth() {
         List<Integer> incomePerMonth = new ArrayList<>(Collections.nCopies(12, 0));
@@ -441,5 +368,18 @@ public class OrdersService {
         userRepository.save(manager);
         paymentRepository.save(payment);
     }
+
+
+    public void deleteOrder(Integer id) {
+        // Lấy đối tượng Orders dựa vào id
+        Orders order = ordersRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found for this id :: " + id));
+
+        // Đặt trạng thái deleted cho Orders
+        order.setDeleted(true);
+        // Lưu thay đổi vào cơ sở dữ liệu
+        ordersRepository.save(order);
+    }
+
 
 }

@@ -60,13 +60,13 @@ public class OrdersAPI {
         return ordersService.IncomePerMonth();
     }
 
-    @PostMapping("/{id}/transaction")
-    public ResponseEntity creater(@PathVariable Integer id) throws Exception {
-        ordersService.createTransactions(id);
+    @PostMapping("{orderId}/transaction")
+    public ResponseEntity creater(@PathVariable Integer orderId) throws Exception {
+        ordersService.createTransactions(orderId);
         return ResponseEntity.ok("Success");
     }
 
-    @GetMapping("/vnpay-return")
+    @PutMapping("/vnpay-return")
     public ResponseEntity<String> handleVnpayReturn(@RequestParam Map<String, String> params) throws Exception {
         String responseCode = params.get("vnp_ResponseCode");
         String txnRef = params.get("vnp_TxnRef");
@@ -89,13 +89,24 @@ public class OrdersAPI {
         return ResponseEntity.ok(vnPayURL);
     }
 
-    @PutMapping("/{orderID}/update")
-    public ResponseEntity updateOrder(@PathVariable int orderID, @RequestBody OrderRequest orderRequest) {
-        OrderResponse updatedOrder = ordersService.updateOrder(orderID, orderRequest);
+//    @PutMapping("/{orderID}/update")
+//    public ResponseEntity updateOrder(@PathVariable int orderID, @RequestBody OrderRequest orderRequest) {
+//        OrderResponse updatedOrder = ordersService.updateOrder(orderID, orderRequest);
+//        return ResponseEntity.ok(updatedOrder);
+//    }
+
+
+
+    @PutMapping("/{orderId}/update-status")
+    public ResponseEntity<ViewOrdersOnly> updateOrderStatus(@PathVariable Integer orderId, @RequestParam String status) {
+        ViewOrdersOnly updatedOrder = ordersService.updateOrderStatus(orderId, status);
         return ResponseEntity.ok(updatedOrder);
     }
 
-    @DeleteMapping("/{orderID}/remove")
+
+
+
+    @PutMapping("/{orderID}/remove")
     public ResponseEntity<Void> deleteOrder(@PathVariable int orderID) {
         ordersService.deleteOrder(orderID);
         return ResponseEntity.noContent().build();

@@ -19,6 +19,8 @@ public class OrderDetailsAPI {
     @Autowired
     private OrderDetailsService orderDetailService;
 
+
+
     @GetMapping("/{orderDetailId}/get-orderDetail")
     public ResponseEntity getOrderDetailsById(@PathVariable Integer orderDetailId) {
         OrderDetailsResponse response = orderDetailService.getOrderDetailsById(orderDetailId);
@@ -39,11 +41,11 @@ public class OrderDetailsAPI {
 
 
 
-//    @PostMapping("create-orderdetail")
-//    public OrderDetails createOrderDetail(@RequestBody OrderDetails orderDetail) {
-//        return orderDetailService.createOrderDetail(orderDetail);
+//    @PutMapping("/{orderId}/add-details")
+//    public ResponseEntity<List<OrderDetailsResponse>> addOrderDetails(@PathVariable Integer orderId, @RequestBody List<OrderDetailsRequest> orderDetailsRequests) {
+//        List<OrderDetailsResponse> addedOrderDetails = orderDetailService.addOrderDetails(orderId, orderDetailsRequests);
+//        return ResponseEntity.ok(addedOrderDetails);
 //    }
-//
 
     @PutMapping("/{orderDetailID}")
     public ResponseEntity<OrderDetailsResponse> updateOrderDetail(@PathVariable int orderDetailID, @RequestBody OrderDetailsRequest orderDetailsRequest) {
@@ -54,6 +56,7 @@ public class OrderDetailsAPI {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/{orderDetailID}")
     public ResponseEntity<Void> deleteOrderDetail(@PathVariable int orderDetailID) {

@@ -7,5 +7,7 @@ import java.util.List;
 
 @Data
 public class OrderRequest {
+    private double totalAmount;
+
     private List<OrderDetailsRequest> orderDetails;
 }

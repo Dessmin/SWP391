@@ -24,25 +24,31 @@ public class PaymentAPI {
         return ResponseEntity.ok(response);
     }
 
-
-    @GetMapping("/list-payments")
-    public ResponseEntity getAllPayments() {
-        List<PaymentResponse> response = paymentService.getAllPayments();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/list-user-payments")
-    public ResponseEntity getPaymentByUser() {
-        List<PaymentResponse> response = paymentService.getPaymentByUser();
-        return ResponseEntity.ok(response);
-    }
-
-
     @GetMapping("/{orderId}/list-order-payments")
     public ResponseEntity getPaymentByOrder(@PathVariable Integer orderId) {
         List<PaymentResponse> response = paymentService.getPaymentByOrder(orderId);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{paymentID}")
+    public ResponseEntity<Void> deletePayment(@PathVariable int paymentID) {
+        paymentService.deletePayment(paymentID);
+        return ResponseEntity.noContent().build();
+    }
+//    @GetMapping("/list-payments")
+//    public ResponseEntity getAllPayments() {
+//        List<PaymentResponse> response = paymentService.getAllPayments();
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @GetMapping("/list-user-payments")
+//    public ResponseEntity getPaymentByUser() {
+//        List<PaymentResponse> response = paymentService.getPaymentByUser();
+//        return ResponseEntity.ok(response);
+//    }
+
+
+
 
 
 //    // Create new payment
@@ -63,10 +69,5 @@ public class PaymentAPI {
 //        }
 //    }
 
-    // Delete payment by ID
-    @DeleteMapping("/{paymentID}")
-    public ResponseEntity<Void> deletePayment(@PathVariable int paymentID) {
-        paymentService.deletePayment(paymentID);
-        return ResponseEntity.noContent().build();
-    }
+
 }
