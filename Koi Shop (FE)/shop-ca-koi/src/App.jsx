@@ -19,10 +19,8 @@ import OrderDetailsPage from "./components/orderDetailPage";
 import Consignment from "./pages/consignment";
 import ConsignmentManagement from "./pages/admin/consignment-management";
 import Certificate from "./pages/certificate-detail-page";
-import CompareKoi from "./pages/comparison";
-import OrderManagement from "./pages/admin/order-management";
-import OrderDetailAdmin from "./pages/admin/orderDetail-management";
-import PaymentAdmin from "./pages/admin/payment-management";
+import Promotion from "./pages/admin/promotion-management";
+import Batch from "./pages/admin/batch-management";
 
 function App() {
   const router = createBrowserRouter([
@@ -53,10 +51,6 @@ function App() {
     {
       path: "/home/dashboard/consignment",
       element: <ConsignmentManagement />,
-    },
-    {
-      path: "/home/dashboard/order",
-      element: <OrderManagement />,
     },
     {
       path: "cart",
@@ -107,20 +101,12 @@ function App() {
       element: <Consignment />,
     },
     {
-      path: "/home/dashboard/koi/certificate/:koiId",
-      element: <Certificate />,
+      path: "/home/dashboard/promotion",
+      element: <Promotion />,
     },
     {
-      path: "/koi-comparison/:id/:compareId",
-      element: <CompareKoi />,
-    },
-    {
-      path: "/orderDetail/:id",
-      element: <OrderDetailAdmin />,
-    },
-    {
-      path: "/payment/:id",
-      element: <PaymentAdmin />,
+      path: "/home/dashboard/batch",
+      element: <Batch />,
     },
   ]);
 

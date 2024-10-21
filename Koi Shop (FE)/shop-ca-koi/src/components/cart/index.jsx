@@ -1,11 +1,10 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getCartFromSession, saveCartToSession } from "../../helper/helper";
 import { useSelector } from "react-redux";
 import { Table, Button } from "antd";
 import apiOrder from "../../config/api-order";
 
 const Cart = () => {
-  
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
   const [cartItems, setCartItems] = useState([]); // State để lưu giỏ hàng từ session
 
@@ -31,24 +30,22 @@ const Cart = () => {
     window.location.reload();
   };
 
-  
-
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       alert("Your cart is empty.");
       return;
     }
-  
+
     // Tạo đối tượng orderRequest chứa danh sách orderDetails từ cartItems
     const orderRequest = {
       orderDetails: cartItems.map((item) => ({
         productId: item.id,
         productType: item.type, // "KoiFish" hoặc "Batch"
         quantity: item.type === "Batch" ? item.quantity : 1, // Batch có số lượng, KoiFish mặc định là 1
-        unitPrice: item.price,
+        price: item.price,
       })),
     };
-  
+
     try {
       // Gọi API tạo đơn hàng và lấy URL thanh toán
       const response = await apiOrder.post("add-order", orderRequest, {
@@ -56,13 +53,12 @@ const Cart = () => {
           Authorization: `Bearer ${user.token}`, // Gửi token trong header
         },
       });
-  
+
       const paymentUrl = response.data; // Giả sử backend trả về paymentUrl
-  
+
       // Chuyển hướng sang trang thanh toán
       window.location.href = paymentUrl;
-      
-  
+
       // Xóa giỏ hàng sau khi thanh toán thành công
       setCartItems([]);
       saveCartToSession(user.id, []);
@@ -71,10 +67,6 @@ const Cart = () => {
       alert("Error creating order. Please try again.");
     }
   };
-  
-  
-
-
 
   // Định nghĩa các cột cho bảng
   const columns = [
@@ -123,10 +115,9 @@ const Cart = () => {
 
   return (
     <div>
-      
-      <h1 style={{textAlign: "center"}}>Your cart</h1>
+      <h2>Your Cart</h2>
       {cartItems.length === 0 ? (
-        <p style={{textAlign: "center"}} >No items in cart</p>
+        <p>No items in cart</p>
       ) : (
         <div>
           <Table columns={columns} dataSource={cartItems} rowKey="id" />

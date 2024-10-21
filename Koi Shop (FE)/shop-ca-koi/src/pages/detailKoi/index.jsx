@@ -4,21 +4,15 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
-  
   Descriptions,
   Form,
   Image,
   Input,
   Rate,
-  
-  Select,
   Spin,
   Table,
 } from "antd";
 import { toast } from "react-toastify";
-import apiKoi from "../../config/koi-api";
-import { Option } from "antd/es/mentions";
-import "./index.scss";
 
 const desc = ["1", "2", "3", "4", "5"];
 
@@ -27,16 +21,11 @@ function DetailKoi() {
   const [feedback, setFeedback] = useState("");
   const [certificateImage, setCertificateImage] = useState(null); // Thay đổi state để chỉ lưu trữ image
   const [value, setValue] = useState();
-  const [koiList, setKoiList] = useState([]);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const { id } = useParams(); // Lấy id từ URL
   const [koi, setKoi] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [breeds, setBreeds] = useState([]);
-  const [selectedBreed, setSelectedBreed] = useState("All");
 
   const fetchKoiById = async (id) => {
     try {
@@ -53,55 +42,6 @@ function DetailKoi() {
       console.log(error.toString());
       return null;
     }
-  };
-
-  const fetchKoiList = async (page = 0) => {
-    try {
-      const response = await apiKoi.get(`list?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
-        },
-      });
-      setKoiList(response.data.content); // Lưu danh sách cá koi
-      setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
-    } catch (e) {
-      console.log(e); // Ghi lại lỗi không phải axios
-    }
-  };
-
-  const fetchKoiByBreed = async (breed, page = 0) => {
-    try {
-      const response = await apiKoi.get(`${breed}?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
-        },
-      });
-      setKoiList(response.data.content); // Lưu danh sách cá koi
-      setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
-    } catch (e) {
-      console.log(e); // Ghi lại lỗi không phải axios
-    }
-  };
-
-  const fetchBreeds = async () => {
-    try {
-      const response = await apiKoi.get(
-        "http://localhost:8080/api/breeds/list-breedName",
-        {
-          // Giả sử API lấy danh sách breed là /breeds
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      setBreeds(response.data); // Giả sử response.data là mảng danh sách breed
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleCompare = (compareId) => {
-    navigate(`/koi-comparison/${id}/${compareId}`); // Điều hướng đến trang so sánh với id hiện tại và compareId
   };
 
   const handleFeedBack = async () => {
@@ -165,7 +105,6 @@ function DetailKoi() {
   };
 
   useEffect(() => {
-    fetchBreeds();
     fetchKoiById(id).then((data) => {
       if (data) {
         setKoi(data);
@@ -174,21 +113,7 @@ function DetailKoi() {
     });
     fetchCertificateById(id);
     fetchFeedBackById(id); // Lấy danh sách feedback khi tải trang
-    if (selectedBreed === "All") {
-      fetchKoiList(page); // Gọi hàm fetch cho "All"
-    } else {
-      fetchKoiByBreed(selectedBreed, page); // Gọi hàm fetch cho breed đã chọn
-    }
-  }, [id, page, selectedBreed]);
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage); // Cập nhật số trang
-  };
-
-  const handleBreedChange = (value) => {
-    setSelectedBreed(value); // Cập nhật breed đã chọn
-    setPage(0); // Reset về trang đầu khi thay đổi breed
-  };
+  }, [id]);
 
   if (loading) {
     return <Spin tip="Loading..." />;
@@ -276,87 +201,6 @@ function DetailKoi() {
           </Descriptions.Item>
         </Descriptions>
       )}
-      <h2>Danh sách cá Koi hiện có</h2>
-      Breed
-      <Select
-        defaultValue="All"
-        style={{ width: 200, marginBottom: "20px" }}
-        onChange={handleBreedChange}
-      >
-        <Option value="All">All</Option>
-        {breeds.map((breed, index) => (
-          <Option key={index} value={breed}>
-            {breed}
-          </Option>
-        ))}
-      </Select>
-      <div className="koi-list">
-      {koiList && koiList.length > 0 ? (
-        koiList.map((koiItem) => (
-          <div className="koi-card" key={koiItem.id}>
-            <img
-              height={290}
-              src={koiItem.image}
-              alt={koiItem.fishName}
-              style={{
-                width: "100%",
-                borderRadius: "10px 10px 0 0",
-                objectFit: "cover",
-              }}
-            />
-
-            <div className="koi-card__content">
-              <div className="koi-card__info1">
-                <span>
-                  <strong>Name:</strong> {koiItem.fishName}
-                </span>
-                <span>
-                  <strong>Price:</strong> {koiItem.price.toLocaleString()} VND
-                </span>
-              </div>
-              <div className="koi-card__info2">
-                <span>
-                  <strong>Origin:</strong> {koiItem.origin}
-                </span>
-                <span>
-                  <strong>Breed:</strong> {koiItem.breed}
-                </span>
-              </div>
-              <div>
-                <strong>Size:</strong> {koiItem.size} cm
-              </div>
-            </div>
-
-            <Button
-              key={koiItem.id}
-              type="primary"
-              onClick={() => handleCompare(koiItem.id)}
-              style={{ marginTop: "10px", width: "100%" }}
-            >
-              So sánh
-            </Button>
-          </div>
-        ))
-      ) : (
-        <p>Không có cá koi nào để hiển thị</p>
-      )}
-      </div>
-      
-      <div className="koi__page">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index)}
-            style={{
-              margin: "0 5px",
-              padding: "5px 10px",
-              background: page === index ? "lightblue" : "white",
-            }}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
       <h1>Feedback</h1>
       <Table columns={columns} dataSource={feedbackList} rowKey="id" />
       <Button type="primary" onClick={() => navigate("/home")}>

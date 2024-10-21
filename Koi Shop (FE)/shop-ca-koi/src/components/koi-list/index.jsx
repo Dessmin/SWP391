@@ -14,8 +14,6 @@ function KoiList() {
     const [selectedBreed, setSelectedBreed] = useState("All");
 
     const user = useSelector((state) => state.user);
-    
-    // const userGoogle = sessionStorage.getItem('googleUser')
 
     const fetchKoi = async (page = 0) => {
         try {

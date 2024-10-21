@@ -26,18 +26,18 @@ function CardKoi({ koi }) {
 
   return (
     <div className="koi-card">
-      <img style={{ width: '100%', borderRadius: '10px 10px 0 0', objectFit: 'cover' }} height={290} src={image} alt="" />
+      <img height={290} src={image} alt="" />
 
       <div className="koi-card__content">
         <div className="koi-card__info1">
-          <span><strong>Name:</strong> {fishName}</span>
-          <span><strong>Price:</strong> {price.toLocaleString()}VND</span>
+          <span>Name: {fishName}</span>
+          <span>Price: {price}</span>
         </div>
         <div className="koi-card__info2">
-          <span><strong>Origin:</strong> {origin}</span>
-          <span><strong>Breed:</strong> {breed}</span>
+          <span>Origin: {origin}</span>
+          <span>Breed: {breed}</span>
         </div>
-        <div><strong>Size:</strong> {size} cm</div>
+        <div>Size: {size} cm</div>
       </div>
       <Button onClick={() => navigate("/detailKoi/"+id)}>Chi tiết</Button>
       <Button
