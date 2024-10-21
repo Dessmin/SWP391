@@ -22,12 +22,16 @@ function HomeLoged() {
         </div>
       </div>
 
-      <CartProvider >
-        <h2 style={{textAlign: "center"}}>Koi list</h2>
+      <div className="body__list">
+      <CartProvider>
+        
         <KoiList />
-        <h2 style={{textAlign: "center"}}>Batch list</h2>
+        <hr />
         <BatchList />
       </CartProvider>
+      </div>
+
+      
 
       <Footer />
     </div>

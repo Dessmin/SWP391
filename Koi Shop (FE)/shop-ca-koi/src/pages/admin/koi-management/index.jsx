@@ -295,6 +295,14 @@ function Koi() {
             </Form.Item>
 
             <Form.Item
+              label="Diet"
+              name="diet"
+              rules={[{ required: true, message: "Please input diet!" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
               label="Size"
               name="size"
               rules={[{ required: true, message: "Please input size!" }]}
@@ -309,6 +317,35 @@ function Koi() {
             >
               <InputNumber />
             </Form.Item>
+
+            <Form.Item
+              label="Food"
+              name="food"
+              rules={[{ required: true, message: "Please input food type!" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Screening Rate"
+              name="screeningRate"
+              rules={[
+                { required: true, message: "Please input screening rate!" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Hình ảnh"
+              name="image"
+              rules={[
+                { required: true, message: "Vui lòng nhập URL hình ảnh" },
+              ]}
+            >
+              <Input placeholder="Nhập URL hình ảnh" />
+            </Form.Item>
+            
           </Form>
         </Modal>
       </Dashboard>

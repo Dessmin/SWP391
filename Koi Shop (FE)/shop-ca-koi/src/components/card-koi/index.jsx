@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import PropTypes from "prop-types";
-import "./index.scss";
+import './cardKoi.scss'
 import { useContext } from "react";
 import { CartContext } from "../../helper/CartContext";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ function CardKoi({ koi }) {
 
   return (
     <div className="koi-card">
-      <img style={{ width: '100%', borderRadius: '10px 10px 0 0', objectFit: 'cover' }} height={290} src={image} alt="" />
+      <img height={250} src={image} alt="" />
 
       <div className="koi-card__content">
         <div className="koi-card__info1">
@@ -40,7 +40,7 @@ function CardKoi({ koi }) {
         <div><strong>Size:</strong> {size} cm</div>
       </div>
       <Button onClick={() => navigate("/detailKoi/"+id)}>Chi tiết</Button>
-      <Button
+      <Button 
         onClick={handleAddToCart} // Gọi hàm thêm sản phẩm vào giỏ hàng
         style={{ width: "100%", height: "50px" }}
         type="primary"

@@ -33,6 +33,7 @@ function BatchList() {
   };
   return (
     <div className="batch">
+      <h2>Danh sách lô cá Koi</h2>
       <div className="batch__list">
       {batches.map((batch, index) => (
         <CardBatch key={index} batch={batch} />

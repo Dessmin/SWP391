@@ -1,13 +1,22 @@
 .batch{
     display: flex;
     flex-direction: column;
+    padding: 0 50px;
+
+    h2{
+        margin-top: 45px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
     &__list{
         display: flex;
+        justify-content: space-evenly;
     }
 
     &__page{
-        margin-top: 10px;
+        margin-top: 30px;
+        margin-bottom: 50px;
         text-align: center;
 
         button{

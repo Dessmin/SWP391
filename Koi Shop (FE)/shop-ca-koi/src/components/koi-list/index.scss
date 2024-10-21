@@ -1,14 +1,22 @@
 .koi{
     display: flex;
     flex-direction: column;
+    padding: 0 50px;
+
+    h2{
+        margin-top: 45px;
+        text-align: center;
+    }
 
     &__list{
         display: flex;
+        justify-content: space-evenly;
     }
 
     &__page{
-        margin-top: 10px;
+        margin-top: 30px;
         text-align: center;
+        margin-bottom: 30px;
 
         button{
             border-radius: 10px;

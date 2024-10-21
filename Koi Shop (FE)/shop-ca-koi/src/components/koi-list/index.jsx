@@ -79,7 +79,8 @@ function KoiList() {
 
     return (
         <div className="koi">
-            Breed<Select 
+            <h2>Danh sách Koi</h2>
+            <strong>Breed</strong><Select 
                 defaultValue="All"
                 style={{ width: 200, marginBottom: '20px' }}
                 onChange={handleBreedChange}

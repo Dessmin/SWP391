@@ -24,6 +24,7 @@ function PaymentAdmin() {
       console.log(error);
     }
   };
+  
 
   useEffect(() => {
     if (id) {
