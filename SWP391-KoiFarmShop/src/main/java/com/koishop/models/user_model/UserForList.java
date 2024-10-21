@@ -11,4 +11,4 @@ public class UserForList {
     private String userName;
     private Date joinDate;
     private Role role;
-}
+    private boolean deleted;}

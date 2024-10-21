@@ -43,6 +43,16 @@ public class BatchService {
         return batchResponse;
     }
 
+    public List<BatchView> getBatches() {
+        List<BatchView> batchViewList = new ArrayList<>();
+        for (Batch batches : batchRepository.findAll()) {
+            BatchView batch = modelMapper.map(batches, BatchView.class);
+            batch.setBreedName(batches.getBreed().getBreedName());
+            batchViewList.add(batch);
+        }
+        return batchViewList;
+    }
+
 
     public BatchDetailUpdate createBatch(BatchDetailUpdate batch) {
         Batch newBatch = modelMapper.map(batch, Batch.class);

@@ -47,7 +47,7 @@ public class BreedsAPI {
     }
 
     // Xóa Breed theo ID
-    @DeleteMapping("/{breedID}")
+    @PutMapping("/{breedID}/delete")
     public ResponseEntity<Void> deleteBreed(@PathVariable Integer breedID) {
         breedsService.deleteBreed(breedID);
         return ResponseEntity.noContent().build();

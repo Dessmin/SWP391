@@ -116,7 +116,7 @@ public class UserService implements UserDetailsService {
 
 
     public List<UserForList> getAllUsers() {
-        List<User> users = userRepository.findAllByDeletedIsFalse();
+        List<User> users = userRepository.findAll();
         Type listType = new TypeToken<List<UserForList>>() {}.getType();
         return modelMapper.map(users, listType);
     }

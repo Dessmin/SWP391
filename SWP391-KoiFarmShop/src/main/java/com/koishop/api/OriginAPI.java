@@ -42,7 +42,7 @@ public class OriginAPI {
         return originService.updateOrigin(id, origin);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/delete")
     public void deleteOrigin(@PathVariable Integer id) {
         originService.deleteOrigin(id);
     }

@@ -32,29 +32,27 @@ public class KoiFishService {
 
     public FishResponse getAllKoiFish(int page, int size) {
         List<FishForList> fishForLists = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findByIsForSaleAndDeletedIsFalse( true, PageRequest.of(page, size))) {
+        for (KoiFish koiFish : koiFishRepository.findByIsForSaleAndDeletedIsFalse(true, PageRequest.of(page, size))) {
             FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
             fishForList.setBreed(koiFish.getBreed().getBreedName());
             fishForList.setOrigin(koiFish.getOrigin().getOriginName());
             fishForLists.add(fishForList);
         }
         FishResponse fishResponse = new FishResponse();
-        fishResponse.setTotalPages(koiFishRepository.findAll(PageRequest.of(page, size)).getTotalPages());
-        fishResponse.setTotalElements(koiFishRepository.findAll(PageRequest.of(page, size)).getTotalElements());
+        fishResponse.setTotalPages(koiFishRepository.findByIsForSaleAndDeletedIsFalse(true, PageRequest.of(page, size)).getTotalPages());
+        fishResponse.setTotalElements(koiFishRepository.findByIsForSaleAndDeletedIsFalse(true, PageRequest.of(page, size)).getTotalElements());
         fishResponse.setPage(page);
         fishResponse.setContent(fishForLists);
         return fishResponse;
     }
 
-    public List<FishForList> ListFish() {
-        List<FishForList> fishForLists = new ArrayList<>();
+    public List<ListFishForManager> ListFish() {
+        List<ListFishForManager> fishForLists = new ArrayList<>();
         for (KoiFish koiFish : koiFishRepository.findAll()) {
-            if (!koiFish.isDeleted()) {
-                FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
-                fishForList.setBreed(koiFish.getBreed().getBreedName());
-                fishForList.setOrigin(koiFish.getOrigin().getOriginName());
-                fishForLists.add(fishForList);
-            }
+            ListFishForManager fishForList = modelMapper.map(koiFish, ListFishForManager.class);
+            fishForList.setBreed(koiFish.getBreed().getBreedName());
+            fishForList.setOrigin(koiFish.getOrigin().getOriginName());
+            fishForLists.add(fishForList);
         }
         return fishForLists;
     }

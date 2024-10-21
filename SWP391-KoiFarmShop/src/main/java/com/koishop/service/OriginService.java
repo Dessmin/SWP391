@@ -16,7 +16,7 @@ public class OriginService {
     private OriginRepository originRepository;
 
     public List<Origin> getAllOrigins() {
-        return originRepository.findAllByDeletedIsFalse();
+        return originRepository.findAll();
     }
 
     public List<String> listOriginNames() {

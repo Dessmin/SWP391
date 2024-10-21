@@ -60,8 +60,8 @@ public class OrdersAPI {
         return ordersService.IncomePerMonth();
     }
 
-    @PostMapping("transaction")
-    public ResponseEntity creater(@RequestParam Integer id) throws Exception {
+    @PostMapping("/{id}/transaction")
+    public ResponseEntity creater(@PathVariable Integer id) throws Exception {
         ordersService.createTransactions(id);
         return ResponseEntity.ok("Success");
     }
