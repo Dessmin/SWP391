@@ -80,9 +80,5 @@ public class KoiFish {
     @JsonIgnore
     private List<RatingsFeedbacks> ratingsFeedbacks;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    User manager;
-
     private boolean deleted;
 }

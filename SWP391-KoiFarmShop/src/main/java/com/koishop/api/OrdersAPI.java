@@ -71,15 +71,16 @@ public class OrdersAPI {
         String responseCode = params.get("vnp_ResponseCode");
         String txnRef = params.get("vnp_TxnRef");
 
-        // Kiểm tra mã phản hồi từ VNPay
-        if ("00".equals(responseCode)) {
-            // Nếu thanh toán thành công, cập nhật trạng thái đơn hàng
-            ordersService.updateOrderStatus(txnRef, "PAID");
-            return ResponseEntity.ok("Thanh toán thành công");
-        } else {
-            // Nếu thanh toán thất bại, cập nhật trạng thái đơn hàng
-            ordersService.updateOrderStatus(txnRef, "FAILED");
-            return ResponseEntity.ok("Thanh toán thất bại");
+        try {
+            if ("00".equals(responseCode)) {
+                ordersService.updateOrderStatus(txnRef, "PAID");
+                return ResponseEntity.ok("Payment successful");
+            } else {
+                ordersService.updateOrderStatus(txnRef, "FAILED");
+                return ResponseEntity.status(400).body("Payment failed: Response Code " + responseCode);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating order status: " + e.getMessage());
         }
     }
 
@@ -96,8 +97,13 @@ public class OrdersAPI {
 //    }
 
 
-
     @PutMapping("/{orderId}/update-status")
+    public ResponseEntity<String> updateStatus(@PathVariable Integer orderId, @RequestParam String status) {
+        ordersService.updateStatus(orderId, status);
+        return ResponseEntity.ok().body("Order status updated successfully.");
+    }
+
+    @PutMapping("/{orderId}/update-order-status")
     public ResponseEntity<ViewOrdersOnly> updateOrderStatus(@PathVariable Integer orderId, @RequestParam String status) {
         ViewOrdersOnly updatedOrder = ordersService.updateOrderStatus(orderId, status);
         return ResponseEntity.ok(updatedOrder);

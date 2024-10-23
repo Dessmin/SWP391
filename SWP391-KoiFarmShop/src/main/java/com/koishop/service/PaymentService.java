@@ -58,27 +58,24 @@ public class PaymentService {
 
 
 
-    public PaymentResponse getPaymentByOrder(Integer orderId) {
-        // Lấy Payment dựa trên orderId
-        Payment payment = paymentRepository.findByOrders_OrderID(orderId);
+    public List<PaymentResponse> getPaymentByOrder(Integer orderId) {
+        // Lấy danh sách thanh toán dựa trên orderId
+        List<Payment> payments = paymentRepository.findByOrders_OrderID(orderId);
 
-        if (payment == null) {
-            throw new EntityNotFoundException("Payment not found for Order ID: " + orderId);
+        if (payments.isEmpty()) {
+            throw new EntityNotFoundException("No payments found for Order ID: " + orderId);
         }
 
-        // Kiểm tra xem đơn hàng liên kết có bị xóa không
-        if (payment.getOrders() == null || payment.getOrders().isDeleted()) {
-            throw new RuntimeException("Cannot retrieve payment. The order with ID " + orderId + " has been deleted.");
-        }
-
-        // Ánh xạ Payment thành PaymentResponse
-        PaymentResponse response = modelMapper.map(payment, PaymentResponse.class);
-        // Lấy orderId từ Orders và thiết lập cho PaymentResponse
-        response.setOrderId(payment.getOrders() != null ? payment.getOrders().getOrderID() : null);
-
-        return response; // Trả về PaymentResponse duy nhất
+        // Ánh xạ danh sách Payment thành danh sách PaymentResponse
+        return payments.stream()
+                .map(payment -> {
+                    PaymentResponse response = modelMapper.map(payment, PaymentResponse.class);
+                    // Lấy orderId từ Orders và thiết lập cho PaymentResponse
+                    response.setOrderId(payment.getOrders() != null ? payment.getOrders().getOrderID() : null);
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
-
 
     public List<PaymentResponse> getPaymentByUser() {
         // Lấy người dùng hiện tại

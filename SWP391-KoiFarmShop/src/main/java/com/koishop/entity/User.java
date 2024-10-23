@@ -90,13 +90,5 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<Transactions> transactionsTo;
 
-    @OneToMany(mappedBy = "manager")
-    @JsonIgnore
-    private Set<KoiFish> koiFishs;
-
-    @OneToMany(mappedBy = "manager")
-    @JsonIgnore
-    private Set<Batch> batches;
-
     private double balance = 0;
 }

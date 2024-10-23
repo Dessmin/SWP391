@@ -59,13 +59,23 @@ public class KoiFishService {
 
     public ViewFish createKoiFish(ViewFish fishCreate) {
         KoiFish newKoiFish = modelMapper.map(fishCreate, KoiFish.class);
-        newKoiFish.setManager(userService.getCurrentUser());
         newKoiFish.setBreed(breedsService.getBreedByName(fishCreate.getBreed()));
         newKoiFish.setOrigin(originService.getOriginByName(fishCreate.getOrigin()));
         newKoiFish.setIsForSale(true);
         newKoiFish.setDeleted(false);
         koiFishRepository.save(newKoiFish);
         return fishCreate;
+    }
+
+    public Integer customerFishConsign(FishForConsignment consignment) {
+        KoiFish koiFish = modelMapper.map(consignment, KoiFish.class);
+        koiFish.setBreed(breedsService.getBreedByName(consignment.getBreed()));
+        koiFish.setOrigin(originService.getOriginByName(consignment.getOrigin()));
+        koiFish.setPrice(1.0);
+        koiFish.setIsForSale(false);
+        koiFish.setDeleted(false);
+        koiFishRepository.save(koiFish);
+        return koiFish.getKoiID();
     }
 
     public ViewFish updateKoiFish(Integer id, ViewFish koiFishDetails) {

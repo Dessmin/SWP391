@@ -7,11 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class DefaultFish {
+public class FishForConsignment {
     @NotBlank(message = "KoiFishName không được để trống")
     @Size(min = 3, max = 50, message = "UserName phải có từ 3 đến 50 ký tự")
     @Column(unique = true)
@@ -34,9 +33,11 @@ public class DefaultFish {
     @DecimalMin(value = "0.0", inclusive = false, message = "Size must be greater than zero")
     private Double size;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
-    private Double price;
+    @NotBlank
+    private String breed;
+
+    @NotBlank
+    private String origin;
 
     @NotBlank(message = "Food is required")
     private String food;

@@ -22,13 +22,18 @@ public class KoiFishAPI {
     // Lấy tất cả KoiFish
     @GetMapping("list")
     public FishResponse getAllKoiFish(@RequestParam int page) {
-        return koiFishService.getAllKoiFish(page, 6);
+        return koiFishService.getAllKoiFish(page, 4);
     }
 
     // Tạo KoiFish mới
     @PostMapping("/add")
     public ViewFish createKoiFish(@Valid @RequestBody ViewFish koiFish) {
         return koiFishService.createKoiFish(koiFish);
+    }
+
+    @PostMapping("/fish-consign")
+    public int consign(@Valid @RequestBody FishForConsignment koiFish) {
+        return koiFishService.customerFishConsign(koiFish);
     }
 
     // Cập nhật KoiFish theo ID
@@ -67,7 +72,7 @@ public class KoiFishAPI {
 
     @GetMapping("/{breed}")
     public FishResponse getKoiFishByOrigin(@PathVariable String breed, @RequestParam int page) {
-        return koiFishService.getKoiFishesByBreed(breed, page, 6);
+        return koiFishService.getKoiFishesByBreed(breed, page, 4);
     }
 
     @GetMapping("/koiFish/cart/{id}")

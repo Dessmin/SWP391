@@ -34,8 +34,4 @@ public class Batch {
 
     private Boolean isSale;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    User manager;
 }

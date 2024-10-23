@@ -42,8 +42,6 @@ public class OrdersService {
     KoiFishService koiFishService;
     @Autowired
     BatchService batchService;
-    @Autowired
-    OrderDetailsRepository orderDetailsRepository;
 
 
     public Orders getOderById(Integer id) {
@@ -54,7 +52,7 @@ public class OrdersService {
 
     public List<OrderResponse> getAllOrders() {
         List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Orders order : ordersRepository.findByDeletedFalse()) {
+        for (Orders order : ordersRepository.findAll()) {
             OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
             orderResponse.setUserName(order.getUser().getUsername());
 
@@ -74,13 +72,12 @@ public class OrdersService {
                 orderResponses.add(orderResponse);
             }
         }
-
         return orderResponses;
     }
 
     public List<ViewOrdersOnly> getOrdersSummary() {
         // Lấy danh sách tất cả các đơn hàng
-        List<Orders> ordersList = ordersRepository.findByDeletedFalse();
+        List<Orders> ordersList = ordersRepository.findAll();
         List<ViewOrdersOnly> viewOrdersOnlyList = new ArrayList<>();
 
         // Duyệt qua từng đơn hàng trong danh sách
@@ -155,6 +152,7 @@ public class OrdersService {
                 koiFishService.updateIsForSale(orderDetailsRequest.getProductId());
             } else if (orderDetailsRequest.getProductType() == ProductType.Batch){
                 batchService.updateIsSale(orderDetailsRequest.getProductId());
+                batchService.quantityBatch(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity());
             } else {
                 throw new IllegalArgumentException("Unknown product type");
             }
@@ -198,7 +196,12 @@ public class OrdersService {
         return viewOrdersOnly;
     }
 
-
+    public void updateStatus(Integer orderId, String status) {
+        Orders existingOrder = ordersRepository.findByOrderID(orderId);
+        if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
+        existingOrder.setOrderStatus(status);
+        ordersRepository.save(existingOrder);
+    }
 
     public List<Integer> IncomePerMonth() {
         List<Integer> incomePerMonth = new ArrayList<>(Collections.nCopies(12, 0));
@@ -332,24 +335,24 @@ public class OrdersService {
         // Customer to Manager
 
         // Lấy productType từ OrderDetails
-        OrderDetails orderDetail = orders.getOrderDetails().get(0);
-        ProductType productType = orderDetail.getProductType();
-        User manager;
+//        OrderDetails orderDetail = orders.getOrderDetails().get(0);
+//        ProductType productType = orderDetail.getProductType();
+        User manager = userRepository.findFirstByRole(Role.Manager);
 
 // Kiểm tra loại sản phẩm để tìm Manager
-        if (productType == ProductType.KoiFish) {
-            // Tìm manger dựa trên sản phẩm cá thể
-            KoiFish koiFish = koiFishRepository.findById(orderDetail.getProductId())
-                    .orElseThrow(() -> new EntityNotFoundException("KoiFish not found!"));
-            manager = koiFish.getManager();
-        } else if (productType == ProductType.Batch) {
-            // Tìm manager dựa trên batch
-            Batch batch = batchRepository.findById(orderDetail.getProductId())
-                    .orElseThrow(() -> new EntityNotFoundException("Batch not found!"));
-            manager = batch.getManager();
-        } else {
-            throw new IllegalArgumentException("Unknown product type");
-        }
+//        if (productType == ProductType.KoiFish) {
+//            // Tìm manger dựa trên sản phẩm cá thể
+//            KoiFish koiFish = koiFishRepository.findById(orderDetail.getProductId())
+//                    .orElseThrow(() -> new EntityNotFoundException("KoiFish not found!"));
+//            manager = koiFish.getManager();
+//        } else if (productType == ProductType.Batch) {
+//            // Tìm manager dựa trên batch
+//            Batch batch = batchRepository.findById(orderDetail.getProductId())
+//                    .orElseThrow(() -> new EntityNotFoundException("Batch not found!"));
+//            manager = batch.getManager();
+//        } else {
+//            throw new IllegalArgumentException("Unknown product type");
+//        }
 
 
         transactions3.setFrom(customer);
@@ -363,6 +366,7 @@ public class OrdersService {
 
 
         payment.setTransactions(setTransactions);
+
 
         userRepository.save(customer);
         userRepository.save(manager);

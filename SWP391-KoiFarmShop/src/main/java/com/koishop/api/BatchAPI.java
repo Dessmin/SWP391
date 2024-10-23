@@ -23,12 +23,12 @@ public class BatchAPI {
 
     @GetMapping("/list-batch")
     public BatchResponse getAllBatch(@RequestParam int page) {
-        return batchService.getAllBatch(page, 6);
+        return batchService.getAllBatch(page, 4);
     }
 
     @GetMapping("/{breed}/list-batch-breed")
     public BatchResponse getAllBatchByBreed(@PathVariable String breed,@RequestParam int page) {
-        return batchService.getAllBatchByBreed(breed, page, 6);
+        return batchService.getAllBatchByBreed(breed, page, 4);
     }
     
     @PostMapping("/create-batch")

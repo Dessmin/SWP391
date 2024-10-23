@@ -19,8 +19,7 @@ import java.util.List;
 
 @Service
 public class BatchService {
-    @Autowired
-    UserService userService;
+
     @Autowired
     BatchRepository batchRepository;
     @Autowired
@@ -28,6 +27,8 @@ public class BatchService {
     private ModelMapper modelMapper;
     @Autowired
     private BreedsService breedsService;
+    @Autowired
+    private UserService userService;
 
     public BatchResponse getAllBatch(int page, int size) {
         List<BatchView> batchViewList = new ArrayList<>();
@@ -58,7 +59,6 @@ public class BatchService {
     public BatchDetailUpdate createBatch(BatchDetailUpdate batch) {
         Batch newBatch = modelMapper.map(batch, Batch.class);
         newBatch.setBreed(breedsService.getBreedByName(batch.getBreed()));
-        newBatch.setManager(userService.getCurrentUser());
         newBatch.setIsSale(true);
         batchRepository.save(newBatch);
         return batch;
@@ -72,12 +72,11 @@ public class BatchService {
         return batchDetailUpdate;
     }
 
-    public boolean updateIsSale(Integer id) {
+    public void updateIsSale(Integer id) {
         Batch batch = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
         batch.setIsSale(!batch.getIsSale());
         batchRepository.save(batch);
-        return batch.getIsSale();
     }
 
     public BatchDetailUpdate updateBatch(int id, BatchDetailUpdate batch) {
@@ -114,6 +113,12 @@ public class BatchService {
         batchResponse.setPage(page);
         batchResponse.setContent(batchViewList);
         return batchResponse;
+    }
+
+    public void quantityBatch(int id, int quantity) {
+        Batch batch = batchRepository.findByBatchID(id);
+        batch.setQuantity(batch.getQuantity() - quantity);
+        batchRepository.save(batch);
     }
 
     public String getBreedByBatchId(int batchId) {
