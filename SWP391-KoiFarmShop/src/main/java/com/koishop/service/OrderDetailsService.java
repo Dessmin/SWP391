@@ -49,6 +49,9 @@ public class OrderDetailsService {
 
         // Ánh xạ từ OrderDetails sang OrderDetailsResponse bằng vòng lặp for
         for (OrderDetails orderDetails : orderDetailsList) {
+            if (orderDetails.getOrders().isDeleted()) {
+                throw new RuntimeException("Order with ID " + orderDetails.getOrders().getOrderID() + " has been deleted!");
+            }
             OrderDetailsResponse response = modelMapper.map(orderDetails, OrderDetailsResponse.class);
             response.setOrderId(orderDetails.getOrders().getOrderID());
             orderDetailsResponseList.add(response);
@@ -63,6 +66,9 @@ public class OrderDetailsService {
         List<OrderDetails> orderDetailsList = orderDetailsRepository.findByOrders_OrderID(orderId);
         if (orderDetailsList.isEmpty()) {
             throw new EntityNotFoundException("No OrderDetails found for Order ID: " + orderId);
+        }
+        if (orderDetailsList.get(0).getOrders().isDeleted()) {
+            throw new RuntimeException("Order with ID " + orderId + " has been deleted!");
         }
         List<OrderDetailsResponse> orderDetailsResponses = new ArrayList<>();
 
@@ -149,6 +155,11 @@ public class OrderDetailsService {
         // Tìm OrderDetails theo id, nếu không tồn tại thì ném lỗi
         OrderDetails orderDetails = orderDetailsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order Detail not found"));
+
+        if (orderDetails.getOrders().isDeleted()) {
+            throw new RuntimeException("Cannot update Order Detail. The order with ID "
+                    + orderDetails.getOrders().getOrderID() + " has been deleted.");
+        }
 
         // Ánh xạ từ OrderDetailsRequest vào thực thể orderDetails hiện tại
         modelMapper.map(orderDetailsRequest, orderDetails);

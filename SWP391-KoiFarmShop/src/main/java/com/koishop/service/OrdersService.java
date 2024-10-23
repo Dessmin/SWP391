@@ -7,7 +7,6 @@ import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.models.orders_model.OrderResponse;
 import com.koishop.models.orders_model.ViewOrdersOnly;
 import com.koishop.repository.*;
-import org.hibernate.query.Order;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +51,7 @@ public class OrdersService {
 
     public List<OrderResponse> getAllOrders() {
         List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Orders order : ordersRepository.findAll()) {
+        for (Orders order : ordersRepository.findByDeletedFalse()) {
             OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
             orderResponse.setUserName(order.getUser().getUsername());
 
@@ -77,7 +76,7 @@ public class OrdersService {
 
     public List<ViewOrdersOnly> getOrdersSummary() {
         // Lấy danh sách tất cả các đơn hàng
-        List<Orders> ordersList = ordersRepository.findAll();
+        List<Orders> ordersList = ordersRepository.findByDeletedFalse();
         List<ViewOrdersOnly> viewOrdersOnlyList = new ArrayList<>();
 
         // Duyệt qua từng đơn hàng trong danh sách
