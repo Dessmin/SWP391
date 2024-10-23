@@ -13,9 +13,9 @@ function Footer() {
           alt="Koi Shop"
           className="logo"
         />
-        <p>Address: District 9, Ho Chi Minh City</p>
-        <p>Phone number: 0123456789</p>
-        <p>Email: koishop@gmail.com</p>
+        <p><strong>Địa chỉ: </strong> District 9, Ho Chi Minh City</p>
+        <p><strong>SDT: </strong> 0123456789</p>
+        <p><strong>Email: </strong> koishop@gmail.com</p>
       </div>
 
       <div className="footer-section links">

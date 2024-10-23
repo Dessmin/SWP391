@@ -25,7 +25,7 @@ function CardKoi({ koi }) {
   const { id, fishName, breed, origin, size, price, image } = koi;
 
   return (
-    <div className="koi-card">
+    <div className="koi-card1">
       <img height={250} src={image} alt="" />
 
       <div className="koi-card__content">

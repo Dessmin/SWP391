@@ -17,8 +17,28 @@ const PaymentSuccess = () => {
     const searchParams = new URLSearchParams(location.search);
     const vnpResponseCode = searchParams.get("vnp_ResponseCode");
 
+    const updateOrderStatus = async (status) => {
+      try {
+        await axios.put(
+          `http://localhost:8080/api/orders/${orderId}/update-status`,
+          null, // Tham số body không cần thiết ở đây
+          {
+            params: { status }, // Truyền tham số status qua query params
+            headers: {
+              Authorization: `Bearer ${user.token}`, // Gửi token trong header
+            },
+          }
+        );
+      } catch (error) {
+        console.log("Error updating order status:", error);
+        setError("Cập nhật trạng thái đơn hàng thất bại.");
+      }
+    };
+
     // Nếu thanh toán thất bại hoặc bị hủy
     if (vnpResponseCode !== "00") {
+      // Cập nhật trạng thái đơn hàng là "FAIL"
+      updateOrderStatus("FAIL"); 
       navigate("/payment-failed", { replace: true });
       return;
     }
@@ -38,6 +58,7 @@ const PaymentSuccess = () => {
 
         // Gọi hàm thêm giao dịch
         await addTransaction(); // Gọi hàm thêm giao dịch sau khi nhận được đơn hàng
+        await updateOrderStatus("PAID"); // Giả sử trạng thái là PAID
       } catch (err) {
         setError("Không thể tải thông tin đơn hàng.");
         setLoading(false);
@@ -46,20 +67,18 @@ const PaymentSuccess = () => {
 
     const addTransaction = async () => {
       try {
-        await apiOrder.post(
-          `${orderId}/transaction`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`, // Gửi token trong header
-            },
-          }
-        );
+        await apiOrder.post(`${orderId}/transaction`, {}, {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          },
+        });
       } catch (error) {
         console.log("Error adding transaction:", error);
         // Có thể thêm thông báo lỗi nếu cần
       }
     };
+
+    
 
     // Fetch order details only if payment was successful
     fetchOrder();
@@ -91,7 +110,7 @@ const PaymentSuccess = () => {
       {order && (
         <div style={{ marginTop: "20px" }}>
           <p>
-            <strong>Tổng tiền:</strong> {order.totalAmount} VND
+            <strong>Tổng tiền:</strong> {order.totalAmount.toLocaleString()} VND
           </p>
           <p>
             <strong>Ngày tạo:</strong>{" "}

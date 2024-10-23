@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import "./index.scss";
 import apiKoi from "../../config/koi-api";
 import CardKoi from "../card-koi";
-import { Select } from "antd";
+import { Button, Select } from "antd";
 import { Option } from "antd/es/mentions";
 
 function KoiList() {
@@ -102,13 +102,13 @@ function KoiList() {
 
             <div className="koi__page">
                 {Array.from({ length: totalPages }, (_, index) => (
-                    <button
+                    <Button
                         key={index}
                         onClick={() => handlePageChange(index)}
                         style={{ margin: '0 5px', padding: '5px 10px', background: page === index ? 'lightblue' : 'white' }}
                     >
                         {index + 1}
-                    </button>
+                    </Button>
                 ))}
             </div>
         </div>

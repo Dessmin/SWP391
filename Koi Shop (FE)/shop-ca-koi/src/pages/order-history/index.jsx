@@ -1,19 +1,18 @@
-import { Button, Table } from "antd";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import Dashboard from "../../../components/dashboard";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import {  Table } from "antd";
+import './index.scss'
 
-function OrderManagement() {
+function OrderHistory() {
   const user = useSelector((state) => state.user);
   const [orders, setOrders] = useState([]);
-  const navigate = useNavigate();
 
-  const fetchOrder = async () => {
+  const fetchOrderHistory = async () => {
     try {
+        
       const response = await axios.get(
-        "http://localhost:8080/api/orders/list-orders/summary",
+        "http://localhost:8080/api/orders/list-user-orders/summary",
         {
           headers: {
             Authorization: `Bearer ${user.token}`, // Gửi token trong header
@@ -29,19 +28,11 @@ function OrderManagement() {
   };
 
   useEffect(() => {
-    fetchOrder();
+    fetchOrderHistory();
   }, [user.token]);
 
-
-
-
-
   const columns = [
-    {
-      title: "Id",
-      dataIndex: "orderID",
-      key: "orderID",
-    },
+
     {
       title: "Tên người dùng",
       dataIndex: "userName",
@@ -62,33 +53,17 @@ function OrderManagement() {
       dataIndex: "orderStatus",
       key: "orderStatus",
     },
-    {
-      title: "Action",
-      dataIndex: "action",
-      render: (text, record) => (
-        <span>
-          <Button onClick={() => navigate(`/orderDetail/${record.orderID}`)}>Order detail</Button>
-
-          <Button  type="primary" danger style={{ marginLeft: 8 }}>Xóa</Button>
-          <Button onClick={() => navigate(`/payment/${record.orderID}`)} type="primary">Payment</Button>
-        </span>
-      ),
-    },
   ];
-  return (
-    <div>
-      <Dashboard>
-        <Table
+
+  return <div className="history">
+    <h1>Lịch sử đặt hàng</h1>
+    <Table
           columns={columns}
           dataSource={orders}
           rowKey={(record) => record.id}
           bordered
         />
-      </Dashboard>
-      
-      
-    </div>
-  );
+  </div>;
 }
 
-export default OrderManagement;
+export default OrderHistory;

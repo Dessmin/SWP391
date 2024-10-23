@@ -1,0 +1,32 @@
+.bttnn{
+    margin-top: 20px;
+    text-align: center;
+    margin-left: 1330px;
+}
+
+.link{
+    text-decoration: none;
+    text-align: right;
+    margin-right: 0;
+    display: block;
+    margin-top: 15px;
+}
+
+.link:hover{
+    color: rgb(0, 0, 0);
+}
+
+.action{
+    padding: 0 20px;
+}
+
+.user-detail{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    h1{
+        text-align: center;
+    }
+}
+

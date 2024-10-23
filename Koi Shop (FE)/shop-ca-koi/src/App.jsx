@@ -25,6 +25,7 @@ import OrderDetailAdmin from "./pages/admin/orderDetail-management";
 import PaymentAdmin from "./pages/admin/payment-management";
 import Batch from "./pages/admin/batch-management";
 import Promotion from "./pages/admin/promotion-management";
+import OrderHistory from "./pages/order-history";
 
 function App() {
   const router = createBrowserRouter([
@@ -131,6 +132,10 @@ function App() {
     {
       path: "/home/dashboard/promotion",
       element: <Promotion />,
+    },
+    {
+      path: "/orderHistory",
+      element: <OrderHistory />,
     },
   ]);
 

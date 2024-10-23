@@ -4,13 +4,11 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
-  
   Descriptions,
   Form,
   Image,
   Input,
   Rate,
-  
   Select,
   Spin,
   Table,
@@ -215,7 +213,7 @@ function DetailKoi() {
 
   return (
     <div>
-      <h1>Detail Koi name: {koi.fishName}</h1>
+      <h1>{koi.fishName}</h1>
       {koi && (
         <Descriptions bordered column={1}>
           <Descriptions.Item label="Fish Name">
@@ -240,7 +238,7 @@ function DetailKoi() {
             {koi.screeningRate}
           </Descriptions.Item>
           <Descriptions.Item label="Image">
-            <img width={100} src={koi.image} alt="" />
+            <Image width={100} src={koi.image} alt="Certificate" />
           </Descriptions.Item>
 
           {/* Hiển thị chứng nhận */}
@@ -276,75 +274,79 @@ function DetailKoi() {
           </Descriptions.Item>
         </Descriptions>
       )}
-      <h2>Danh sách cá Koi hiện có</h2>
-      Breed
-      <Select
-        defaultValue="All"
-        style={{ width: 200, marginBottom: "20px" }}
-        onChange={handleBreedChange}
-      >
-        <Option value="All">All</Option>
-        {breeds.map((breed, index) => (
-          <Option key={index} value={breed}>
-            {breed}
-          </Option>
-        ))}
-      </Select>
-      <div className="koi-list">
-      {koiList && koiList.length > 0 ? (
-        koiList.map((koiItem) => (
-          <div className="koi-card" key={koiItem.id}>
-            <img
-              height={290}
-              src={koiItem.image}
-              alt={koiItem.fishName}
-              style={{
-                width: "100%",
-                borderRadius: "10px 10px 0 0",
-                objectFit: "cover",
-              }}
-            />
 
-            <div className="koi-card__content">
-              <div className="koi-card__info1">
-                <span>
-                  <strong>Name:</strong> {koiItem.fishName}
-                </span>
-                <span>
-                  <strong>Price:</strong> {koiItem.price.toLocaleString()} VND
-                </span>
-              </div>
-              <div className="koi-card__info2">
-                <span>
-                  <strong>Origin:</strong> {koiItem.origin}
-                </span>
-                <span>
-                  <strong>Breed:</strong> {koiItem.breed}
-                </span>
-              </div>
-              <div>
-                <strong>Size:</strong> {koiItem.size} cm
-              </div>
-            </div>
+      <h1 className="compare" style={{ textAlign: "center" }}>So sánh cá Koi</h1>
+      <div className="koi-compare">
+        <strong>Breed </strong>
+        <Select
+          defaultValue="All"
+          style={{ width: 200, marginBottom: "20px" }}
+          onChange={handleBreedChange}
+        >
+          <Option value="All">All</Option>
+          {breeds.map((breed, index) => (
+            <Option key={index} value={breed}>
+              {breed}
+            </Option>
+          ))}
+        </Select>
+        <div className="koi-list">
+          {koiList && koiList.length > 0 ? (
+            koiList.map((koiItem) => (
+              <div className="koi-card" key={koiItem.id}>
+                <img
+                  height={290}
+                  src={koiItem.image}
+                  alt={koiItem.fishName}
+                  style={{
+                    width: "100%",
+                    borderRadius: "10px 10px 0 0",
+                    objectFit: "cover",
+                  }}
+                />
 
-            <Button
-              key={koiItem.id}
-              type="primary"
-              onClick={() => handleCompare(koiItem.id)}
-              style={{ marginTop: "10px", width: "100%" }}
-            >
-              So sánh
-            </Button>
-          </div>
-        ))
-      ) : (
-        <p>Không có cá koi nào để hiển thị</p>
-      )}
+                <div className="koi-card__content">
+                  <div className="koi-card__info1">
+                    <span>
+                      <strong>Name:</strong> {koiItem.fishName}
+                    </span>
+                    <span>
+                      <strong>Price:</strong> {koiItem.price.toLocaleString()}{" "}
+                      VND
+                    </span>
+                  </div>
+                  <div className="koi-card__info2">
+                    <span>
+                      <strong>Origin:</strong> {koiItem.origin}
+                    </span>
+                    <span>
+                      <strong>Breed:</strong> {koiItem.breed}
+                    </span>
+                  </div>
+                  <div>
+                    <strong>Size:</strong> {koiItem.size} cm
+                  </div>
+                </div>
+
+                <Button
+                  key={koiItem.id}
+                  type="primary"
+                  onClick={() => handleCompare(koiItem.id)}
+                  style={{ marginTop: "10px", width: "100%", height: '50px' }}
+                >
+                  So sánh
+                </Button>
+              </div>
+            ))
+          ) : (
+            <p>Không có cá koi nào để hiển thị</p>
+          )}
+        </div>
       </div>
-      
+
       <div className="koi__page">
         {Array.from({ length: totalPages }, (_, index) => (
-          <button
+          <Button
             key={index}
             onClick={() => handlePageChange(index)}
             style={{
@@ -354,7 +356,7 @@ function DetailKoi() {
             }}
           >
             {index + 1}
-          </button>
+          </Button>
         ))}
       </div>
       <h1>Feedback</h1>

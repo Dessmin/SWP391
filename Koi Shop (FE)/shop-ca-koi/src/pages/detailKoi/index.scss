@@ -1,6 +1,6 @@
 .koi-card{
   background-color: rgb(255, 255, 255);
-  width: calc(100%/6);
+  width: calc(100%/5);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.3);
@@ -39,4 +39,12 @@
 
 .koi-list{
     display: flex;
+    justify-content: space-evenly;
+    
   }
+
+.koi-compare{
+    padding: 10px 20px;
+}
+
+

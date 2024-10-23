@@ -13,7 +13,7 @@ const OrderDetails = () => {
   const [error, setError] = useState(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const [consignmentType, setConsignmentType] = useState("Offline"); // Mặc định là "Offline"
+  const [consignmentTypes, setConsignmentTypes] = useState({}); // Mặc định là "Offline"
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -46,7 +46,7 @@ const OrderDetails = () => {
     const consignmentData = {
       fishId,
       requestDate: new Date().toISOString(),
-      consignmentType,
+      consignmentType: consignmentTypes[fishId] || "Offline",
     };
 
     try {
@@ -63,6 +63,13 @@ const OrderDetails = () => {
     } catch (err) {
       toast.error("Ký gửi thất bại.");
     }
+  };
+
+  const handleConsignmentTypeChange = (productId, value) => {
+    setConsignmentTypes((prev) => ({
+      ...prev,
+      [productId]: value, // Cập nhật consignmentType cho từng sản phẩm
+    }));
   };
 
   if (loading) {
@@ -91,24 +98,23 @@ const OrderDetails = () => {
           <Descriptions.Item label="Tổng tiền">
             {order.totalAmount} VND
           </Descriptions.Item>
-          {/* <Descriptions.Item label="Ngày tạo">
-            {new Date(order.createDate).toLocaleString()}
-          </Descriptions.Item> */}
-          {/* <Descriptions.Item label="Trạng thái">
-            {order.status}
-          </Descriptions.Item> */}
           <Descriptions.Item label="Chi tiết sản phẩm">
             {order.orderDetails.map((item, index) => (
               <div key={index}>
                 <p>Id: {item.productId}</p>
                 <p>Sản phẩm: {item.productType}</p>
                 <p>Số lượng: {item.quantity}</p>
-                <p>Giá: {item.unitPrice} VND</p>
+                <p>Giá: {item.unitPrice.toLocaleString()} VND</p>
                 {item.productType === "KoiFish" && (
                   <>
                     <Radio.Group
-                      onChange={(e) => setConsignmentType(e.target.value)}
-                      value={consignmentType}
+                      onChange={(e) =>
+                        handleConsignmentTypeChange(
+                          item.productId,
+                          e.target.value
+                        )
+                      }
+                      value={consignmentTypes[item.productId] || "Offline"} // Lấy giá trị của sản phẩm cụ thể
                       style={{ marginBottom: "10px" }}
                     >
                       <Radio value="Online">Online</Radio>

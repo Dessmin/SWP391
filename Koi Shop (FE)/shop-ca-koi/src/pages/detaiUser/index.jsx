@@ -2,7 +2,8 @@ import { Button, Descriptions, Spin } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import './index.scss'
 
 function DetailUser() {
   const navigate = useNavigate();
@@ -43,8 +44,8 @@ function DetailUser() {
   }
 
   return (
-    <div>
-      <h1>Detail User ID: {id}</h1>
+    <div className="user-detail">
+      <h1>Welcome, {userId.userName}</h1>
       {userId && (
         <Descriptions bordered column={1}>
           <Descriptions.Item label="User Name">
@@ -65,7 +66,11 @@ function DetailUser() {
           
         </Descriptions>
       )}
-      <Button type="primary" onClick={() => navigate("/home")}>Trở về</Button>
+      <div className="action">
+      <Link className="link" to="/orderHistory">Lịch sử mua hàng</Link>
+      <Button className="bttnn" type="primary" onClick={() => navigate("/home")}>Trang chủ</Button>
+      </div>
+      
     </div>
   );
 }

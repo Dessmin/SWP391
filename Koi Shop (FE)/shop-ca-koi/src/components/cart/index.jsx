@@ -1,19 +1,106 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getCartFromSession, saveCartToSession } from "../../helper/helper";
 import { useSelector } from "react-redux";
-import { Table, Button } from "antd";
+import { Table, Button, Input } from "antd";
 import apiOrder from "../../config/api-order";
+import axios from "axios";
 
 const Cart = () => {
-  
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
   const [cartItems, setCartItems] = useState([]); // State để lưu giỏ hàng từ session
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [voucherCode, setVoucherCode] = useState("");
+  const [userPoint, setUserPoint] = useState();
 
   // Lấy giỏ hàng từ session theo user id
   useEffect(() => {
     if (user) {
       const cartFromSession = getCartFromSession(user.id);
       setCartItems(cartFromSession || []); // Nếu session không có giỏ hàng, gán giá trị mảng rỗng
+    }
+  }, [user]);
+
+  const calculateSubtotal = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.price * (item.quantity || 1),
+      0
+    );
+  };
+
+  const calculateTotalAmount = () => {
+    const subtotal = calculateSubtotal();
+    const discountFromVoucher = (subtotal * discountPercent) / 100;
+    const discountFromPoints = points; // Giả sử mỗi điểm trừ trực tiếp 1 đơn vị tiền
+    const total = subtotal - discountFromVoucher - discountFromPoints;
+    setTotalAmount(total > 0 ? total : 0); // Đảm bảo tổng không âm
+  };
+
+  const handleVoucherApply = async () => {
+    try {
+      // Gọi API với phương thức GET và truyền mã voucher vào URL
+      const response = await axios.get(
+        `http://localhost:8080/api/promotions/${voucherCode}/discount`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      console.log();
+
+      // Giả sử API trả về giá trị discountPercent
+      setDiscountPercent(response.data); // Lưu phần trăm giảm giá vào state
+      calculateTotalAmount(); // Tính toán lại tổng tiền sau khi nhận phần trăm giảm giá
+    } catch (error) {
+      console.error("Error applying voucher", error);
+      alert("Invalid voucher code.");
+    }
+  };
+
+  useEffect(() => {
+    calculateTotalAmount();
+  }, [cartItems, points, discountPercent]);
+
+  const updateUserPoints = async (points) => {
+    try {
+      await axios.put(
+        `http://localhost:8080/api/user/usePoint`,
+        {
+          point: points,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      console.log("User points updated successfully");
+    } catch (error) {
+      console.error("Error updating user points", error);
+    }
+  };
+
+  const fetchPoint = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/user/customer-point`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      setUserPoint(response.data);
+      console.log("User points updated successfully");
+    } catch (error) {
+      console.error("Error updating user points", error);
+    }
+  };
+  useEffect(() => {
+    if (user) {
+      fetchPoint();
     }
   }, [user]);
 
@@ -31,16 +118,15 @@ const Cart = () => {
     window.location.reload();
   };
 
-  
-
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       alert("Your cart is empty.");
       return;
     }
-  
+
     // Tạo đối tượng orderRequest chứa danh sách orderDetails từ cartItems
     const orderRequest = {
+      totalAmount: totalAmount,
       orderDetails: cartItems.map((item) => ({
         productId: item.id,
         productType: item.type, // "KoiFish" hoặc "Batch"
@@ -48,7 +134,7 @@ const Cart = () => {
         unitPrice: item.price,
       })),
     };
-  
+
     try {
       // Gọi API tạo đơn hàng và lấy URL thanh toán
       const response = await apiOrder.post("add-order", orderRequest, {
@@ -56,13 +142,15 @@ const Cart = () => {
           Authorization: `Bearer ${user.token}`, // Gửi token trong header
         },
       });
-  
+
       const paymentUrl = response.data; // Giả sử backend trả về paymentUrl
-  
+
       // Chuyển hướng sang trang thanh toán
       window.location.href = paymentUrl;
-      
-  
+      if (points > 0) {
+        await updateUserPoints(points);
+      }
+
       // Xóa giỏ hàng sau khi thanh toán thành công
       setCartItems([]);
       saveCartToSession(user.id, []);
@@ -71,10 +159,6 @@ const Cart = () => {
       alert("Error creating order. Please try again.");
     }
   };
-  
-  
-
-
 
   // Định nghĩa các cột cho bảng
   const columns = [
@@ -123,21 +207,61 @@ const Cart = () => {
 
   return (
     <div>
-      
-      <h1 style={{textAlign: "center"}}>Your cart</h1>
+      <h1 style={{ textAlign: "center" }}>Your cart</h1>
       {cartItems.length === 0 ? (
-        <p style={{textAlign: "center"}} >No items in cart</p>
+        <p style={{ textAlign: "center" }}>No items in cart</p>
       ) : (
         <div>
           <Table columns={columns} dataSource={cartItems} rowKey="id" />
+          
+
+          <span style={{ marginLeft: "20px" }}>
+              Bạn có <strong>{userPoint}</strong> điểm
+            </span>
+          <div style={{ marginTop: "20px" }}>
+            <Input
+              type="number"
+              placeholder="Enter points to use"
+              value={points}
+              onChange={(e) => setPoints(Number(e.target.value))}
+              style={{ width: "200px", marginRight: "10px" }}
+            />
+            <span>Points</span>
+            
+          </div>
+
+          {/* Nhập voucher */}
+          <div style={{ marginTop: "20px" }}>
+            <Input
+              placeholder="Enter voucher code"
+              value={voucherCode}
+              onChange={(e) => setVoucherCode(e.target.value)}
+              style={{ width: "200px", marginRight: "10px" }}
+            />
+            <Button type="primary" onClick={handleVoucherApply}>
+              Apply Voucher
+            </Button>
+          </div>
+
+          {/* Hiển thị tổng tiền */}
+          <div style={{ marginTop: "20px" }}>
+            <h3>Total Amount: {totalAmount.toLocaleString()} VND</h3>
+          </div>
+
           {/* Nút Checkout */}
           <Button
             type="primary"
             onClick={handleCheckout}
             style={{ marginTop: "20px" }}
+            disabled={points > userPoint || cartItems.length === 0} // Điều kiện disabled
           >
             Checkout
           </Button>
+          {points > userPoint && (
+            <p style={{ color: "red", marginTop: "10px" }}>
+              Không đủ điểm
+            </p>
+          )}
         </div>
       )}
     </div>

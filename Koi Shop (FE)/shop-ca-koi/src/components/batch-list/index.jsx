@@ -3,6 +3,7 @@ import apiBatch from "../../config/api-batch";
 import CardBatch from "../card-batch";
 import { useSelector } from "react-redux";
 import './index.scss'
+import { Button } from "antd";
 function BatchList() {
   const [batches, setbatches] = useState([]);
   const [page, setPage] = useState(0); // Số trang hiện tại
@@ -43,7 +44,7 @@ function BatchList() {
 
       <div className="batch__page">
         {Array.from({ length: totalPages }, (_, index) => (
-          <button
+          <Button
             key={index}
             onClick={() => handlePageChange(index)}
             style={{
@@ -53,7 +54,7 @@ function BatchList() {
             }}
           >
             {index + 1}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table, Spin, Alert } from "antd";
+import './index.scss'
 
 function Consignment() {
   const user = useSelector((state) => state.user);
@@ -32,11 +33,7 @@ function Consignment() {
   }, [user.token]);
 
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
+    
     {
       title: "Tên cá",
       dataIndex: "fishName",
@@ -63,7 +60,7 @@ function Consignment() {
       title: "Giá bán tại cửa hàng",
       dataIndex: "shopPrice",
       key: "shopPrice",
-      render: (price) => `${price} VND`,
+      render: (price) => `${price.toLocaleString()} VND`,
     },
   ];
 
@@ -76,7 +73,7 @@ function Consignment() {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="consignment">
       <h1>Danh sách ký gửi</h1>
       <Table
         columns={columns}
