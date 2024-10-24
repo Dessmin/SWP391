@@ -1,14 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Table, Spin, Alert } from "antd";
+import { Table, Spin, Alert, Button } from "antd";
 import './index.scss'
+import { useNavigate } from "react-router-dom";
 
 function Consignment() {
   const user = useSelector((state) => state.user);
   const [consignments, setConsignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchConsignment = async () => {
@@ -81,6 +83,7 @@ function Consignment() {
         rowKey={(record) => record.id}
         bordered
       />
+      <Button onClick={() => navigate("/consignmentKoi")}>Ký gửi</Button>
     </div>
   );
 }

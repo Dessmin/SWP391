@@ -4,8 +4,13 @@
     padding: 0 50px;
 
     h2{
+        display: inline-block;
+        background-color: red;
+        padding: 10px 20px;
         margin-top: 45px;
         text-align: center;
+        margin: 45px auto 20px;
+        border-radius: 55px;
     }
 
     &__list{

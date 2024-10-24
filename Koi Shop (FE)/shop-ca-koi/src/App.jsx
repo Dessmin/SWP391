@@ -26,6 +26,9 @@ import PaymentAdmin from "./pages/admin/payment-management";
 import Batch from "./pages/admin/batch-management";
 import Promotion from "./pages/admin/promotion-management";
 import OrderHistory from "./pages/order-history";
+import ManualConsignment from "./pages/manual-consignment";
+import AddConsignment from "./pages/add-consignment";
+import ConfirmConsign from "./pages/confirm-consign";
 
 function App() {
   const router = createBrowserRouter([
@@ -137,6 +140,19 @@ function App() {
       path: "/orderHistory",
       element: <OrderHistory />,
     },
+    {
+      path: "/consignmentKoi",
+      element: <ManualConsignment />,
+    },
+    {
+      path: "/addConsignmentKoi",
+      element: <AddConsignment />,
+    },
+    {
+      path: "/confirm/:id",
+      element: <ConfirmConsign />,
+    },
+  
   ]);
 
   return <RouterProvider router={router} />;

@@ -7,25 +7,9 @@ import { toast } from "react-toastify";
 import Header from "../../components/header(def)";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/features/userSlice";
-// import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-// import { auth, googleProvider } from "../../config/firebase";
+
 function Login() {
-  // const handleLoginGoogle = () => {
-  //   signInWithPopup(auth, googleProvider)
-  //     .then((result) => {
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       console.log(credential);
-  //       sessionStorage.setItem(
-  //         "googleUser",
-  //         JSON.stringify(credential.idToken)
-  //       );
-  //       navigate("/home");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  
 
   const navigate = useNavigate();
 
@@ -85,14 +69,7 @@ function Login() {
           <Button style={{ width: "500px" }} type="primary" htmlType="submit">
             Log in
           </Button>
-          {/* <Button onClick={handleLoginGoogle} className="login-google">
-            <img
-              width={25}
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
-              alt=""
-            />
-            <span>Login with Google</span>
-          </Button> */}
+          
         </Form>
       </div>
     </div>

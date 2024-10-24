@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCartFromSession, saveCartToSession } from "../../helper/helper";
 import { useSelector } from "react-redux";
-import { Table, Button, Input } from "antd";
+import { Table, Button, Input, InputNumber } from "antd";
 import apiOrder from "../../config/api-order";
 import axios from "axios";
 
@@ -17,7 +17,10 @@ const Cart = () => {
   // Lấy giỏ hàng từ session theo user id
   useEffect(() => {
     if (user) {
-      const cartFromSession = getCartFromSession(user.id);
+      const cartFromSession = getCartFromSession(user.id).map((item) => ({
+        ...item,
+        initialQuantity: item.quantity, // Lưu giá trị ban đầu của số lượng
+      }));
       setCartItems(cartFromSession || []); // Nếu session không có giỏ hàng, gán giá trị mảng rỗng
     }
   }, [user]);
@@ -104,6 +107,20 @@ const Cart = () => {
     }
   }, [user]);
 
+  const handleQuantityChange = (value, productId, productType) => {
+    const updatedCart = cartItems.map((item) => {
+      if (item.id === productId && item.type === productType) {
+        return {
+          ...item,
+          quantity: value > item.initialQuantity ? item.initialQuantity : value, // Không cho phép vượt quá số lượng ban đầu
+        };
+      }
+      return item;
+    });
+    setCartItems(updatedCart);
+    saveCartToSession(user.id, updatedCart); // Cập nhật giỏ hàng trong session
+  };
+
   // Hàm xử lý xóa sản phẩm khỏi giỏ hàng
   const handleRemoveFromCart = (productId, productType) => {
     // Xóa sản phẩm dựa trên cả id và type
@@ -189,7 +206,19 @@ const Cart = () => {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
-      render: (quantity, record) => (record.type === "Batch" ? quantity : 1), // Chỉ hiện số lượng cho batch
+      render: (quantity, record) =>
+        record.type === "Batch" ? (
+          <InputNumber
+            min={1}
+            max={record.initialQuantity}
+            value={quantity}
+            onChange={(value) =>
+              handleQuantityChange(value, record.id, record.type)
+            }
+          />
+        ) : (
+          1
+        ),
     },
     {
       title: "Action",
@@ -213,11 +242,10 @@ const Cart = () => {
       ) : (
         <div>
           <Table columns={columns} dataSource={cartItems} rowKey="id" />
-          
 
           <span style={{ marginLeft: "20px" }}>
-              Bạn có <strong>{userPoint}</strong> điểm
-            </span>
+            Bạn có <strong>{userPoint}</strong> điểm
+          </span>
           <div style={{ marginTop: "20px" }}>
             <Input
               type="number"
@@ -227,7 +255,6 @@ const Cart = () => {
               style={{ width: "200px", marginRight: "10px" }}
             />
             <span>Points</span>
-            
           </div>
 
           {/* Nhập voucher */}
@@ -258,9 +285,7 @@ const Cart = () => {
             Checkout
           </Button>
           {points > userPoint && (
-            <p style={{ color: "red", marginTop: "10px" }}>
-              Không đủ điểm
-            </p>
+            <p style={{ color: "red", marginTop: "10px" }}>Không đủ điểm</p>
           )}
         </div>
       )}

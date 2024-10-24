@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import "./index.scss";
 import apiKoi from "../../config/koi-api";
 import CardKoi from "../card-koi";
-import { Button, Select } from "antd";
+import { Button, Input, Select } from "antd";
 import { Option } from "antd/es/mentions";
 
 function KoiList() {
@@ -12,10 +12,12 @@ function KoiList() {
     const [totalPages, setTotalPages] = useState(1);
     const [breeds, setBreeds] = useState([]); // State để lưu danh sách breed
     const [selectedBreed, setSelectedBreed] = useState("All");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [name, setName] = useState([]);
 
     const user = useSelector((state) => state.user);
     
-    // const userGoogle = sessionStorage.getItem('googleUser')
+    
 
     const fetchKoi = async (page = 0) => {
         try {
@@ -42,6 +44,27 @@ function KoiList() {
             setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
         } catch (e) {
             console.log(e); // Ghi lại lỗi không phải axios
+        }
+    };
+
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value); // Cập nhật từ khóa tìm kiếm khi người dùng nhập
+    };
+
+    const handleSearch = async () => {
+        try {
+            const response = await apiKoi.get(`${searchTerm}/search`, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            });
+            
+            setName(response.data); // Cập nhật danh sách cá Koi dựa trên từ khóa tìm kiếm
+            console.log(response.data);
+            
+            
+        } catch (error) {
+            console.error("Error fetching Koi by search", error);
         }
     };
 
@@ -80,6 +103,18 @@ function KoiList() {
     return (
         <div className="koi">
             <h2>Danh sách Koi</h2>
+
+            Search: <Input
+                placeholder="Nhập tên Koi muốn tìm"
+                value={searchTerm}
+                onChange={handleInputChange}
+                onPressEnter={handleSearch} // Gọi tìm kiếm khi nhấn Enter
+                style={{ width: 300, marginBottom: "20px" }}
+            />
+            <Button type="primary" onClick={handleSearch}>
+                Tìm kiếm
+            </Button>
+            
             <strong>Breed</strong><Select 
                 defaultValue="All"
                 style={{ width: 200, marginBottom: '20px' }}
@@ -94,10 +129,13 @@ function KoiList() {
             </Select>
             
             <div className="koi__list">
-            {kois.map((koi, index) => (
-                <CardKoi key={index} koi={koi} />
-            ))}
-            </div>
+    {kois
+        .filter(koi => name.includes(koi.fishName)) // Kiểm tra nếu fishName của koi nằm trong danh sách name
+        .map((koi, index) => (
+            <CardKoi key={index} koi={koi} />
+        ))}
+</div>
+
             
 
             <div className="koi__page">
