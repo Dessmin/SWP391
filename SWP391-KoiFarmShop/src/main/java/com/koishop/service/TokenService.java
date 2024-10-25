@@ -27,7 +27,7 @@ public class TokenService {
 
     public String generateToken(User user) {
         String token = Jwts.builder()
-                .setSubject(user.getUsername()+"")
+                .setSubject(user.getEmail()+"")
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 7))
                 .signWith(getSigninKey())
@@ -41,7 +41,7 @@ public class TokenService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        String username = claims.getSubject();
-        return userRepository.findByUserName(username);
+        String userEmail = claims.getSubject();
+        return userRepository.findByEmail(userEmail);
     }
 }

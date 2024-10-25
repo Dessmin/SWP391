@@ -17,7 +17,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -202,14 +204,30 @@ public class OrdersService {
         ordersRepository.save(existingOrder);
     }
 
-    public List<Integer> IncomePerMonth() {
-        List<Integer> incomePerMonth = new ArrayList<>(Collections.nCopies(12, 0));
-        for (Orders order : ordersRepository.findAll()) {
-            int month = order.getOrderDate().getMonth();
-            incomePerMonth.set(month, incomePerMonth.get(month) + order.getTotalAmount().intValue());
+    public List<Object[]> IncomeLast3Years() {
+        List<Object[]> incomePerMonthList = new ArrayList<>();
+        int currentYear = Year.now().getValue();
+        int currentMonth = LocalDate.now().getMonthValue();
+        for (int year = currentYear; year > currentYear - 3; year--) {
+            List<Integer> incomePerMonth = new ArrayList<>(Collections.nCopies(12, 0));
+            for (Orders order : ordersRepository.findByOrderStatusAndDeletedFalse("Finished")) {
+                if (order.getOrderDate().getYear() == year) {
+                    int month = order.getOrderDate().getMonth();
+                    if (year == currentYear && month > currentMonth - 1) {
+                        continue;
+                    }
+                    incomePerMonth.set(month, incomePerMonth.get(month) + order.getTotalAmount().intValue());
+                }
+            }
+            for (int i = (year == currentYear ? currentMonth - 1 : 11); i >= 0; i--) {
+                incomePerMonthList.add(new Object[]{year, i + 1, incomePerMonth.get(i)}); // Year, month, income
+            }
         }
-        return incomePerMonth;
+        return incomePerMonthList;
     }
+
+
+
 
 
     public String createUrl(OrderRequest orderRequest) throws  Exception {

@@ -55,10 +55,6 @@ public class OrdersAPI {
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/Income")
-    public List<Integer> getIncomePerMonth() {
-        return ordersService.IncomePerMonth();
-    }
 
     @PostMapping("{orderId}/transaction")
     public ResponseEntity creater(@PathVariable Integer orderId) throws Exception {

@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.security.SecureRandom;
 import java.util.*;
 
 @Service
@@ -40,12 +41,25 @@ public class UserService implements UserDetailsService {
     @Autowired
     private EmailService emailService;
 
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    public static String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(8);
+
+        for (int i = 0; i < 8; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
+        }
+
+        return password.toString();
+    }
+
     public CustomerRequest registerUser(RegisterRequest registerRequest) {
         // map regis -> user
         User user = modelMapper.map(registerRequest, User.class);
         try {
-            String originpassword = user.getPassword();
-            user.setPassword(passwordEncoder.encode(originpassword));
+            user.setPassword(passwordEncoder.encode(generateRandomPassword()));
             user.setJoinDate(new Date());
             user.setRole(Role.Customer);
             user.setPointsBalance(0.0);
@@ -56,6 +70,7 @@ public class UserService implements UserDetailsService {
             emailDetail.setUser(savedUser);
             emailDetail.setSubject("Welcome to Koi Shop");
             emailDetail.setLink("https://www.google.com");
+            emailDetail.setLink("https://www.google.com/?token=" + tokenService.generateToken(user));
             emailService.sentEmail(emailDetail);
             return modelMapper.map(savedUser, CustomerRequest.class);
         } catch (Exception e) {
@@ -79,7 +94,7 @@ public class UserService implements UserDetailsService {
             modelMapper.map(adminViewUser, user);
             userRepository.save(user);
             return modelMapper.map(user, AdminViewUser.class);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error during update process", e);
         }
     }
@@ -117,20 +132,9 @@ public class UserService implements UserDetailsService {
 
     public List<UserForList> getAllUsers() {
         List<User> users = userRepository.findAll();
-        Type listType = new TypeToken<List<UserForList>>() {}.getType();
+        Type listType = new TypeToken<List<UserForList>>() {
+        }.getType();
         return modelMapper.map(users, listType);
-    }
-
-    public List<Integer> userPerMonth() {
-        List<Integer> usersPerMonth = new ArrayList<>(Collections.nCopies(12, 0));
-
-        for (User user : userRepository.findAllByDeletedIsFalse()) {
-            if (user.getRole() == Role.Customer) {
-                int month = user.getJoinDate().getMonth();
-                usersPerMonth.set(month, usersPerMonth.get(month) + 1);
-            }
-        }
-        return usersPerMonth;
     }
 
     public AdminViewUser detail(long id) {
@@ -166,17 +170,17 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
         try {
             userRepository.save(user);
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             throw new RuntimeException("Error during reset password process", e);
         }
     }
 
-    public void resetPassword(ResetPasswordRequest oldPassword, ResetPasswordRequest newPassword) {
+    public void resetPassword(String oldPassword, ResetPasswordRequest newPassword) {
         User user = getCurrentUser();
-        if (passwordEncoder.matches(oldPassword.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword.getPassword()));
             userRepository.save(user);
-        }else throw new IllegalArgumentException("Old password is incorrect.");
+        } else throw new IllegalArgumentException("Old password is incorrect.");
     }
 
     public CustomerRequest updateForCustomer(CustomerRequest updateRequest) {
@@ -211,7 +215,7 @@ public class UserService implements UserDetailsService {
 
     public Double usePoint(Point point) {
         User user = getCurrentUser();
-        user.setPointsBalance(user.getPointsBalance()-point.getPoint());
+        user.setPointsBalance(user.getPointsBalance() - point.getPoint());
         userRepository.save(user);
         return user.getPointsBalance();
     }

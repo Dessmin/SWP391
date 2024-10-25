@@ -23,6 +23,7 @@ public class Breeds {
 
     @NotBlank(message = "Breed name is required")
     @Size(max = 100, message = "Breed name must not exceed 100 characters")
+    @Column(unique = true)
     private String breedName;
 
     @NotBlank(message = "Description is required")

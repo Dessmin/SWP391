@@ -4,18 +4,12 @@ import com.koishop.entity.*;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orderdetails_model.OrderDetailsResponse;
-import com.koishop.repository.BatchRepository;
-import com.koishop.repository.KoiFishRepository;
-import com.koishop.repository.OrderDetailsRepository;
-import com.koishop.repository.OrdersRepository;
+import com.koishop.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class OrderDetailsService {
@@ -35,6 +29,8 @@ public class OrderDetailsService {
     KoiFishRepository koiFishRepository;
     @Autowired
     BatchRepository batchRepository;
+    @Autowired
+    private BreedsService breedsService;
 
 
     public OrderDetailsResponse getOrderDetailsById(Integer id) {
@@ -174,7 +170,6 @@ public class OrderDetailsService {
         if (orderDetails.getOrders() != null) {
             orderDetailsResponse.setOrderId(orderDetails.getOrders().getOrderID());
         }
-
         return orderDetailsResponse;
     }
 
@@ -182,6 +177,4 @@ public class OrderDetailsService {
     public void deleteOrderDetail(Integer id) {
         orderDetailsRepository.deleteById(id);
     }
-
-
 }

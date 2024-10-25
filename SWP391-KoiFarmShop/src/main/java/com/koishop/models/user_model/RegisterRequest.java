@@ -14,10 +14,6 @@ public class RegisterRequest {
     @Column(unique = true)
     private String userName;
 
-    @NotBlank(message = "Password không được để trống")
-    @Size(min = 8, message = "Password phải có ít nhất 8 ký tự")
-    private String password;
-
     @NotBlank(message = "Email không được để trống")
     @Email(message = "Email không hợp lệ")
     @Column(unique = true)

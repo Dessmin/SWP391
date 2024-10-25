@@ -33,9 +33,6 @@ public class UserAPI {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/UserPerMonth")
-    public List<Integer> getUserPerMonth(){return userService.userPerMonth();}
-
     // Login API
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -77,7 +74,7 @@ public class UserAPI {
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity resetPasswordByEmail(@Valid @RequestBody ResetPasswordRequest oldPassword, @Valid @RequestBody ResetPasswordRequest newPassword) {
+    public ResponseEntity resetPassword(@RequestParam String oldPassword, @Valid @RequestBody ResetPasswordRequest newPassword) {
         userService.resetPassword(oldPassword, newPassword);
         return ResponseEntity.ok("Success sent request to reset password");
     }
