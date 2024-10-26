@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8080/")
-@SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/dashboard")
+@SecurityRequirement(name = "api")
 public class DashBoardAPI {
 
     @Autowired

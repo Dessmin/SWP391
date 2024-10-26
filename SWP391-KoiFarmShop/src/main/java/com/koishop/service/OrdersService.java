@@ -30,10 +30,6 @@ public class OrdersService {
     @Autowired
     UserService userService;
     @Autowired
-    KoiFishRepository koiFishRepository;
-    @Autowired
-    BatchRepository batchRepository;
-    @Autowired
     ModelMapper modelMapper;
     @Autowired
     UserRepository userRepository;

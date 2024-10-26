@@ -48,14 +48,14 @@ public class DashBoardService {
         dashboard.put("consigments", consigments);
 
         List<Object[]> BreedSold = breedsService.BreedsSold();
-//        List<Map<String, Object>> breeds = new ArrayList<>();
-//        for (Object[] objects : BreedSold) {
-//            Map<String, Object> breed = new HashMap<>();
-//            breed.put("breedName", objects[0]);
-//            breed.put("totalSold", objects[1]);
-//            breeds.add(breed);
-//        }
-        dashboard.put("breeds", BreedSold);
+        List<Map<String, Object>> breeds = new ArrayList<>();
+        for (Object[] objects : BreedSold) {
+            Map<String, Object> breed = new HashMap<>();
+            breed.put("breedName", objects[0]);
+            breed.put("totalSold", objects[1]);
+            breeds.add(breed);
+        }
+        dashboard.put("breeds", breeds);
         return dashboard;
     }
 
@@ -63,15 +63,15 @@ public class DashBoardService {
 
         Map<String, Object> dashboardIncome = new HashMap<>();
         List<Object[]> incomeMonthly = ordersService.IncomeLast3Years();
-//        List<Map<String, Object>> incomePerMonth = new ArrayList<>();
-//        for (Object[] objects : incomeMonthly) {
-//            Map<String, Object> income = new HashMap<>();
-//            income.put("Year", objects[0]);
-//            income.put("Month", objects[1]);
-//            income.put("Income", objects[2]);
-//            incomePerMonth.add(income);
-//        }
-        dashboardIncome.put("incomeMonthly", incomeMonthly);
+        List<Map<String, Object>> incomePerMonth = new ArrayList<>();
+        for (Object[] objects : incomeMonthly) {
+            Map<String, Object> income = new HashMap<>();
+            income.put("Year", objects[0]);
+            income.put("Month", objects[1]);
+            income.put("Income", objects[2]);
+            incomePerMonth.add(income);
+        }
+        dashboardIncome.put("incomeMonthly", incomePerMonth);
         return dashboardIncome;
     }
 }

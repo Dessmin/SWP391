@@ -1,6 +1,5 @@
 package com.koishop.api;
 
-import com.koishop.entity.Batch;
 import com.koishop.models.batch_model.BatchDetailUpdate;
 import com.koishop.models.batch_model.BatchResponse;
 import com.koishop.models.batch_model.BatchView;
