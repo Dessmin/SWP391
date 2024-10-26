@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Success</title>
+</head>
+<body style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; background-color: #f6f6f6; margin: 0; padding: 0;">
+<table width="100%" bgcolor="#f6f6f6" cellpadding="0" cellspacing="0">
+  <tr>
+    <td></td>
+    <td width="600" style="margin: 0 auto; display: block; max-width: 600px; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; border-radius: 5px; border: 1px solid #e9e9e9;">
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center" style="background-color: #28a745; color: #ffffff; padding: 20px; border-radius: 5px 5px 0 0;">
+              <h1 style="margin: 0;">Payment Successful!</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px;">
+              <p>Hi <strong th:text="${name}"></strong>,</p>
+              <p>Your payment of <strong th:text="${paymentAmount}"></strong> has been successfully processed.</p>
+              <p>Transaction ID: <strong th:text="${transactionId}"></strong></p>
+              <p>You can view your order details by clicking the button below:</p>
+              <p style="text-align: center;">
+                <a th:href="${link}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Go to My Orders</a>
+              </p>
+              <p>Thank you for choosing KoiShop!</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="text-align: center; color: #666; padding: 15px; font-size: 14px; border-top: 1px solid #e9e9e9; margin-top: 20px;">
+        <p style="margin: 0;">If you have any questions, feel free to <a href="#" style="color: #007bff; text-decoration: underline;">contact us</a>.</p>
+        <p style="margin: 5px 0 0;">© 2024 KoiShop. All rights reserved.</p>
+      </div>
+    </td>
+    <td></td>
+  </tr>
+</table>
+</body>
+</html>

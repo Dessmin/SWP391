@@ -69,8 +69,7 @@ public class UserService implements UserDetailsService {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(savedUser);
             emailDetail.setSubject("Welcome to Koi Shop");
-            emailDetail.setLink("https://www.google.com");
-            emailDetail.setLink("https://www.google.com/?token=" + tokenService.generateToken(user));
+            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user));
             emailService.sentEmail(emailDetail);
             return modelMapper.map(savedUser, CustomerRequest.class);
         } catch (Exception e) {
@@ -159,9 +158,9 @@ public class UserService implements UserDetailsService {
         else {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(user);
-            emailDetail.setSubject("Reset Password");
-            emailDetail.setLink("https://www.google.com/?token=" + tokenService.generateToken(user));
-            emailService.sentEmail(emailDetail);
+            emailDetail.setSubject("Password Reset Confirmation");
+            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user)); // Link tới trang của bạn
+            emailService.sendResetPasswordEmail(emailDetail);
         }
     }
 
