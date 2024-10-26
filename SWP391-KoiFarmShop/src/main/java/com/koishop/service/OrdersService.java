@@ -6,6 +6,7 @@ import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orders_model.OrderRequest;
 import com.koishop.models.orders_model.OrderResponse;
 import com.koishop.models.orders_model.ViewOrdersOnly;
+import com.koishop.models.user_model.EmailDetail;
 import com.koishop.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ public class OrdersService {
     KoiFishService koiFishService;
     @Autowired
     BatchService batchService;
+    @Autowired
+    EmailService emailService;
 
 
     public Orders getOderById(Integer id) {
@@ -384,6 +387,12 @@ public class OrdersService {
         userRepository.save(customer);
         userRepository.save(manager);
         paymentRepository.save(payment);
+
+        EmailDetail customerEmail = new EmailDetail();
+        customerEmail.setUser(customer);
+        customerEmail.setSubject("Payment Successful for Order #" + orders.getOrderID());
+        customerEmail.setLink("http://koishop.vn/orders/" + orders.getOrderID()); // Adjust the URL
+        emailService.sendPaymentSuccessEmail(customerEmail, String.valueOf(orders.getTotalAmount()), payment.getPaymentID().toString());
     }
 
 
