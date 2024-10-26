@@ -84,10 +84,6 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Optional<User> findByUserId(long id) {
-        return userRepository.findById(id);
-    }
-
     public AdminViewUser updateUser(long id, AdminViewUser adminViewUser) {
         try {
             User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
