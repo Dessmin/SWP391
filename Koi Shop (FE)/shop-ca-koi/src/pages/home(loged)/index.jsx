@@ -1,7 +1,6 @@
 import KoiList from "../../components/koi-list";
 import HeaderLoged from "../../components/header(loged)";
 import { CartProvider } from "../../helper/CartContext";
-import { Link } from "react-router-dom";
 import BatchList from "../../components/batch-list";
 import "./index.scss";
 import Footer from "../../components/footer";

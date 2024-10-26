@@ -61,7 +61,7 @@ const OrderDetails = () => {
       );
       toast.success("Ký gửi thành công!");
     } catch (err) {
-      toast.error("Ký gửi thất bại.");
+      toast.error("Chỉ được ký gửi một lần!");
     }
   };
 
