@@ -1,4 +1,3 @@
-import React from "react";
 import "./index.scss";
 
 function Footer() {
@@ -13,9 +12,15 @@ function Footer() {
           alt="Koi Shop"
           className="logo"
         />
-        <p><strong>Địa chỉ: </strong> District 9, Ho Chi Minh City</p>
-        <p><strong>SDT: </strong> 0123456789</p>
-        <p><strong>Email: </strong> koishop@gmail.com</p>
+        <p>
+          <strong>Địa chỉ: </strong> Quận 9, TP Hồ Chí Minh
+        </p>
+        <p>
+          <strong>SĐT: </strong> 0123456789
+        </p>
+        <p>
+          <strong>Email: </strong> koishop@gmail.com
+        </p>
       </div>
 
       <div className="footer-section links">
@@ -28,11 +33,12 @@ function Footer() {
       </div>
 
       <div className="footer-section quality">
-        <h4>Guaranteed Quality</h4>
+        <h4>Chất lượng đảm bảo</h4>
         <p>
-          At Koi shop, all Koi are sourced from trusted breeders and pass strict
-          health checks. Each fish comes with certification of its origin and
-          health, ensuring confidence in every purchase.
+          Tại cửa hàng The Koi Shop, tất cả cá Koi đều được nhập khẩu từ những
+          người nuôi cá đáng tin cậy và trải qua các kiểm tra sức khỏe nghiêm
+          ngặt. Mỗi con cá đều có giấy chứng nhận về nguồn gốc và sức khỏe, đảm
+          bảo sự tin tưởng trong mỗi giao dịch mua hàng.
         </p>
       </div>
 

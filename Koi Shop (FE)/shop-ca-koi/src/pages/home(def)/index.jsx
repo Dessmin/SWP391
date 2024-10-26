@@ -1,14 +1,13 @@
-import { Col, Row } from "antd"
-import Footer from "../../components/footer"
-import Header from "../../components/header(def)"
-import "./index.scss"
-import Carousel from "../../components/carousel"
+import { Col, Row } from "antd";
+import Footer from "../../components/footer";
+import Header from "../../components/header(def)";
+import "./index.scss";
+import Breeds_Carousel from "../../components/breeds-carousel";
 
 function Home() {
   return (
-
     <div className="body">
-      <Header/>
+      <Header />
       <div className="body__banner">
         <div className="body__slogan">
           <span className="slogan1">Cá koi</span>
@@ -19,7 +18,6 @@ function Home() {
           <span className="slogan2">và</span>
           <span className="slogan2">thịnh vượng</span>
         </div>
-
       </div>
       <div className="body__content">
         <h2>Shop Koi</h2>
@@ -50,14 +48,13 @@ function Home() {
         </Row>
         <hr />
         <div className="body__carousel">
-        <h2>Các loại cá Koi</h2>
-        <Carousel />
+          <h2>Các loại cá Koi</h2>
+          <Breeds_Carousel />
         </div>
-        
       </div>
-      <Footer/>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

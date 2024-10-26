@@ -29,6 +29,7 @@ import OrderHistory from "./pages/order-history";
 import ManualConsignment from "./pages/manual-consignment";
 import AddConsignment from "./pages/add-consignment";
 import ConfirmConsign from "./pages/confirm-consign";
+import Introduction from "./pages/introduction";
 
 function App() {
   const router = createBrowserRouter([
@@ -152,7 +153,10 @@ function App() {
       path: "/confirm/:id",
       element: <ConfirmConsign />,
     },
-  
+    {
+      path: "/introduce",
+      element: <Introduction />,
+    },
   ]);
 
   return <RouterProvider router={router} />;
