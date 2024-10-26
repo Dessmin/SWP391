@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
             emailDetail.setUser(savedUser);
             emailDetail.setSubject("Welcome to Koi Shop");
             emailDetail.setLink("https://www.google.com");
-            emailDetail.setLink("https://www.google.com/?token=" + tokenService.generateToken(user));
+            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user));
             emailService.sentEmail(emailDetail);
             return modelMapper.map(savedUser, CustomerRequest.class);
         } catch (Exception e) {
@@ -82,6 +82,10 @@ public class UserService implements UserDetailsService {
                 throw new RuntimeException("Error during registration process", e); // Xử lý ngoại lệ chung nếu có lỗi khác
             }
         }
+    }
+
+    public Optional<User> findByUserId(long id) {
+        return userRepository.findById(id);
     }
 
     public AdminViewUser updateUser(long id, AdminViewUser adminViewUser) {
@@ -156,7 +160,7 @@ public class UserService implements UserDetailsService {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(user);
             emailDetail.setSubject("Reset Password");
-            emailDetail.setLink("https://www.google.com/?token=" + tokenService.generateToken(user));
+            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user));
             emailService.sentEmail(emailDetail);
         }
     }

@@ -25,7 +25,7 @@ public class DataInitializer {
                 // Create a new user with Manager role
                 User manager = new User();
                 manager.setUserName("Quang Long");
-                manager.setPassword(passwordEncoder.encode("2547911quanglong")); // Set a secure password
+                manager.setPassword(passwordEncoder.encode("12345678")); // Set a secure password
                 manager.setRole(Role.Manager);
                 manager.setEmail("quanglong281381@gmail.com");
                 manager.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
