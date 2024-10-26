@@ -1,13 +1,43 @@
-import { Descriptions, Image } from "antd";
+import { Button, Descriptions, Image, Radio } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ConfirmConsign() {
   const { id } = useParams();
   const user = useSelector((state) => state.user);
   const [koi, setKoi] = useState(null);
+  const [consignmentTypes, setConsignmentTypes] = useState("Offline");
+
+  const handleConsignment = async (fishId) => {
+    if (!fishId) {
+      toast.error("Không có thông tin cá để ký gửi.");
+      return;
+    }
+
+    const consignmentData = {
+      fishId,
+      requestDate: new Date().toISOString(),
+      consignmentType: consignmentTypes,
+    };
+
+    try {
+      await axios.post(
+        "http://localhost:8080/api/consignments/add-consignment",
+        consignmentData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      toast.success("Ký gửi thành công!");
+    } catch (err) {
+      toast.error("Ký gửi thất bại.");
+    }
+  };
 
   const fetchKoiById = async (id) => {
     try {
@@ -64,6 +94,23 @@ function ConfirmConsign() {
           </Descriptions.Item>
         </Descriptions>
       )}
+
+      <Radio.Group
+        onChange={(e) => setConsignmentTypes(e.target.value)} // Cập nhật giá trị khi thay đổi
+        value={consignmentTypes} // Sử dụng giá trị của loại ký gửi
+        style={{ marginBottom: "10px" }}
+      >
+        <Radio value="Online">Online</Radio>
+        <Radio value="Offline">Offline</Radio>
+      </Radio.Group>
+
+      <Button
+        type="default"
+        onClick={() => handleConsignment(id)}
+        style={{ marginTop: "10px" }}
+      >
+        Ký gửi
+      </Button>
     </div>
   );
 }

@@ -10,7 +10,6 @@ import {
   Switch,
   message,
   notification,
-  Select,
 } from "antd";
 import Dashboard from "../../../components/dashboard";
 import { useEffect, useState } from "react";
@@ -18,7 +17,6 @@ import { useForm } from "antd/es/form/Form";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import apiKoi from "../../../config/koi-api";
 
 function Koi() {
   // Dữ liệu mẫu
@@ -26,8 +24,7 @@ function Koi() {
   const [form] = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useSelector((state) => state.user);
-  const [breeds, setBreeds] = useState([]); // State để lưu danh sách breed
-  const [origins, setOrigins] = useState([]);
+
   // Hàm để thêm một con cá Koi mới
   async function fetchKoi(data) {
     try {
@@ -222,42 +219,7 @@ function Koi() {
 
   useEffect(() => {
     loadKoiList();
-    fetchBreeds();
-    fetchOrigins();
   }, []);
-  const fetchBreeds = async () => {
-    try {
-      const response = await apiKoi.get(
-        "http://localhost:8080/api/breeds/list-breedName",
-        {
-          // Giả sử API lấy danh sách breed là /breeds
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      setBreeds(response.data); // Giả sử response.data là mảng danh sách breed
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const fetchOrigins = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/origin/list-originName",
-        {
-          // Giả sử API lấy danh sách breed là /origin
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      setOrigins(response.data); // Giả sử response.data là mảng danh sách origin
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   return (
     <div>
@@ -300,29 +262,17 @@ function Koi() {
             <Form.Item
               label="Breed"
               name="breed"
-              rules={[{ required: true, message: "Please select breed!" }]}
+              rules={[{ required: true, message: "Please input breed!" }]}
             >
-              <Select placeholder="Select Breed">
-                {breeds.map((breed) => (
-                  <Select.Option key={breed} value={breed}>
-                    {breed}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Input />
             </Form.Item>
 
             <Form.Item
               label="Origin"
               name="origin"
-              rules={[{ required: true, message: "Please select origin!" }]}
+              rules={[{ required: true, message: "Please input origin!" }]}
             >
-              <Select placeholder="Select Origin">
-                {origins.map((origin) => (
-                  <Select.Option key={origin} value={origin}>
-                    {origin}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Input />
             </Form.Item>
 
             <Form.Item
@@ -395,6 +345,7 @@ function Koi() {
             >
               <Input placeholder="Nhập URL hình ảnh" />
             </Form.Item>
+            
           </Form>
         </Modal>
       </Dashboard>

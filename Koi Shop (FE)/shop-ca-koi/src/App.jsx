@@ -29,6 +29,9 @@ import OrderHistory from "./pages/order-history";
 import ManualConsignment from "./pages/manual-consignment";
 import AddConsignment from "./pages/add-consignment";
 import ConfirmConsign from "./pages/confirm-consign";
+import ResetPassword from "./pages/reset-password";
+import ConfirmResetPassword from "./pages/confirm-reset-password";
+import ChangePassword from "./pages/change-password";
 import Introduction from "./pages/introduction";
 
 function App() {
@@ -154,9 +157,22 @@ function App() {
       element: <ConfirmConsign />,
     },
     {
-      path: "/introduce",
-      element: <Introduction />,
+      path: "/resetPassword",
+      element: <ResetPassword />,
     },
+    {
+      path: "/confirmResetPassword",
+      element: <ConfirmResetPassword/>,
+    },
+    {
+      path: "/changePassword",
+      element: <ChangePassword/>,
+    },
+    {
+      path: "/introduce",
+      element: <Introduction/>,
+    },
+  
   ]);
 
   return <RouterProvider router={router} />;

@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 function CardKoi({ koi }) {
   const navigate = useNavigate();
 
+  const { id, fishName, breed, origin, size, price, image } = koi;
+
   const handleAddToCart = () => {
     const product = {
       
@@ -22,7 +24,7 @@ function CardKoi({ koi }) {
   };
 
   const { addToCart } = useContext(CartContext);
-  const { id, fishName, breed, origin, size, price, image } = koi;
+  
 
   return (
     <div className="koi-card1">

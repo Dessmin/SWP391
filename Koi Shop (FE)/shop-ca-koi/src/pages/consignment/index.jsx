@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table, Spin, Alert, Button } from "antd";
-import "./index.scss";
+import './index.scss'
 import { useNavigate } from "react-router-dom";
 
 function Consignment() {
@@ -35,6 +35,7 @@ function Consignment() {
   }, [user.token]);
 
   const columns = [
+    
     {
       title: "Tên cá",
       dataIndex: "fishName",

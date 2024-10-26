@@ -160,7 +160,7 @@ function UserDetail() {
                 name="email"
                 rules={[{ required: true, message: "Please input email!" }]}
               >
-                <Input />
+                <Input disabled />
               </Form.Item>
 
               <Form.Item

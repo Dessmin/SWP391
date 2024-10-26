@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/features/userSlice";
 import { toast } from "react-toastify";
 import "./index.scss";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 
 function HeaderLoged() {
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux store
@@ -41,7 +41,7 @@ function HeaderLoged() {
           <Link to="/home">
             <li>Trang chủ</li>
           </Link>
-          <Link to="/introduce">
+          <Link to="">
             <li>Giới thiệu</li>
           </Link>
           <Link to="/consignment">
@@ -55,11 +55,11 @@ function HeaderLoged() {
       <div className="header__welcome-logout">
         <ul className="logout-box">
           <Link to="/cart">
-            <ShoppingCartOutlined />
+            <ShoppingCartOutlined style={{ fontSize: "25px" }} />
           </Link>
 
           <li onClick={() => navigate(`/detailUser/${user.userId}`)}>
-            Welcome, {user.username}
+            <UserOutlined style={{ fontSize: "25px" }} />
           </li>
 
           <li onClick={handleLogout}>Log out</li>

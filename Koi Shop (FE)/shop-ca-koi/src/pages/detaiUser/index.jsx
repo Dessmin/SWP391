@@ -1,42 +1,90 @@
-import { Button, Descriptions, Spin } from "antd";
+import { Button, Descriptions, Form, Input, message, Modal, Spin } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import './index.scss'
+import "./index.scss";
 
 function DetailUser() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const { id } = useParams(); // Lấy id từ URL
-  const [userId, setUserId] = useState(null); // Thay đổi từ mảng thành null
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
 
+  const [loading, setLoading] = useState(true);
+  const [userDetails, setUserDetails] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [form] = Form.useForm();
+
+  
   const fetchUserById = async (id) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/api/user/${id}/detail`,
         {
           headers: {
-            Authorization: `Bearer ${user.token}`, // Gửi token trong header
+            Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      return response.data;
+      setUserDetails(response.data);
+      setLoading(false); 
     } catch (error) {
       console.log(error.toString());
-      return null; // Trả về null nếu có lỗi
+      setLoading(false); 
+    }
+  };
+
+  
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+    form.resetFields();
+  };
+
+  
+  const handleEditModalOpen = () => {
+    setIsEditModalOpen(true);
+    form.setFieldsValue({
+      ...userDetails,
+    });
+  };
+
+  
+  const handleUpdate = async (values) => {
+    setLoading(true); 
+    try {
+      // Gửi yêu cầu update
+      const response = await axios.put(
+        `http://localhost:8080/api/user/${id}/customer-update`,
+        {
+          ...values,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        ...values,
+      }));
+
+      setIsEditModalOpen(false); 
+      message.success("User updated successfully!");
+    } catch (error) {
+      message.error("Failed to update user.");
+      console.error("Error updating user:", error);
+    } finally {
+      setLoading(false); 
     }
   };
 
   useEffect(() => {
-    fetchUserById(id).then((data) => {
-      if (data) {
-        setUserId(data);
-      }
-      setLoading(false); // Cập nhật trạng thái loading sau khi nhận dữ liệu
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (id) {
+      fetchUserById(id);
+    }
   }, [id]);
 
   if (loading) {
@@ -45,32 +93,93 @@ function DetailUser() {
 
   return (
     <div className="user-detail">
-      <h1>Welcome, {userId.userName}</h1>
-      {userId && (
+      <h1>Welcome, {userDetails?.userName}</h1>
+      {userDetails && (
         <Descriptions bordered column={1}>
           <Descriptions.Item label="User Name">
-            {userId.userName}
+            {userDetails.userName}
           </Descriptions.Item>
-          <Descriptions.Item label="Email">{userId.email}</Descriptions.Item>
+          <Descriptions.Item label="Email">
+            {userDetails.email}
+          </Descriptions.Item>
           <Descriptions.Item label="Phone">
-            {userId.phoneNumber}
+            {userDetails.phoneNumber}
           </Descriptions.Item>
           <Descriptions.Item label="Balance">
-            {userId.pointsBalance}
+            {userDetails.pointsBalance}
           </Descriptions.Item>
           <Descriptions.Item label="Address">
-            {userId.address}
+            {userDetails.address}
           </Descriptions.Item>
-          
-          
-          
         </Descriptions>
       )}
       <div className="action">
-      <Link className="link" to="/orderHistory">Lịch sử mua hàng</Link>
-      <Button className="bttnn" type="primary" onClick={() => navigate("/home")}>Trang chủ</Button>
+        <Link className="link" to="/orderHistory">
+          <Button>Lịch sử mua hàng</Button>
+        </Link>
+        <Button
+          type="default"
+          style={{ marginLeft: 8 }}
+          onClick={handleEditModalOpen}
+        >
+          Update
+        </Button>
+        <Button
+          className="bttnn"
+          type="primary"
+          onClick={() => navigate("/home")}
+        >
+          Trang chủ
+        </Button>
+
+        <Button onClick={() => navigate("/changePassword")} type="primary">Đổi mật khẩu</Button>
       </div>
-      
+
+      <Modal
+        title="Edit User Details"
+        open={isEditModalOpen}
+        onOk={form.submit}
+        onCancel={handleEditModalClose}
+      >
+        <Form
+          form={form}
+          onFinish={handleUpdate}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
+        >
+          <Form.Item
+            label="User Name"
+            name="userName"
+            rules={[{ required: true, message: "Please input user name!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: "Please input email!" }]}
+          >
+            <Input disabled />
+          </Form.Item>
+
+          <Form.Item
+            label="Phone Number"
+            name="phoneNumber"
+            rules={[{ required: true, message: "Please input phone number!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Address"
+            name="address"
+            rules={[{ required: true, message: "Please input address!" }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

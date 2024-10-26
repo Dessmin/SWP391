@@ -218,14 +218,7 @@ function KoiDetail() {
               <Form.Item
                 label="Size"
                 name="size"
-                rules={[
-                  { required: true, message: "Please input size!" },
-                  {
-                    type: "number",
-                    min: 0,
-                    message: "Size must be a positive number!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please input size!" }]}
               >
                 <InputNumber min={0} />
               </Form.Item>
@@ -233,14 +226,7 @@ function KoiDetail() {
               <Form.Item
                 label="Price"
                 name="price"
-                rules={[
-                  { required: true, message: "Please input price!" },
-                  {
-                    type: "number",
-                    min: 0,
-                    message: "Price must be a positive number!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please input price!" }]}
               >
                 <InputNumber min={0} />
               </Form.Item>

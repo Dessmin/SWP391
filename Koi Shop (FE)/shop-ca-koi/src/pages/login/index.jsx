@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "antd";
 import "./index.scss";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../config/api";
 import { toast } from "react-toastify";
 import Header from "../../components/header(def)";
@@ -71,6 +71,7 @@ function Login() {
           </Button>
           
         </Form>
+        <Link className="link" to="/resetPassword">Quên mật khẩu?</Link>
       </div>
     </div>
   );

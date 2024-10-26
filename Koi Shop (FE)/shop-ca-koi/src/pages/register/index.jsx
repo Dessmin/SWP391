@@ -41,19 +41,7 @@ function Register() {
             <Input placeholder="Enter your user name" />
           </Form.Item>
 
-          {/* Password */}
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter your password',
-              },
-            ]}
-          >
-            <Input.Password placeholder="Enter your password" />
-          </Form.Item>
+          
 
           {/* Email */}
           <Form.Item

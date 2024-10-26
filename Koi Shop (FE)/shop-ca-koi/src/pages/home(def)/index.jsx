@@ -1,26 +1,28 @@
-import { Col, Row } from "antd";
-import Footer from "../../components/footer";
-import Header from "../../components/header(def)";
-import "./index.scss";
-import Breeds_Carousel from "../../components/breeds-carousel";
+import { Col, Row } from "antd"
+import Footer from "../../components/footer"
+import Header from "../../components/header(def)"
+import "./index.scss"
+import Breeds_Carousel from "../../components/breeds-carousel"
 
 function Home() {
   return (
+
     <div className="body">
-      <Header />
+      <Header/>
       <div className="body__banner">
-        <div className="body__slogan">
-          <span className="slogan1">Cá koi</span>
+        {/* <div className="body__slogan">
+          <span className="slogan1">Cá Koi</span>
           <hr />
-          <span className="slogan2">Biểu tượng</span>
-          <span className="slogan2">của</span>
-          <span className="slogan2">may mắn</span>
-          <span className="slogan2">và</span>
-          <span className="slogan2">thịnh vượng</span>
-        </div>
+          <span className="slogan2">Biểu Tượng</span>
+          <span className="slogan2">Của</span>
+          <span className="slogan2">May Mắn</span>
+          <span className="slogan2">Và</span>
+          <span className="slogan2">Thịnh Vượng</span>
+        </div> */}
+
       </div>
       <div className="body__content">
-        <h2>Shop Koi</h2>
+        <h2 style={{color: 'white'}}>Shop Koi</h2>
         <Row className="body__info" align={"middle"} gutter={30}>
           <Col span={14}>
             <div className="body__description">
@@ -48,13 +50,14 @@ function Home() {
         </Row>
         <hr />
         <div className="body__carousel">
-          <h2>Các loại cá Koi</h2>
-          <Breeds_Carousel />
+        <h2 style={{color: 'white'}}>Các loại cá Koi</h2>
+        <Breeds_Carousel/>
         </div>
+        
       </div>
-      <Footer />
+      <Footer/>
     </div>
-  );
+  )
 }
 
-export default Home;
+export default Home
