@@ -24,7 +24,7 @@ public class PaymentAPI {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{orderId}/list-order-payments")
+    @GetMapping("/{orderId}/order-payment")
     public ResponseEntity getPaymentByOrder(@PathVariable Integer orderId) {
         PaymentResponse response = paymentService.getPaymentByOrder(orderId);
         return ResponseEntity.ok(response);

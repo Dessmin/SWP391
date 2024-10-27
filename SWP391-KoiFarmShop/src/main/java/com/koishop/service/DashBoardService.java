@@ -59,10 +59,9 @@ public class DashBoardService {
         return dashboard;
     }
 
-    public Map<String, Object> income(){
-
+    public Map<String, Object> income() {
         Map<String, Object> dashboardIncome = new HashMap<>();
-        List<Object[]> incomeMonthly = ordersService.IncomeLast3Years();
+        List<Object[]> incomeMonthly = ordersRepository.findIncomeLast3Years();
         List<Map<String, Object>> incomePerMonth = new ArrayList<>();
         for (Object[] objects : incomeMonthly) {
             Map<String, Object> income = new HashMap<>();
@@ -74,4 +73,5 @@ public class DashBoardService {
         dashboardIncome.put("incomeMonthly", incomePerMonth);
         return dashboardIncome;
     }
+
 }
