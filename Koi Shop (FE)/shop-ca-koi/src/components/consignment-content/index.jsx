@@ -223,7 +223,7 @@ const ConsignmentContent = () => {
 
   return (
     <div className="content-container">
-      <h1>Ký gửi</h1>
+      <h1 className="yellow">Ký gửi</h1>
       {isExpanded ? fullContent : shortContent}
       <button onClick={handleToggle} className="toggle-btn">
         {isExpanded ? "Thu gọn" : "Xem thêm"}

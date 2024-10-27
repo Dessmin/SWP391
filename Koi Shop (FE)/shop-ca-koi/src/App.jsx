@@ -170,15 +170,23 @@ function App() {
     },
     {
       path: "/confirmResetPassword",
-      element: <ConfirmResetPassword/>,
+      element: <ConfirmResetPassword />,
     },
     {
       path: "/changePassword",
-      element: <ChangePassword/>,
+      element: <ChangePassword />,
     },
     {
       path: "/introduce",
-      element: <Introduction/>,
+      element: <Introduction />,
+    },
+    {
+      path: "/home/dashboard/rating_feedback",
+      element: <RatingFeedback />,
+    },
+    {
+      path: "/koi_introduction",
+      element: <Koi_introduction />,
     },
     {
       path: "/home/dashboard/income",

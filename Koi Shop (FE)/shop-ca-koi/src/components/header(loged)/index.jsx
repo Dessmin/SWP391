@@ -73,9 +73,10 @@ function HeaderLoged() {
       <div className="header__welcome-logout">
         <ul className="logout-box">
           <Link to="/cart">
-            <ShoppingCartOutlined style={{ fontSize: "25px" }} />
+            <ShoppingCartOutlined
+              style={{ fontSize: "25px", color: "white" }}
+            />
           </Link>
-
           <div
             className="user-menu-container"
             onMouseEnter={() => setShowMenu(true)}
