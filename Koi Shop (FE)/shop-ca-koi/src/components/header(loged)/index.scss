@@ -1,68 +1,56 @@
-.header{
-    height: 70px;
-    background-color: rgba(0, 0, 0, 0.2);
+.header__welcome-logout {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0 100px;
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 2;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(9px);
+  }
+  
+  .logout-box {
+    display: flex;
+    align-items: center;
+    list-style: none;
+  }
+  
+  .user-menu-container {
+    position: relative;
+    display: inline-block;
+    margin-right: 30px;
+    margin-left: 30px;
+  }
+  
+.Logout-template{
+    cursor: pointer;
+    color: white;
+}  
+  
+.user-menu {
+    position: absolute;
+    top: 25px; // Đặt menu ngay bên dưới icon user (chỉnh giá trị này nếu cần)
+    left: 50%; // Đặt ở giữa phần tử chứa
+    transform: translateX(-50%); // Dịch chuyển để căn giữa
     
-
-    &__navigate{
-        ul{
-            display: flex;
-            gap: 50px;
-
-            a{
-                list-style: none;
-                text-decoration: none;
-                font-size: 22px;
-                color: rgb(255, 255, 255);
-                font-weight: 400;
-
-                &:hover{
-                    color: white;
-                    &::after{
-                        width: 100%;
-                        
-                    }
-                }
-
-                &::after{
-                    content: "";
-                    display: block;
-                    
-                    width: 0;
-                    height: 3px;
-                    background-color: rgb(255, 255, 255);
-                    transition: all 0.3s;
-                }
-            }
+    background-color: rgba(255, 255, 255,0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 15px; // Tăng padding để menu rộng hơn
+    width: 150px; // Tăng chiều rộng menu
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    
+  
+    ul {
+      list-style: none;
+      margin: 0;
+      padding-left: 0;
+  
+      li {
+        padding: 10px 15px; // Tăng khoảng cách bên trong các mục menu
+        cursor: pointer;
+        color: #333;
+        font-size: 16px;
+  
+        &:hover {
+          background-color: #f0f0f0;
         }
+      }
     }
-
-    &__welcome-logout{
-        .logout-box{
-            display: flex;
-            gap: 30px;
-
-            li{
-                list-style: none;
-                cursor: pointer;
-                text-decoration: underline;
-                color: rgb(255, 255, 255);
-            }
-            
-        }
-
-        a{
-            color: white;
-        }
-    }
-}
+  }
+  

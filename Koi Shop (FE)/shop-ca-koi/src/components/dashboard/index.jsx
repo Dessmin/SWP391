@@ -25,6 +25,7 @@ const items = [
   getItem("Order", "4", <UserOutlined />),
   getItem("Batch", "5", <FileOutlined />),
   getItem("Promotion", "6", <FileOutlined />),
+  getItem("Rating&Feedback", "7", <FileOutlined />),
 ];
 
 const Dashboard = ({ children }) => {
@@ -60,6 +61,9 @@ const Dashboard = ({ children }) => {
     }
     if (item.key === "6") {
       navigate("/home/dashboard/promotion");
+    }
+    if (item.key === "7") {
+      navigate("/home/dashboard/rating_feedback");
     }
   };
 

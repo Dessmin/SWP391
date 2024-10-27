@@ -33,6 +33,8 @@ import ResetPassword from "./pages/reset-password";
 import ConfirmResetPassword from "./pages/confirm-reset-password";
 import ChangePassword from "./pages/change-password";
 import Introduction from "./pages/introduction";
+import RatingFeedback from "./pages/admin/rating&feedback-management";
+import Koi_introduction from "./pages/Koi-introduction";
 
 function App() {
   const router = createBrowserRouter([
@@ -162,17 +164,24 @@ function App() {
     },
     {
       path: "/confirmResetPassword",
-      element: <ConfirmResetPassword/>,
+      element: <ConfirmResetPassword />,
     },
     {
       path: "/changePassword",
-      element: <ChangePassword/>,
+      element: <ChangePassword />,
     },
     {
       path: "/introduce",
-      element: <Introduction/>,
+      element: <Introduction />,
     },
-  
+    {
+      path: "/home/dashboard/rating_feedback",
+      element: <RatingFeedback />,
+    },
+    {
+      path: "/koi_introduction",
+      element: <Koi_introduction />,
+    },
   ]);
 
   return <RouterProvider router={router} />;

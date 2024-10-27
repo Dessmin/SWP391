@@ -4,13 +4,14 @@ import { logout } from "../../redux/features/userSlice";
 import { toast } from "react-toastify";
 import "./index.scss";
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 function HeaderLoged() {
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux store
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const u = sessionStorage.getItem('user')
-
+  const [showMenu, setShowMenu] = useState(false); // Trạng thái hiển thị menu
   const handleLogout = () => {
     // Xóa thông tin người dùng khỏi Redux
     dispatch(logout());
@@ -41,9 +42,6 @@ function HeaderLoged() {
           <Link to="/home">
             <li>Trang chủ</li>
           </Link>
-          <Link to="">
-            <li>Giới thiệu</li>
-          </Link>
           <Link to="/consignment">
             <li>Ký gửi cá Koi</li>
           </Link>
@@ -55,14 +53,34 @@ function HeaderLoged() {
       <div className="header__welcome-logout">
         <ul className="logout-box">
           <Link to="/cart">
-            <ShoppingCartOutlined style={{ fontSize: "25px" }} />
+            <ShoppingCartOutlined
+              style={{ fontSize: "25px", color: "white" }}
+            />
           </Link>
-
-          <li onClick={() => navigate(`/detailUser/${user.userId}`)}>
-            <UserOutlined style={{ fontSize: "25px" }} />
+          <div
+            className="user-menu-container"
+            onMouseEnter={() => setShowMenu(true)}
+            onMouseLeave={() => setShowMenu(false)}
+          >
+            <UserOutlined
+              style={{ fontSize: "25px", cursor: "pointer", color: "white" }}
+            />
+            {showMenu && (
+              <div className="user-menu">
+                <ul>
+                  <li onClick={() => navigate(`/detailUser/${user.userId}`)}>
+                    Thông tin cá nhân
+                  </li>
+                  <li onClick={() => navigate(`/orderHistory`)}>
+                    Lịch sử đơn hàng
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+          <li className="Logout-template" onClick={handleLogout}>
+            Log out
           </li>
-
-          <li onClick={handleLogout}>Log out</li>
         </ul>
       </div>
     </header>
