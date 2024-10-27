@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import "./index.scss";
 import apiKoi from "../../config/koi-api";
 import CardKoi from "../card-koi";
-import { Button, Col, Input, Row, Select } from "antd";
+import { Button, Select } from "antd";
 import { Option } from "antd/es/mentions";
 
 function KoiList() {
@@ -12,9 +12,9 @@ function KoiList() {
   const [totalPages, setTotalPages] = useState(1);
   const [breeds, setBreeds] = useState([]); // State để lưu danh sách breed
   const [selectedBreed, setSelectedBreed] = useState("All");
-  const [searchTerm, setSearchTerm] = useState("");
   const [name, setName] = useState([]);
 
+  const searchTerm = useSelector((state) => state.search.term);
   const user = useSelector((state) => state.user);
 
   const fetchKoi = async (page = 0) => {
@@ -45,13 +45,13 @@ function KoiList() {
     }
   };
 
-  const handleInputChange = (e) => {
-    setSearchTerm(e.target.value); // Cập nhật từ khóa tìm kiếm khi người dùng nhập
-  };
+  // const handleInputChange = (e) => {
+  //   setSearchTerm(e.target.value); // Cập nhật từ khóa tìm kiếm khi người dùng nhập
+  // };
+  
 
-  const handleSearch = async () => {
+  const fetchKoiBySearchTerm = async () => {
     if (!searchTerm) {
-      // Nếu không nhập gì, hiển thị toàn bộ danh sách
       setName([]);
       fetchKoi(page);
       return;
@@ -62,13 +62,31 @@ function KoiList() {
           Authorization: `Bearer ${user.token}`,
         },
       });
-
-      setName(response.data); // Cập nhật danh sách cá Koi dựa trên từ khóa tìm kiếm
-      console.log(response.data);
+      setName(response.data);
     } catch (error) {
       console.error("Error fetching Koi by search", error);
     }
   };
+  // const handleSearch = async () => {
+  //   if (!searchTerm) {
+  //     // Nếu không nhập gì, hiển thị toàn bộ danh sách
+  //     setName([]);
+  //     fetchKoi(page);
+  //     return;
+  //   }
+  //   try {
+  //     const response = await apiKoi.get(`${searchTerm}/search`, {
+  //       headers: {
+  //         Authorization: `Bearer ${user.token}`,
+  //       },
+  //     });
+
+  //     setName(response.data); // Cập nhật danh sách cá Koi dựa trên từ khóa tìm kiếm
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching Koi by search", error);
+  //   }
+  // };
 
   const fetchBreeds = async () => {
     try {
@@ -88,6 +106,7 @@ function KoiList() {
   };
 
   useEffect(() => {
+    fetchKoiBySearchTerm(),
     fetchBreeds(); // Lấy danh sách breed khi component mount
     // Lấy danh sách Koi theo breed đã chọn
     if (selectedBreed === "All") {
@@ -95,7 +114,7 @@ function KoiList() {
     } else {
       fetchKoiByBreed(selectedBreed, page); // Gọi hàm fetch cho breed đã chọn
     }
-  }, [page, selectedBreed]);
+  }, [page, selectedBreed, searchTerm]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage); // Cập nhật số trang
@@ -109,22 +128,10 @@ function KoiList() {
   return (
     <div className="koi">
       <h2>Danh sách Koi</h2>
-
-      <div className="search-bar">
-        <Input
-          placeholder="Nhập tên Koi muốn tìm"
-          value={searchTerm}
-          onChange={handleInputChange}
-          onPressEnter={handleSearch} // Gọi tìm kiếm khi nhấn Enter
-          style={{ width: 550, height: 32, marginBottom: "20px" }}
-        />
-
-        <Button type="primary" onClick={handleSearch}>
-          Tìm kiếm
-        </Button>
-      </div>
+      <div className="action">
+      
       <div className="filter">
-        <strong style={{color:'white'}}>Breed</strong>
+        <strong style={{ color: "white" }}>Breed</strong>
         <Select
           defaultValue="All"
           style={{ width: 200, marginBottom: "20px" }}
@@ -138,6 +145,10 @@ function KoiList() {
           ))}
         </Select>
       </div>
+      
+      </div>
+
+      
 
       <div className="koi__list">
         {kois

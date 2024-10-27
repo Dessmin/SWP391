@@ -66,7 +66,7 @@ function Login() {
             />
           </Form.Item>
 
-          <Button style={{ width: "500px" }} type="primary" htmlType="submit">
+          <Button className="btn" style={{ width: "500px" }} type="primary" htmlType="submit">
             Log in
           </Button>
           

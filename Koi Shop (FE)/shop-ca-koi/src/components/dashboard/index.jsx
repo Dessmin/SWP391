@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { FileOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  BarChartOutlined,
+  FileOutlined,
+  ProductOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -21,10 +27,13 @@ const items = [
     getItem("Origin", "2-2", <FileOutlined />),
     getItem("Koi", "2-3", <FileOutlined />), // Mục con cho Koi
   ]),
-  getItem("Consignment", "3", <UserOutlined />),
-  getItem("Order", "4", <UserOutlined />),
+  getItem("Consignment", "3", <ProductOutlined />),
+  getItem("Order", "4", <ShoppingCartOutlined />),
   getItem("Batch", "5", <FileOutlined />),
   getItem("Promotion", "6", <FileOutlined />),
+  getItem("Statistic", "7", <BarChartOutlined />),
+  getItem("Icome", "8", <BarChartOutlined />),
+  getItem("Rating&Feedback", "9", <FileOutlined />),
 ];
 
 const Dashboard = ({ children }) => {
@@ -61,6 +70,15 @@ const Dashboard = ({ children }) => {
     if (item.key === "6") {
       navigate("/home/dashboard/promotion");
     }
+    if (item.key === "7") {
+      navigate("/home/dashboard/stat");
+    }
+    if (item.key === "8") {
+      navigate("/home/dashboard/income");
+    }
+    if (item.key === "9") {
+      navigate("/home/dashboard/rating_feedback");
+    }
   };
 
   return (
@@ -83,9 +101,11 @@ const Dashboard = ({ children }) => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         {children}
-        <Link to="/home">
-          <Button>Trở về</Button>
-        </Link>
+        <div>
+          <Link to="/home">
+            <Button>Trở về</Button>
+          </Link>
+        </div>
       </Layout>
     </Layout>
   );

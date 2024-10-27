@@ -32,10 +32,18 @@
 .search-bar{
     display: flex;
     justify-content: center;
-    gap: 0;
+    
+    position: relative;
+    margin-right: 200px;
 }
 .filter{
     display: flex;
     gap: 12px;
     
+}
+.action{
+    margin-top: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
 }

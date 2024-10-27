@@ -35,29 +35,26 @@ function PaymentAdmin() {
   return (
     <div>
       <h2>Payment</h2>
-      {payment.length > 0 ? (
-        payment.map((pay) => (
-          <Descriptions
-            key={pay.paymentID}
-            bordered
-            column={1}
-            style={{ marginBottom: '20px' }}
-            title={`Payment ID: ${pay.paymentID}`}
-          >
-            <Descriptions.Item label="Description">
-              {pay.description}
-            </Descriptions.Item>
-            <Descriptions.Item label="Create Date">
-              {new Date(pay.createAt).toLocaleString()}
-            </Descriptions.Item>
-            <Descriptions.Item label="Payment Method">
-              {pay.paymentMethod}
-            </Descriptions.Item>
-            <Descriptions.Item label="Order ID">
-              {pay.orderId}
-            </Descriptions.Item>
-          </Descriptions>
-        ))
+      {payment ? (
+        <Descriptions
+          bordered
+          column={1}
+          style={{ marginBottom: '20px' }}
+          
+        >
+          <Descriptions.Item label="Description">
+            {payment.description}
+          </Descriptions.Item>
+          <Descriptions.Item label="Create Date">
+            {new Date(payment.createAt).toLocaleString()}
+          </Descriptions.Item>
+          <Descriptions.Item label="Payment Method">
+            {payment.paymentMethod}
+          </Descriptions.Item>
+          <Descriptions.Item label="Order ID">
+            {payment.orderId}
+          </Descriptions.Item>
+        </Descriptions>
       ) : (
         <p>No payments found.</p>
       )}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import {  Table } from "antd";
-import './index.scss'
+import { Table } from "antd";
+import "./index.scss";
 
 function OrderHistory() {
   const user = useSelector((state) => state.user);
@@ -10,7 +10,6 @@ function OrderHistory() {
 
   const fetchOrderHistory = async () => {
     try {
-        
       const response = await axios.get(
         "http://localhost:8080/api/orders/list-user-orders/summary",
         {
@@ -21,7 +20,6 @@ function OrderHistory() {
       );
       setOrders(response.data);
       console.log(orders);
-      
     } catch (error) {
       console.log(error);
     }
@@ -32,7 +30,6 @@ function OrderHistory() {
   }, [user.token]);
 
   const columns = [
-
     {
       title: "Tên người dùng",
       dataIndex: "userName",
@@ -55,15 +52,18 @@ function OrderHistory() {
     },
   ];
 
-  return <div className="history">
-    <h1>Lịch sử đặt hàng</h1>
-    <Table
-          columns={columns}
-          dataSource={orders}
-          rowKey={(record) => record.id}
-          bordered
-        />
-  </div>;
+  return (
+    <div className="history">
+      <h1>Lịch sử đặt hàng</h1>
+      <Table
+        
+        columns={columns}
+        dataSource={orders}
+        rowKey={(record) => record.id}
+        bordered
+      />
+    </div>
+  );
 }
 
 export default OrderHistory;

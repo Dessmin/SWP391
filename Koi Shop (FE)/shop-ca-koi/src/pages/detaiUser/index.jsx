@@ -1,9 +1,21 @@
-import { Button, Descriptions, Form, Input, message, Modal, Spin } from "antd";
+import {
+  Avatar,
+  Button,
+  Col,
+  Descriptions,
+  Form,
+  Input,
+  message,
+  Modal,
+  Row,
+  Spin,
+} from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "./index.scss";
+import { ClockCircleOutlined, EditOutlined } from "@ant-design/icons";
 
 function DetailUser() {
   const navigate = useNavigate();
@@ -15,7 +27,6 @@ function DetailUser() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [form] = Form.useForm();
 
-  
   const fetchUserById = async (id) => {
     try {
       const response = await axios.get(
@@ -27,20 +38,18 @@ function DetailUser() {
         }
       );
       setUserDetails(response.data);
-      setLoading(false); 
+      setLoading(false);
     } catch (error) {
       console.log(error.toString());
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
-  
   const handleEditModalClose = () => {
     setIsEditModalOpen(false);
     form.resetFields();
   };
 
-  
   const handleEditModalOpen = () => {
     setIsEditModalOpen(true);
     form.setFieldsValue({
@@ -48,9 +57,8 @@ function DetailUser() {
     });
   };
 
-  
   const handleUpdate = async (values) => {
-    setLoading(true); 
+    setLoading(true);
     try {
       // Gửi yêu cầu update
       const response = await axios.put(
@@ -65,19 +73,18 @@ function DetailUser() {
         }
       );
 
-      
       setUserDetails((prevDetails) => ({
         ...prevDetails,
         ...values,
       }));
 
-      setIsEditModalOpen(false); 
+      setIsEditModalOpen(false);
       message.success("User updated successfully!");
     } catch (error) {
       message.error("Failed to update user.");
       console.error("Error updating user:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -93,47 +100,73 @@ function DetailUser() {
 
   return (
     <div className="user-detail">
-      <h1>Welcome, {userDetails?.userName}</h1>
-      {userDetails && (
-        <Descriptions bordered column={1}>
-          <Descriptions.Item label="User Name">
-            {userDetails.userName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Email">
-            {userDetails.email}
-          </Descriptions.Item>
-          <Descriptions.Item label="Phone">
-            {userDetails.phoneNumber}
-          </Descriptions.Item>
-          <Descriptions.Item label="Balance">
-            {userDetails.pointsBalance}
-          </Descriptions.Item>
-          <Descriptions.Item label="Address">
-            {userDetails.address}
-          </Descriptions.Item>
-        </Descriptions>
-      )}
-      <div className="action">
-        <Link className="link" to="/orderHistory">
-          <Button>Lịch sử mua hàng</Button>
-        </Link>
-        <Button
-          type="default"
-          style={{ marginLeft: 8 }}
-          onClick={handleEditModalOpen}
-        >
-          Update
-        </Button>
-        <Button
+      <h1>Hồ sơ của {userDetails?.userName}</h1>
+      <div className="user-info">
+        
+
+        <Row >
+          <Col className="table-user" span={16}>
+            {userDetails && (
+              <Descriptions className="tble"  bordered column={1}>
+                <Descriptions.Item label="User Name">
+                  {userDetails.userName}
+                </Descriptions.Item>
+                <Descriptions.Item label="Email">
+                  {userDetails.email}
+                </Descriptions.Item>
+                <Descriptions.Item label="Phone">
+                  {userDetails.phoneNumber}
+                </Descriptions.Item>
+                <Descriptions.Item label="Balance">
+                  {userDetails.pointsBalance}
+                </Descriptions.Item>
+                <Descriptions.Item label="Address">
+                  {userDetails.address}
+                </Descriptions.Item>
+                <Descriptions.Item label="Chỉnh sửa">
+                  <div className="action1">
+                    <Button type="primary" onClick={handleEditModalOpen}>
+                      Update <EditOutlined />
+                    </Button>
+
+                    <Button
+                      onClick={() => navigate("/changePassword")}
+                      type="primary"
+                    >
+                      Đổi mật khẩu <EditOutlined />
+                    </Button>
+                  </div>
+                </Descriptions.Item>
+                <Descriptions.Item label="Lịch sử mua hàng">
+                  <Link className="link" to="/orderHistory">
+                    <Button>
+                      Lịch sử mua hàng <ClockCircleOutlined />
+                    </Button>
+                  </Link>
+                </Descriptions.Item>
+              </Descriptions>
+            )}
+          </Col>
+          <Col className="img-cnt" span={8}>
+            <img className="profile-img"
+              height={200}
+              width={200}
+              src="https://i.pinimg.com/736x/da/0d/69/da0d698073a0074d641c8ab579188904.jpg"
+              alt=""
+            />
+          </Col>
+        </Row>
+
+        
+      </div>
+      <Button
+          style={{ width: 200 }}
           className="bttnn"
           type="primary"
           onClick={() => navigate("/home")}
         >
           Trang chủ
         </Button>
-
-        <Button onClick={() => navigate("/changePassword")} type="primary">Đổi mật khẩu</Button>
-      </div>
 
       <Modal
         title="Edit User Details"

@@ -4,12 +4,21 @@ import { logout } from "../../redux/features/userSlice";
 import { toast } from "react-toastify";
 import "./index.scss";
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { Input } from "antd";
+import { setSearchTerm } from "../../redux/features/searchSlice";
+import { useState } from "react";
 
 function HeaderLoged() {
+  const { Search } = Input;
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux store
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const u = sessionStorage.getItem('user')
+  const [showMenu, setShowMenu] = useState(false); // Trạng thái hiển thị menu
+
+  const handleSearch = (value) => {
+    dispatch(setSearchTerm(value)); // Cập nhật từ khóa tìm kiếm trong Redux
+    navigate("/home"); // Điều hướng đến trang home (nơi có KoiList)
+  };
 
   const handleLogout = () => {
     // Xóa thông tin người dùng khỏi Redux
@@ -41,15 +50,24 @@ function HeaderLoged() {
           <Link to="/home">
             <li>Trang chủ</li>
           </Link>
-          <Link to="">
-            <li>Giới thiệu</li>
-          </Link>
+          
           <Link to="/consignment">
             <li>Ký gửi cá Koi</li>
           </Link>
           <Link to="/home/dashboard">
             <li>Dashboard</li>
           </Link>
+          <li className="search">
+            <div className="search-container">
+              <Search
+                placeholder="Nhập tên cá Koi muốn tìm"
+                allowClear
+                enterButton="Search"
+                onSearch={handleSearch}
+                size="large"
+              />
+            </div>
+          </li>
         </ul>
       </div>
       <div className="header__welcome-logout">
@@ -58,11 +76,30 @@ function HeaderLoged() {
             <ShoppingCartOutlined style={{ fontSize: "25px" }} />
           </Link>
 
-          <li onClick={() => navigate(`/detailUser/${user.userId}`)}>
-            <UserOutlined style={{ fontSize: "25px" }} />
+          <div
+            className="user-menu-container"
+            onMouseEnter={() => setShowMenu(true)}
+            onMouseLeave={() => setShowMenu(false)}
+          >
+            <UserOutlined
+              style={{ fontSize: "25px", cursor: "pointer", color: "white" }}
+            />
+            {showMenu && (
+              <div className="user-menu">
+                <ul>
+                  <li onClick={() => navigate(`/detailUser/${user.userId}`)}>
+                    Thông tin cá nhân
+                  </li>
+                  <li onClick={() => navigate(`/orderHistory`)}>
+                    Lịch sử đơn hàng
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+          <li className="Logout-template" onClick={handleLogout}>
+            Log out
           </li>
-
-          <li onClick={handleLogout}>Log out</li>
         </ul>
       </div>
     </header>

@@ -8,7 +8,7 @@ function ResetPassword() {
     const handleReset = async (values) => {
         try {
           const response = await api.post("user/forgot-password", values);
-          toast.success(response.data);
+          toast.success("Hãy kiểm tra hộp thư email");
         } catch (error) {
           console.log(error);
           toast.error(error);

@@ -20,10 +20,19 @@
   max-width: 540px; 
   width: 100%; 
   margin: 0 20px; 
+  backdrop-filter: blur(9px);
+
+  h1{
+    color: black;
+  }
+}
+
+.btn{
+  margin-bottom: 20px;
 }
 
 .link{
-  margin-top: 15px;
+  text-align: end;
 }
 
 

@@ -77,13 +77,14 @@ function Consignment() {
   return (
     <div className="consignment">
       <h1>Danh sách ký gửi</h1>
+      <Button style={{width: 100}} type="primary" onClick={() => navigate("/consignmentKoi")}>Ký gửi</Button>
       <Table
         columns={columns}
         dataSource={consignments}
         rowKey={(record) => record.id}
         bordered
       />
-      <Button onClick={() => navigate("/consignmentKoi")}>Ký gửi</Button>
+      
     </div>
   );
 }
