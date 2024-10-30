@@ -1,0 +1,76 @@
+.cart-container {
+    padding: 20px;
+   
+    .cart-table {
+      margin-top: 20px;
+  
+  
+    }
+  .cart-title{
+    text-align: center;
+  }
+    .points-amount-section {
+      display: flex; // Đặt chế độ hiển thị flex để các phần tử nằm cùng hàng
+      justify-content: space-between; // Căn giữa các phần tử trong hàng
+      align-items: center; // Căn chỉnh theo chiều dọc
+      margin-top: 20px; // Thêm khoảng cách trên
+  
+  
+      .points-section {
+        display: flex;
+        align-items: center; // Căn giữa các phần tử trong hàng
+        gap: 10px; // Khoảng cách giữa các phần tử
+  
+  
+        .points-input {
+          width: 150px; // Chiều rộng của ô nhập điểm
+        }
+      }
+  
+  
+      .total-amount {
+        font-size: 18px; // Kích thước font chữ
+        font-weight: bold; // Đậm
+        color: #ff7a00; // Màu sắc
+      }
+    }
+  
+  
+    .voucher-checkout-section {
+      display: flex; // Đặt chế độ hiển thị flex
+      justify-content: space-between; // Căn giữa các phần tử trong hàng
+      align-items: center; // Căn chỉnh theo chiều dọc
+      margin-top: 10px; // Thêm khoảng cách trên
+  
+  
+      .voucher-section {
+        display: flex; // Đặt chế độ hiển thị flex
+        align-items: center; // Căn giữa các phần tử trong hàng
+        gap: 10px; // Khoảng cách giữa các phần tử
+  
+  
+        .voucher-input {
+          width: 150px; // Chiều rộng của ô nhập voucher
+        }
+      }
+  
+  
+      .amount-checkout-section {
+        display: flex; // Đặt chế độ hiển thị flex
+        flex-direction: column; // Chiều dọc
+        align-items: flex-end; // Căn phải
+  
+  
+        .checkout-btn {
+          background-color: #52c41a; // Màu nền nút
+          color: #fff; // Màu chữ
+  
+  
+          &:hover {
+            background-color: #73d13d; // Màu nền khi hover
+          }
+        }
+      }
+    }
+  }
+  

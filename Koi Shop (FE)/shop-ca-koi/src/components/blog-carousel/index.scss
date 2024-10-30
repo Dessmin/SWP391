@@ -1,0 +1,61 @@
+.carousel{
+    border-radius: 10px;
+    .blog-slide{
+        border-radius: 1px solid black;
+        background-color: rgba(110, 68, 68, 0.9);
+        backdrop-filter: blur(9px);
+        border-radius: 10px;
+        width: calc(100% / 4) !important;
+        overflow: hidden;
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        
+
+        
+
+        img{
+            width: 100%;
+            height: 50%;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .bton {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: auto; /* Đẩy nút xuống đáy */
+            padding-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .title-content{
+        padding: 10px;
+        color: rgb(255, 255, 255);
+        position: relative;
+        
+
+        .title{
+            margin-bottom: 20px;
+        }
+
+        .content {
+            max-height: 130px; /* Giới hạn chiều cao */
+            overflow: hidden;
+            position: relative;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .content::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px; /* Độ cao của lớp mờ */
+            background: linear-gradient(transparent, rgba(110, 68, 68, 0.9));
+        }
+    }
+}

@@ -1,0 +1,41 @@
+.fulll{
+    padding: 100px 100px 100px 100px;
+    background-color: rgba(128, 128, 128, 0.2);
+
+    h1{
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .fb-contain{
+        display: flex;
+        box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+        padding-top: 50px;
+        padding-left: 100px;
+        padding-right: 100px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        padding-bottom: 50px;
+        background-color: white;
+        border-radius: 10px;
+        flex-direction: column;
+        gap: 20px;
+    
+        .fb-form{
+            
+            .fb-star{
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                border-radius: 10px;
+                padding: 10px;
+                width: 100%;
+    
+                .star{
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.2);;
+                }
+            }
+
+            .datee{
+                text-align: end;
+            }
+        }
+    }
+}

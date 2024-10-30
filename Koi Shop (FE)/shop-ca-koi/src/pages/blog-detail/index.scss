@@ -1,0 +1,29 @@
+.blog-full{
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+
+    .blog-card{
+        border-radius: 10px;
+        border: 1px solid black;
+        width: 70%;
+        overflow: hidden;
+
+        img{
+            width: 100%;
+            height: 400px
+            
+        }
+
+        .titlee{
+            text-align: center;
+        }
+
+        .contentt {
+            max-height: 150px; /* Giới hạn chiều cao */
+            
+            word-wrap: break-word; /* Tự động xuống dòng */
+            overflow-wrap: break-word; /* Tự động xuống dòng */
+        }
+    }
+}

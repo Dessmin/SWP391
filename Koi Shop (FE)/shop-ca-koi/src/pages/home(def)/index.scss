@@ -1,0 +1,89 @@
+.body{
+    background-color: rgba(231, 212, 212, 0.3);
+    
+
+    &__banner {
+        background-image: url("https://www.yourcentralvalley.com/wp-content/uploads/sites/54/2023/09/Koi-Fish-Show-returns-to-Fresno-at-Woodward-Park.jpeg?w=2560&h=1440&crop=1");
+        height: 730px;
+        width: 100%;
+        padding-top: 200px;
+        padding-left: 200px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        background-repeat: no-repeat; /* Ngăn không cho hình lặp lại */
+        background-size: cover; /* Điều chỉnh kích thước hình để bao phủ toàn bộ */
+    }
+
+    &__slogan{
+        text-align: center;
+        background-color: rgba(255, 0, 0, 0.5);
+        border-radius: 50px;
+        width: 220px;
+        border: 3px solid rgba(0, 0, 0, 0.6);
+        height: 475px;
+        backdrop-filter: blur(12px);
+
+        .slogan1{
+            display: block;
+            width: 210px;
+            color: rgb(0, 0, 0);
+            font-size: 70px;
+        }
+
+        .slogan2{
+            text-align: center;
+            display: block;
+            width: 210px;
+            color: rgb(255, 255, 255);
+            font-size: 45px;
+            
+        }
+    }
+
+    &__content{
+        padding-left: 100px;
+        padding-right: 100px;
+        background-image: url("https://i.imgur.com/1XN9c8J.png");
+        padding-bottom: 100px;
+        padding-top: 50px;
+
+        h2{
+           
+            text-align: center;
+        }
+    }
+
+    &__description{
+        font-size: large;
+        font-weight: 400;
+        background-color: rgba(145, 136, 136, 0.5);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 0 100px 2px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(9px);
+        color: white;
+    }
+
+    &__carousel{
+        margin-top: 50px;
+        margin-bottom: 100px;
+
+       
+
+        h2{
+            margin-bottom: 25px;
+        }
+    }
+
+    &__info{
+        
+        margin-bottom: 100px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    &__blog{
+        margin-top: 50px;
+    }
+
+    
+}

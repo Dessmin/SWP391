@@ -1,0 +1,49 @@
+.koi{
+    display: flex;
+    flex-direction: column;
+    padding: 0 50px;
+
+    h2{
+        display: inline-block;
+        background-color: red;
+        padding: 10px 20px;
+        margin-top: 45px;
+        text-align: center;
+        margin: 45px auto 20px;
+        border-radius: 55px;
+        color: rgb(255, 255, 255);
+    }
+
+    &__list{
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    &__page{
+        margin-top: 30px;
+        text-align: center;
+        margin-bottom: 30px;
+
+        button{
+            border-radius: 10px;
+        }
+    }
+}
+.search-bar{
+    display: flex;
+    justify-content: center;
+    
+    position: relative;
+    margin-right: 200px;
+}
+.filter{
+    display: flex;
+    gap: 12px;
+    
+}
+.action{
+    margin-top: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+}
