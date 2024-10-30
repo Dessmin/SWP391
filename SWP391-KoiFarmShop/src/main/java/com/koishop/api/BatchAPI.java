@@ -1,6 +1,7 @@
 package com.koishop.api;
 
 import com.koishop.models.batch_model.BatchDetailUpdate;
+import com.koishop.models.batch_model.BatchForManager;
 import com.koishop.models.batch_model.BatchResponse;
 import com.koishop.models.batch_model.BatchView;
 import com.koishop.service.BatchService;
@@ -46,8 +47,13 @@ public class BatchAPI {
     }
 
     @GetMapping("/getbatches")
-    public List<BatchView> getBatches() {
+    public List<BatchForManager> getBatches() {
         return batchService.getBatches();
+    }
+
+    @PutMapping("/{batchId}/update-isSale")
+    public void updateIsSale(@PathVariable int batchId){
+        batchService.updateIsSale(batchId);
     }
 
     @PutMapping("/{batchId}/update")
@@ -56,7 +62,7 @@ public class BatchAPI {
     }
 
 
-    @DeleteMapping("/{batchId}")
+    @PutMapping("/{batchId}/delete")
     public ResponseEntity<Void> deleteBatch(@PathVariable int batchId) {
         batchService.deleteBatch(batchId);
         return ResponseEntity.noContent().build();

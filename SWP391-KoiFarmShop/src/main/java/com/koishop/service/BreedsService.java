@@ -53,9 +53,14 @@ public class BreedsService {
     public void deleteBreed(Integer id) {
         Breeds breed = breedsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Breed not found for this id :: " + id));
-        breed.setDeleted(true);
-        breedsRepository.save(breed);
+        try {
+            breedsRepository.delete(breed);
+        } catch (Exception e) {
+            breed.setDeleted(true);
+            breedsRepository.save(breed);
+        }
     }
+
 
     public Breeds getBreedByName(String breed) {
         Breeds breeds = breedsRepository.getBreedsByBreedName(breed);
@@ -69,6 +74,7 @@ public class BreedsService {
             int totalSold = 0;
             for (OrderDetails orderDetails : orderDetailsRepository.findAll()) {
                 if (orderDetails.getOrders().isDeleted()) continue;
+                if (!orderDetails.getOrders().getOrderStatus().equals("PAID")) continue;
 
                 if (orderDetails.getProductType() == ProductType.KoiFish) {
                     KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(orderDetails.getProductId());

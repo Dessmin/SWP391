@@ -32,7 +32,7 @@ public class DataInitializer {
                 manager.setPhoneNumber("0933701262");
                 manager.setAddress("54D Nguyen Du, Di An, Binh Duong");
                 manager.setBalance(0.0);
-                manager.setPointsBalance(0.0);
+                manager.setPointsBalance(0);
                 manager.setDeleted(false);
                 userRepository.save(manager);
                 System.out.println("Manager user created");

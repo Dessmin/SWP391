@@ -86,7 +86,6 @@ public class KoiFishAPI {
     @GetMapping("/{koiId}/fishName")
     public String getFishName(@PathVariable Integer koiId) {return koiFishService.getFishName(koiId);}
 
-    // Xóa KoiFish theo ID
     @PutMapping("/{koiId}/delete")
     public ResponseEntity<Void> deleteKoiFish(@PathVariable(value = "koiId") Integer koiId) {
         koiFishService.deleteKoiFish(koiId);

@@ -54,7 +54,7 @@ public class UserAPI {
     }
 
     // Delete API
-    @DeleteMapping("/{id}/delete")
+    @PutMapping("/{id}/delete")
     @PreAuthorize("hasRole('Manager')")
     public ResponseEntity delete(@PathVariable long id) {
         userService.deleteUser(id);
@@ -98,12 +98,12 @@ public class UserAPI {
     }
 
     @GetMapping("/customer-point")
-    public Double getCustomerPoints() {
+    public int getCustomerPoints() {
         return userService.getPointsUser();
     }
 
     @PutMapping("/usePoint")
-    public Double usePoint(@RequestBody Point point) {
+    public int usePoint(@RequestBody Point point) {
         return userService.usePoint(point);
     }
 }

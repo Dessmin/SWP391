@@ -48,7 +48,7 @@ public class User implements UserDetails {
     private String address;
 
     @PositiveOrZero(message = "PointsBalance không thể âm")
-    private double pointsBalance;
+    private int pointsBalance;
 
     @Temporal(TemporalType.DATE)
     private Date joinDate;
@@ -81,6 +81,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<RatingsFeedbacks> ratingsFeedbacks;
+
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
+    private List<Posting> postings;
 
     @OneToMany(mappedBy = "from")
     @JsonIgnore

@@ -3,8 +3,10 @@ package com.koishop.service;
 import com.koishop.entity.ConsignmentRequest;
 import com.koishop.entity.KoiFish;
 import com.koishop.entity.User;
+import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.consignment_modle.ConsignmentRequestForCustomer;
 import com.koishop.models.consignment_modle.ConsignmentView;
+import com.koishop.models.consignment_modle.ResponseWithFishId;
 import com.koishop.repository.ConsignmentRequestRepository;
 import com.koishop.repository.KoiFishRepository;
 import com.koishop.repository.UserRepository;
@@ -40,18 +42,19 @@ public class ConsignmentRequestService {
         return consignmentViews;
     }
 
-    public List<ConsignmentView> getAllConsignmentRequestsForCustomer() {
-        List<ConsignmentView> consignmentViews = new ArrayList<>();
+    public List<ResponseWithFishId> getAllConsignmentRequestsForCustomer() {
+        List<ResponseWithFishId> consignmentResponses = new ArrayList<>();
         User user = userService.getCurrentUser();
         for (ConsignmentRequest consignmentRequest : requestRepository.findAll()) {
             if (consignmentRequest.getUser().getUsername().equals(user.getUsername())) {
-                ConsignmentView consignmentView = modelMapper.map(consignmentRequest, ConsignmentView.class);
+                ResponseWithFishId consignmentView = modelMapper.map(consignmentRequest, ResponseWithFishId.class);
+                consignmentView.setKoiFishId(consignmentRequest.getKoiFish().getKoiID());
                 consignmentView.setUserName(consignmentRequest.getUser().getUsername());
                 consignmentView.setFishName(consignmentRequest.getKoiFish().getFishName());
-                consignmentViews.add(consignmentView);
+                consignmentResponses.add(consignmentView);
             }
         }
-        return consignmentViews;
+        return consignmentResponses;
     }
 
     public ConsignmentRequestForCustomer createConsignmentRequest(ConsignmentRequestForCustomer request) {
@@ -66,7 +69,7 @@ public class ConsignmentRequestService {
     }
 
     public ConsignmentView getConsignmentRequestById(Integer id) {
-        ConsignmentRequest request = requestRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        ConsignmentRequest request = requestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         ConsignmentView consignmentView = modelMapper.map(request, ConsignmentView.class);
         consignmentView.setUserName(request.getUser().getUsername());
         consignmentView.setFishName(request.getKoiFish().getFishName());
@@ -74,7 +77,7 @@ public class ConsignmentRequestService {
     }
 
     public ConsignmentView updateConsignmentRequest(int id, ConsignmentView requestDetails) {
-        ConsignmentRequest request = requestRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        ConsignmentRequest request = requestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         KoiFish koiFish = koiFishRepository.findKoiFishByFishName(requestDetails.getFishName());
         request.setKoiFish(koiFish);
         User user = userRepository.findByUserName(requestDetails.getUserName());
@@ -83,6 +86,19 @@ public class ConsignmentRequestService {
         request.setShopPrice(requestDetails.getShopPrice());
         requestRepository.save(request);
         return requestDetails;
+    }
+
+    public boolean updateConsignmentRequestStatus(int id) {
+        boolean isSuccess = false;
+        try {
+            ConsignmentRequest request = requestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
+            request.setStatus(!request.isStatus());
+            requestRepository.save(request);
+            isSuccess = true;
+        }catch (Exception e) {
+            throw new EntityNotFoundException("Not found");
+        }
+        return isSuccess;
     }
 
     public void deleteConsignmentRequest(int id) {

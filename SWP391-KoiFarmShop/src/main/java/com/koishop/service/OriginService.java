@@ -49,9 +49,13 @@ public class OriginService {
     }
 
     public void deleteOrigin(Integer id) {
-        Origin existingOrigin = getOriginById(id);
-        existingOrigin.setDeleted(true);
-        originRepository.save(existingOrigin);
+        Origin existingOrigin = originRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Origin not found"));
+        try {
+            originRepository.delete(existingOrigin);
+        }catch (EntityNotFoundException e) {
+            existingOrigin.setDeleted(true);
+            originRepository.save(existingOrigin);
+        }
     }
 
     public Origin getOriginByName(String origin) {

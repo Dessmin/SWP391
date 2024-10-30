@@ -22,10 +22,10 @@ public class RatingsFeedbacks {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull(message = "Koi ID is required")
-    @ManyToOne
-    @JoinColumn(name = "koifish_id")
-    private KoiFish koiFish;
+    @NotNull(message = "Order ID is required")
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Orders orders;
 
     @NotNull(message = "Rating is required")
     @Min(value = 1, message = "Rating must be at least 1")

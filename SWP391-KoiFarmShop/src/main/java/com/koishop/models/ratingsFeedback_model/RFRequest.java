@@ -8,8 +8,8 @@ import lombok.Data;
 
 @Data
 public class RFRequest {
-    @NotNull(message = "KoiFish is required")
-    private String fishName;
+    @NotNull(message = "Order is required")
+    private int ordersId;
 
     @NotNull(message = "Rating is required")
     @Min(value = 1, message = "Rating must be at least 1")

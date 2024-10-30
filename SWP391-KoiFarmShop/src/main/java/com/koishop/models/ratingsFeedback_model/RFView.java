@@ -11,7 +11,7 @@ public class RFView {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
     private String userName;
-    private String fishName;
+    private int ordersId;
     private Integer rating;
     private String feedback;
     private Date feedbackDate;

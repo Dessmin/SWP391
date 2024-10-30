@@ -1,6 +1,7 @@
 package com.koishop.models.orders_model;
 
 import com.koishop.entity.OrderDetails;
+import com.koishop.entity.TypeOrder;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,6 +11,9 @@ import java.util.List;
 @Data
 public class OrderResponse {
     private Integer orderID;
+
+    @Enumerated(EnumType.STRING)
+    private TypeOrder type;
 
     private String userName;
 

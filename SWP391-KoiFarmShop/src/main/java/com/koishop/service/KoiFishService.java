@@ -144,8 +144,12 @@ public class KoiFishService {
     public void deleteKoiFish(Integer id) {
         KoiFish koiFish = koiFishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + id));
-        koiFish.setDeleted(true);
-        koiFishRepository.save(koiFish);
+        try {
+            koiFishRepository.delete(koiFish);
+        }catch (Exception e) {
+            koiFish.setDeleted(true);
+            koiFishRepository.save(koiFish);
+        }
     }
 
     public ViewFish getKoiFishById(int id) {

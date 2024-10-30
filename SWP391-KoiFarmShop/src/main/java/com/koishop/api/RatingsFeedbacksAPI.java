@@ -20,18 +20,13 @@ public class RatingsFeedbacksAPI {
     @Autowired
     private RatingsFeedbacksService ratingsFeedbacksService;
 
-    @GetMapping("/{koiId}/list-ratingsfeedbacksbykoi")
-    public List<RFView> getAllRatingsFeedbacksByKoi(@PathVariable Integer koiId) {
-        return ratingsFeedbacksService.getAllRatingsFeedbacksByKoiId(koiId);
-    }
-
     @GetMapping("/{userId}/list-ratingsfeedbacksbyuser")
     public List<RFView> getAllRatingsFeedbacksByUser(@PathVariable long userId) {
         return ratingsFeedbacksService.getAllRatingsFeedbacksByUserId(userId);
     }
 
     @GetMapping("list-ratingsfeedbacks")
-    public List<RatingsFeedbacks> getAllRatingsFeedbacks() {
+    public List<RFView> getAllRatingsFeedbacks() {
         return ratingsFeedbacksService.getAllRatingsFeedbacks();
     }
 
@@ -43,11 +38,6 @@ public class RatingsFeedbacksAPI {
     @PostMapping("add-ratingsfeedback")
     public RFView createRatingFeedback(@RequestBody RFRequest ratingFeedback) {
         return ratingsFeedbacksService.createRatingFeedback(ratingFeedback);
-    }
-
-    @PutMapping("/{ratingID}")
-    public RFView updateRatingFeedback(@PathVariable Integer ratingID, @RequestBody RFRequest ratingFeedbackDetails) {
-        return ratingsFeedbacksService.updateRatingFeedback(ratingID, ratingFeedbackDetails);
     }
 
     @DeleteMapping("/{ratingID}")

@@ -3,6 +3,7 @@ package com.koishop.service;
 import com.koishop.entity.Batch;
 import com.koishop.entity.Breeds;
 import com.koishop.models.batch_model.BatchDetailUpdate;
+import com.koishop.models.batch_model.BatchForManager;
 import com.koishop.models.batch_model.BatchResponse;
 import com.koishop.models.batch_model.BatchView;
 import com.koishop.repository.BatchRepository;
@@ -27,15 +28,13 @@ public class BatchService {
     private ModelMapper modelMapper;
     @Autowired
     private BreedsService breedsService;
-    @Autowired
-    private UserService userService;
 
     public BatchResponse getAllBatch(int page, int size) {
         List<BatchView> batchViewList = new ArrayList<>();
-        for (Batch batches : batchRepository.findAll(PageRequest.of(page, size))) {
-            BatchView batch = modelMapper.map(batches, BatchView.class);
-            batch.setBreedName(batches.getBreed().getBreedName());
-            batchViewList.add(batch);
+        for (Batch batch : batchRepository.findByIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(true, PageRequest.of(page, size), 5)) {
+            BatchView batchView = modelMapper.map(batch, BatchView.class);
+            batchView.setBreedName(batch.getBreed().getBreedName());
+            batchViewList.add(batchView);
         }
         BatchResponse batchResponse = new BatchResponse();
         batchResponse.setTotalPages(batchRepository.findAll(PageRequest.of(page, size)).getTotalPages());
@@ -45,10 +44,10 @@ public class BatchService {
         return batchResponse;
     }
 
-    public List<BatchView> getBatches() {
-        List<BatchView> batchViewList = new ArrayList<>();
+    public List<BatchForManager> getBatches() {
+        List<BatchForManager> batchViewList = new ArrayList<>();
         for (Batch batches : batchRepository.findAll()) {
-            BatchView batch = modelMapper.map(batches, BatchView.class);
+            BatchForManager batch = modelMapper.map(batches, BatchForManager.class);
             batch.setBreedName(batches.getBreed().getBreedName());
             batchViewList.add(batch);
         }
@@ -59,7 +58,8 @@ public class BatchService {
     public BatchDetailUpdate createBatch(BatchDetailUpdate batch) {
         Batch newBatch = modelMapper.map(batch, Batch.class);
         newBatch.setBreed(breedsService.getBreedByName(batch.getBreed()));
-        newBatch.setIsSale(true);
+        newBatch.setIsForSale(true);
+        newBatch.setDeleted(false);
         batchRepository.save(newBatch);
         return batch;
     }
@@ -75,7 +75,7 @@ public class BatchService {
     public void updateIsSale(Integer id) {
         Batch batch = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
-        batch.setIsSale(!batch.getIsSale());
+        batch.setIsForSale(!batch.getIsForSale());
         batchRepository.save(batch);
     }
 
@@ -92,15 +92,20 @@ public class BatchService {
     public void deleteBatch(int id) {
         Batch batch = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found for this id :: " + id));
-        batchRepository.delete(batch);
+        try {
+            batchRepository.delete(batch);
+        }catch (Exception e) {
+            batch.setDeleted(true);
+            batchRepository.save(batch);
+        }
     }
 
     public BatchResponse getAllBatchByBreed(String breed, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Batch> batchPage = batchRepository.findByBreed_BreedName(breed, pageable);
+        Page<Batch> batchPage = batchRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(breed, true, pageable, 5);
         List<BatchView> batchViewList = new ArrayList<>();
-        for (Batch batches : batchRepository.findByBreed_BreedName(breed, pageable)) {
+        for (Batch batches : batchRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(breed, true, pageable, 5)) {
             if (batches.getBreed().getBreedName().equals(breed)) {
                 BatchView batch = modelMapper.map(batches, BatchView.class);
                 batch.setBreedName(batches.getBreed().getBreedName());

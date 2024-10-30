@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,10 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer orderID;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TypeOrder type;
 
     @NotNull(message = "User ID is required")
     @ManyToOne
@@ -46,6 +51,9 @@ public class Orders {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderDetails> orderDetails;
 
+    @OneToOne(mappedBy = "orders")
+    @JsonIgnore
+    private RatingsFeedbacks ratingsFeedbacks;
 
     private boolean deleted;
 

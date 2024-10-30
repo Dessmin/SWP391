@@ -62,7 +62,7 @@ public class UserService implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(generateRandomPassword()));
             user.setJoinDate(new Date());
             user.setRole(Role.Customer);
-            user.setPointsBalance(0.0);
+            user.setPointsBalance(0);
             user.setDeleted(false);
             User savedUser = userRepository.save(user);
 
@@ -100,10 +100,13 @@ public class UserService implements UserDetailsService {
 
 
     public void deleteUser(long id) {
-        Optional<User> existingUser = userRepository.findById(id);
-        if (existingUser.isEmpty()) throw new EntityNotFoundException("User not found!");
-        existingUser.get().setDeleted(true);
-        userRepository.save(existingUser.get());
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        try {
+            userRepository.delete(user);
+        }catch (Exception e) {
+            user.setDeleted(true);
+            userRepository.save(user);
+        }
     }
 
     public UserResponse login(LoginRequest loginRequest) {
@@ -207,12 +210,12 @@ public class UserService implements UserDetailsService {
         return modelMapper.map(currentUser, CustomerRequest.class);
     }
 
-    public Double getPointsUser() {
+    public int getPointsUser() {
         User user = getCurrentUser();
         return user.getPointsBalance();
     }
 
-    public Double usePoint(Point point) {
+    public int usePoint(Point point) {
         User user = getCurrentUser();
         user.setPointsBalance(user.getPointsBalance() - point.getPoint());
         userRepository.save(user);

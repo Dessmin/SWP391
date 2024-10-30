@@ -2,6 +2,7 @@ package com.koishop.api;
 
 import com.koishop.models.consignment_modle.ConsignmentRequestForCustomer;
 import com.koishop.models.consignment_modle.ConsignmentView;
+import com.koishop.models.consignment_modle.ResponseWithFishId;
 import com.koishop.service.ConsignmentRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class ConsignmentRequestAPI {
     }
 
     @GetMapping("/getforCustomer")
-    public List<ConsignmentView> getConsignmentRequestForCustomer() {
+    public List<ResponseWithFishId> getConsignmentRequestForCustomer() {
         return consignmentRequestService.getAllConsignmentRequestsForCustomer();
     }
 

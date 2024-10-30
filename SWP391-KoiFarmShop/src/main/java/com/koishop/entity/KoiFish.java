@@ -76,9 +76,5 @@ public class KoiFish {
     @OneToOne(mappedBy = "koiFish")
     private ConsignmentRequest consignmentRequest;
 
-    @OneToMany(mappedBy = "koiFish")
-    @JsonIgnore
-    private List<RatingsFeedbacks> ratingsFeedbacks;
-
     private boolean deleted;
 }

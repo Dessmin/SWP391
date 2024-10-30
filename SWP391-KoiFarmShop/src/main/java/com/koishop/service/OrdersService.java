@@ -42,6 +42,12 @@ public class OrdersService {
     BatchService batchService;
     @Autowired
     EmailService emailService;
+    @Autowired
+    private KoiFishRepository koiFishRepository;
+    @Autowired
+    private OrderDetailsRepository orderDetailsRepository;
+    @Autowired
+    private ConsignmentRequestRepository consignmentRequestRepository;
 
 
     public Orders getOderById(Integer id) {
@@ -148,18 +154,10 @@ public class OrdersService {
             orderDetail.setProductType(orderDetailsRequest.getProductType());
             orderDetail.setQuantity(orderDetailsRequest.getQuantity());
             orderDetail.setUnitPrice(orderDetailsRequest.getUnitPrice());
-            if (orderDetailsRequest.getProductType() == ProductType.KoiFish) {
-                koiFishService.updateIsForSale(orderDetailsRequest.getProductId());
-            } else if (orderDetailsRequest.getProductType() == ProductType.Batch){
-                batchService.updateIsSale(orderDetailsRequest.getProductId());
-                batchService.quantityBatch(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity());
-            } else {
-                throw new IllegalArgumentException("Unknown product type");
-            }
-
             orderDetails.add(orderDetail);
 
         }
+        order.setType(orderRequest.getType());
         order.setOrderDetails(orderDetails);
         order.setTotalAmount(total);
         order.setOrderStatus("Pending");
@@ -199,6 +197,31 @@ public class OrdersService {
     public void updateStatus(Integer orderId, String status) {
         Orders existingOrder = ordersRepository.findByOrderID(orderId);
         if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
+        if (status.equals("PAID")){
+            User customer = existingOrder.getUser();
+            int point = (int) Math.round(customer.getPointsBalance() + existingOrder.getTotalAmount() * 0.01);
+            customer.setPointsBalance(point);
+            userRepository.save(customer);
+            if (existingOrder.getType().equals(TypeOrder.Consignment)){
+                for (OrderDetails orderDetail: orderDetailsRepository.findByOrders_OrderID(existingOrder.getOrderID())) {
+                    KoiFish fish = koiFishRepository.findKoiFishByKoiID(orderDetail.getProductId());
+                    ConsignmentRequest consignmentRequest = fish.getConsignmentRequest();
+                    consignmentRequest.setStatus(true);
+                    consignmentRequestRepository.save(consignmentRequest);
+                }
+            } else {
+                for (OrderDetails orderDetail: orderDetailsRepository.findByOrders_OrderID(existingOrder.getOrderID())) {
+                    if (orderDetail.getProductType() == ProductType.KoiFish) {
+                        KoiFish koiFish = koiFishRepository.findKoiFishByKoiID(orderDetail.getProductId());
+                        koiFish.setIsForSale(false);
+                    } else if (orderDetail.getProductType() == ProductType.Batch){
+                        batchService.quantityBatch(orderDetail.getProductId(), orderDetail.getQuantity());
+                    } else {
+                        throw new IllegalArgumentException("Unknown product type");
+                    }
+                }
+            }
+        }
         existingOrder.setOrderStatus(status);
         ordersRepository.save(existingOrder);
     }
@@ -303,8 +326,6 @@ public class OrdersService {
         transactions1.setPayment(payment);
         transactions1.setStatus(TransactionsStatus.Success);
         transactions1.setDescription("VNPAY to Customer");
-        double point = customer.getPointsBalance() + orders.getTotalAmount() * 0.01;
-        customer.setPointsBalance(point);
         setTransactions.add(transactions1);
 
 
