@@ -1,30 +1,26 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
+  Col,
   Descriptions,
-  Form,
   Image,
-  Input,
+  Modal,
   Rate,
+  Row,
   Select,
   Spin,
-  Table,
 } from "antd";
-import { toast } from "react-toastify";
 import apiKoi from "../../config/koi-api";
 import { Option } from "antd/es/mentions";
 import "./index.scss";
-
-const desc = ["1", "2", "3", "4", "5"];
+import { CartContext } from "../../helper/CartContext";
 
 function DetailKoi() {
-  const [feedbackList, setFeedbackList] = useState([]);
-  const [feedback, setFeedback] = useState("");
   const [certificateImage, setCertificateImage] = useState(null); // Thay đổi state để chỉ lưu trữ image
-  const [value, setValue] = useState();
+
   const [koiList, setKoiList] = useState([]);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -36,6 +32,31 @@ function DetailKoi() {
   const [breeds, setBreeds] = useState([]);
   const [selectedBreed, setSelectedBreed] = useState("All");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleAddToCart = () => {
+    const product = {
+      id,
+      name: koi.fishName,
+      image: koi.image,
+      quantity: 1,
+      price: koi.price,
+      type: "KoiFish", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
+    };
+    addToCart(product); // Thêm sản phẩm vào giỏ hàng
+  };
+
+  const { addToCart } = useContext(CartContext);
+
   const fetchKoiById = async (id) => {
     try {
       const response = await axios.get(
@@ -46,10 +67,28 @@ function DetailKoi() {
           },
         }
       );
+      console.log(response.data);
+
       return response.data;
     } catch (error) {
       console.log(error.toString());
       return null;
+    }
+  };
+
+  const fetchCertificateById = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/certificates/${id}/fish-certificate`, // Đảm bảo URL đúng
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error.toString());
     }
   };
 
@@ -61,6 +100,7 @@ function DetailKoi() {
         },
       });
       setKoiList(response.data.content); // Lưu danh sách cá koi
+
       setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
     } catch (e) {
       console.log(e); // Ghi lại lỗi không phải axios
@@ -102,66 +142,6 @@ function DetailKoi() {
     navigate(`/koi-comparison/${id}/${compareId}`); // Điều hướng đến trang so sánh với id hiện tại và compareId
   };
 
-  const handleFeedBack = async () => {
-    const values = {
-      fishName: koi.fishName,
-      rating: value,
-      feedback: feedback,
-    };
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/api/ratings-feedbacks/add-ratingsfeedback",
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        toast.success("Gửi feedback thành công");
-        fetchFeedBackById(id); // Cập nhật danh sách feedback sau khi gửi feedback thành công
-      }
-    } catch (error) {
-      console.log(error.toString());
-    }
-  };
-
-  const fetchFeedBackById = async (id) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/ratings-feedbacks/${id}/list-ratingsfeedbacksbykoi`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      setFeedbackList(response.data); // Cập nhật danh sách feedback
-    } catch (error) {
-      console.log(error.toString());
-    }
-  };
-
-  const fetchCertificateById = async (id) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/certificates/${id}/fish-certificate`, // Đảm bảo URL đúng
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      // Lấy chỉ image từ dữ liệu trả về
-      if (response.data && response.data.length > 0) {
-        setCertificateImage(response.data[0].image); // Lưu image từ phần tử đầu tiên
-      }
-    } catch (error) {
-      console.log(error.toString());
-    }
-  };
-
   useEffect(() => {
     fetchBreeds();
     fetchKoiById(id).then((data) => {
@@ -170,8 +150,13 @@ function DetailKoi() {
       }
       setLoading(false);
     });
-    fetchCertificateById(id);
-    fetchFeedBackById(id); // Lấy danh sách feedback khi tải trang
+    fetchCertificateById(id).then((data) => {
+      if (data) {
+        setCertificateImage(data);
+      }
+      setLoading(false);
+    });
+
     if (selectedBreed === "All") {
       fetchKoiList(page); // Gọi hàm fetch cho "All"
     } else {
@@ -192,90 +177,68 @@ function DetailKoi() {
     return <Spin tip="Loading..." />;
   }
 
-  const columns = [
-    {
-      title: "User Name",
-      dataIndex: "userName",
-      key: "userName",
-    },
-    {
-      title: "Rating",
-      dataIndex: "rating",
-      key: "rating",
-      render: (rating) => <Rate disabled value={rating} />, // Hiển thị số sao
-    },
-    {
-      title: "Feedback",
-      dataIndex: "feedback",
-      key: "feedback",
-    },
-  ];
-
   return (
-    <div>
-      <h1>{koi.fishName}</h1>
-      {koi && (
-        <Descriptions bordered column={1}>
-          <Descriptions.Item label="Fish Name">
-            {koi.fishName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Description">
-            {koi.description}
-          </Descriptions.Item>
-          <Descriptions.Item label="Breed">{koi.breed}</Descriptions.Item>
-          <Descriptions.Item label="Origin">{koi.origin}</Descriptions.Item>
-          <Descriptions.Item label="Gender">
-            {koi.gender ? "Male" : "Female"}
-          </Descriptions.Item>
-          <Descriptions.Item label="Birth day">
-            {koi.birthDate}
-          </Descriptions.Item>
-          <Descriptions.Item label="Diet">{koi.diet}</Descriptions.Item>
-          <Descriptions.Item label="Size">{koi.size}</Descriptions.Item>
-          <Descriptions.Item label="Price">{koi.price}</Descriptions.Item>
-          <Descriptions.Item label="Food">{koi.food}</Descriptions.Item>
-          <Descriptions.Item label="Screening rate">
-            {koi.screeningRate}
-          </Descriptions.Item>
-          <Descriptions.Item label="Image">
-            <Image width={100} src={koi.image} alt="Certificate" />
-          </Descriptions.Item>
+    <div className="full-koi">
+      <h1>Thông tin cá {koi.fishName}</h1>
 
-          {/* Hiển thị chứng nhận */}
-          <Descriptions.Item label="Certificate">
-            {certificateImage ? (
-              <Image width={200} src={certificateImage} alt="Certificate" />
-            ) : (
-              <span>No Certificate Available</span>
+      <div className="koi-info">
+        <Row>
+          <Col className="img-price" span={12}>
+            <img src={koi.image} alt="" />
+
+            <p className="price">
+              <strong>Giá: </strong>
+              {koi.price.toLocaleString()} VND
+            </p>
+
+            <Button
+              onClick={handleAddToCart}
+              style={{ width: "100%", height: "50px" }}
+              type="primary"
+            >
+              Thêm vào giỏ hàng
+            </Button>
+          </Col>
+
+          <Col className="detailKoi" span={12}>
+            {koi && (
+              <Descriptions bordered column={1}>
+                <Descriptions.Item label="Description">
+                  {koi.description}
+                </Descriptions.Item>
+                <Descriptions.Item label="Breed">{koi.breed}</Descriptions.Item>
+                <Descriptions.Item label="Origin">
+                  {koi.origin}
+                </Descriptions.Item>
+                <Descriptions.Item label="Gender">
+                  {koi.gender ? "Male" : "Female"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Birth day">
+                  {koi.birthDate}
+                </Descriptions.Item>
+                <Descriptions.Item label="Diet">{koi.diet}</Descriptions.Item>
+                <Descriptions.Item label="Size">{koi.size}</Descriptions.Item>
+
+                <Descriptions.Item label="Food">{koi.food}</Descriptions.Item>
+                <Descriptions.Item label="Screening rate">
+                  {koi.screeningRate}
+                </Descriptions.Item>
+
+                {/* Hiển thị chứng nhận */}
+                <Descriptions.Item label="Certificate">
+                  <Button type="primary" onClick={showModal}>
+                    Xem chứng chỉ hiện có
+                  </Button>
+                </Descriptions.Item>
+              </Descriptions>
             )}
-          </Descriptions.Item>
+          </Col>
+        </Row>
+      </div>
 
-          <Descriptions.Item label="Rating">
-            <Form onFinish={handleFeedBack}>
-              <Form.Item>
-                <Rate tooltips={desc} onChange={setValue} value={value} />
-                {value ? <span>{desc[value - 1]}</span> : null}
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  placeholder="Feedback"
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                />
-              </Form.Item>
-              <Button
-                style={{ width: "100%" }}
-                type="primary"
-                htmlType="submit"
-              >
-                Submit
-              </Button>
-            </Form>
-          </Descriptions.Item>
-        </Descriptions>
-      )}
-
-      <h1 className="compare" style={{ textAlign: "center" }}>So sánh cá Koi</h1>
+      <h1 className="compare" style={{ textAlign: "center" }}>
+        So sánh cá Koi
+      </h1>
       <div className="koi-compare">
         <strong>Breed </strong>
         <Select
@@ -332,7 +295,7 @@ function DetailKoi() {
                   key={koiItem.id}
                   type="primary"
                   onClick={() => handleCompare(koiItem.id)}
-                  style={{ marginTop: "10px", width: "100%", height: '50px' }}
+                  style={{ marginTop: "10px", width: "100%", height: "50px" }}
                 >
                   So sánh
                 </Button>
@@ -359,11 +322,27 @@ function DetailKoi() {
           </Button>
         ))}
       </div>
-      <h1>Feedback</h1>
-      <Table columns={columns} dataSource={feedbackList} rowKey="id" />
+
       <Button type="primary" onClick={() => navigate("/home")}>
         Trở về
       </Button>
+
+      <>
+        <Modal
+          title="Chứng chỉ"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          {certificateImage && certificateImage.length > 0 ? (
+            certificateImage.map((ci) => (
+              <Image key={ci.id} height={100} width={200} src={ci.image} />
+            ))
+          ) : (
+            <p>Không có chứng chỉ nào.</p>
+          )}
+        </Modal>
+      </>
     </div>
   );
 }

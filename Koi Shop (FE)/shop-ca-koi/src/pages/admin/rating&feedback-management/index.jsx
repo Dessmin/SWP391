@@ -47,40 +47,23 @@ function RatingFeedback() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "ratingID",
-      key: "ratingID",
+      dataIndex: "id",
+      key: "id",
     },
     {
       title: "Người dùng",
-      dataIndex: ["user", "username"],
-      key: "user",
+      dataIndex: "userName",
+      key: "userName",
     },
     {
-      title: "Số điện thoại",
-      dataIndex: ["user", "phoneNumber"],
-      key: "phoneNumber",
+      title: "Order Id",
+      dataIndex: "ordersId",
+      key: "ordersId",
     },
-    {
-      title: "Địa chỉ",
-      dataIndex: ["user", "address"],
-      key: "address",
-    },
-    {
-      title: "Cá Koi",
-      dataIndex: ["koiFish", "fishName"],
-      key: "koiFish",
-    },
-    {
-      title: "Giới tính",
-      dataIndex: ["koiFish", "gender"],
-      key: "gender",
-      render: (gender) => (gender ? "Đực" : "Cái"), // true là Đực, false là Cái
-    },
-    {
-      title: "Giống cá",
-      dataIndex: ["koiFish", "breed", "breedName"],
-      key: "breedName",
-    },
+    
+    
+    
+    
     {
       title: "Điểm",
       dataIndex: "rating",

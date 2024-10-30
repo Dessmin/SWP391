@@ -8,6 +8,7 @@ import "./index.scss";
 import { Link } from "react-router-dom";
 import { RollbackOutlined } from "@ant-design/icons";
 
+
 const Cart = () => {
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
   const [cartItems, setCartItems] = useState([]); // State để lưu giỏ hàng từ session
@@ -16,6 +17,7 @@ const Cart = () => {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [voucherCode, setVoucherCode] = useState("");
   const [userPoint, setUserPoint] = useState();
+
 
   // Lấy giỏ hàng từ session theo user id
   useEffect(() => {
@@ -28,12 +30,14 @@ const Cart = () => {
     }
   }, [user]);
 
+
   const calculateSubtotal = () => {
     return cartItems.reduce(
       (total, item) => total + item.price * (item.quantity || 1),
       0
     );
   };
+
 
   const calculateTotalAmount = () => {
     const subtotal = calculateSubtotal();
@@ -42,6 +46,7 @@ const Cart = () => {
     const total = subtotal - discountFromVoucher - discountFromPoints;
     setTotalAmount(total > 0 ? total : 0); // Đảm bảo tổng không âm
   };
+
 
   const handleVoucherApply = async () => {
     try {
@@ -56,6 +61,7 @@ const Cart = () => {
       );
       console.log();
 
+
       // Giả sử API trả về giá trị discountPercent
       setDiscountPercent(response.data); // Lưu phần trăm giảm giá vào state
       calculateTotalAmount(); // Tính toán lại tổng tiền sau khi nhận phần trăm giảm giá
@@ -65,28 +71,31 @@ const Cart = () => {
     }
   };
 
+
   useEffect(() => {
     calculateTotalAmount();
   }, [cartItems, points, discountPercent]);
 
-  const updateUserPoints = async (points) => {
-    try {
-      await axios.put(
-        `http://localhost:8080/api/user/usePoint`,
-        {
-          point: points,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      console.log("User points updated successfully");
-    } catch (error) {
-      console.error("Error updating user points", error);
-    }
-  };
+
+  // const updateUserPoints = async (points) => {
+  //   try {
+  //     await axios.put(
+  //       `http://localhost:8080/api/user/usePoint`,
+  //       {
+  //         point: points,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${user.token}`,
+  //         },
+  //       }
+  //     );
+  //     console.log("User points updated successfully");
+  //   } catch (error) {
+  //     console.error("Error updating user points", error);
+  //   }
+  // };
+
 
   const fetchPoint = async () => {
     try {
@@ -110,6 +119,7 @@ const Cart = () => {
     }
   }, [user]);
 
+
   const handleQuantityChange = (value, productId, productType) => {
     const updatedCart = cartItems.map((item) => {
       if (item.id === productId && item.type === productType) {
@@ -124,6 +134,7 @@ const Cart = () => {
     saveCartToSession(user.id, updatedCart); // Cập nhật giỏ hàng trong session
   };
 
+
   // Hàm xử lý xóa sản phẩm khỏi giỏ hàng
   const handleRemoveFromCart = (productId, productType) => {
     // Xóa sản phẩm dựa trên cả id và type
@@ -131,18 +142,22 @@ const Cart = () => {
       (item) => !(item.id === productId && item.type === productType)
     );
 
+
     setCartItems(updatedCart);
     saveCartToSession(user.id, updatedCart); // Cập nhật giỏ hàng theo userId
+
 
     // Tải lại trang sau khi cập nhật giỏ hàng
     window.location.reload();
   };
+
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       alert("Your cart is empty.");
       return;
     }
+
 
     // Tạo đối tượng orderRequest chứa danh sách orderDetails từ cartItems
     const orderRequest = {
@@ -156,6 +171,7 @@ const Cart = () => {
       })),
     };
 
+
     try {
       // Gọi API tạo đơn hàng và lấy URL thanh toán
       const response = await apiOrder.post("add-order", orderRequest, {
@@ -164,13 +180,16 @@ const Cart = () => {
         },
       });
 
+
       const paymentUrl = response.data; // Giả sử backend trả về paymentUrl
+
 
       // Chuyển hướng sang trang thanh toán
       window.location.href = paymentUrl;
       if (points > 0) {
-        await updateUserPoints(points);
+        sessionStorage.setItem("point", points);
       }
+
 
       // Xóa giỏ hàng sau khi thanh toán thành công
       setCartItems([]);
@@ -180,6 +199,7 @@ const Cart = () => {
       alert("Error creating order. Please try again.");
     }
   };
+
 
   // Định nghĩa các cột cho bảng
   const columns = [
@@ -238,6 +258,7 @@ const Cart = () => {
     },
   ];
 
+
   return (
     <div className="cart-container">
       <div>
@@ -252,6 +273,7 @@ const Cart = () => {
               dataSource={cartItems}
               rowKey="id"
             />
+
 
             <div className="points-amount-section">
               <div className="points-section">
@@ -268,10 +290,12 @@ const Cart = () => {
                 <span className="points-label">Points</span>
               </div>
 
+
               <h3 className="total-amount">
                 Total Amount: {totalAmount.toLocaleString()} VND
               </h3>
             </div>
+
 
             <div className="voucher-checkout-section">
               <div className="voucher-section">
@@ -289,6 +313,7 @@ const Cart = () => {
                   Apply Voucher
                 </Button>
               </div>
+
 
               <div className="amount-checkout-section">
                 <Button
@@ -318,5 +343,6 @@ const Cart = () => {
     </div>
   );
 };
+
 
 export default Cart;

@@ -50,13 +50,18 @@ function HeaderLoged() {
           <Link to="/home">
             <li>Trang chủ</li>
           </Link>
-
+          
           <Link to="/consignment">
             <li>Ký gửi cá Koi</li>
           </Link>
+          {user.role !== 'Customer' && (
           <Link to="/home/dashboard/stat">
             <li>Dashboard</li>
           </Link>
+        )}
+          
+            
+          
           <li className="search">
             <div className="search-container">
               <Search

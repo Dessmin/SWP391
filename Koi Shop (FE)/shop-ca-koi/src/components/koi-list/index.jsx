@@ -5,6 +5,7 @@ import apiKoi from "../../config/koi-api";
 import CardKoi from "../card-koi";
 import { Button, Select } from "antd";
 import { Option } from "antd/es/mentions";
+import axios from "axios";
 
 function KoiList() {
   const [kois, setKois] = useState([]);
@@ -33,21 +34,22 @@ function KoiList() {
 
   const fetchKoiByBreed = async (breed, page = 0) => {
     try {
-      const response = await apiKoi.get(`${breed}?page=${page}`, {
+      const response = await axios.get(`http://localhost:8080/api/koi-fishes/${breed}?page=${page}`, {
         headers: {
           Authorization: `Bearer ${user.token}`, // Gửi token trong header
         },
       });
       setKois(response.data.content); // Lưu danh sách cá koi
+      console.log(response.data.content);
+      
       setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
     } catch (e) {
       console.log(e); // Ghi lại lỗi không phải axios
     }
   };
 
-  // const handleInputChange = (e) => {
-  //   setSearchTerm(e.target.value); // Cập nhật từ khóa tìm kiếm khi người dùng nhập
-  // };
+  
+  
 
   const fetchKoiBySearchTerm = async () => {
     if (!searchTerm) {
@@ -66,26 +68,7 @@ function KoiList() {
       console.error("Error fetching Koi by search", error);
     }
   };
-  // const handleSearch = async () => {
-  //   if (!searchTerm) {
-  //     // Nếu không nhập gì, hiển thị toàn bộ danh sách
-  //     setName([]);
-  //     fetchKoi(page);
-  //     return;
-  //   }
-  //   try {
-  //     const response = await apiKoi.get(`${searchTerm}/search`, {
-  //       headers: {
-  //         Authorization: `Bearer ${user.token}`,
-  //       },
-  //     });
-
-  //     setName(response.data); // Cập nhật danh sách cá Koi dựa trên từ khóa tìm kiếm
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching Koi by search", error);
-  //   }
-  // };
+  
 
   const fetchBreeds = async () => {
     try {
@@ -105,7 +88,8 @@ function KoiList() {
   };
 
   useEffect(() => {
-    fetchKoiBySearchTerm(), fetchBreeds(); // Lấy danh sách breed khi component mount
+    fetchKoiBySearchTerm(),
+    fetchBreeds(); // Lấy danh sách breed khi component mount
     // Lấy danh sách Koi theo breed đã chọn
     if (selectedBreed === "All") {
       fetchKoi(page); // Gọi hàm fetch cho "All"
@@ -127,22 +111,26 @@ function KoiList() {
     <div className="koi">
       <h2>Danh sách Koi</h2>
       <div className="action">
-        <div className="filter">
-          <strong style={{ color: "white" }}>Breed</strong>
-          <Select
-            defaultValue="All"
-            style={{ width: 200, marginBottom: "20px" }}
-            onChange={handleBreedChange}
-          >
-            <Option value="All">All</Option>
-            {breeds.map((breed, index) => (
-              <Option key={index} value={breed}>
-                {breed}
-              </Option>
-            ))}
-          </Select>
-        </div>
+      
+      <div className="filter">
+        <strong style={{ color: "white" }}>Breed</strong>
+        <Select
+          defaultValue="All"
+          style={{ width: 200, marginBottom: "20px" }}
+          onChange={handleBreedChange}
+        >
+          <Option value="All">All</Option>
+          {breeds.map((breed, index) => (
+            <Option key={index} value={breed}>
+              {breed}
+            </Option>
+          ))}
+        </Select>
       </div>
+      
+      </div>
+
+      
 
       <div className="koi__list">
         {kois

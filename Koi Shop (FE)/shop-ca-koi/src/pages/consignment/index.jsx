@@ -2,8 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table, Spin, Alert, Button } from "antd";
-import './index.scss'
+import "./index.scss";
 import { useNavigate } from "react-router-dom";
+import apiOrder from "../../config/api-order";
 
 function Consignment() {
   const user = useSelector((state) => state.user);
@@ -12,6 +13,39 @@ function Consignment() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const handleConssign = async (consignment) => {
+    // Nhận bản ghi ký gửi
+    const orderRequest = {
+      totalAmount: consignment.shopPrice,
+      type: "Consignment",
+      orderDetails: [
+        // Chuyển sang mảng
+        {
+          productId: consignment.koiFishId,
+          productType: "KoiFish", // Hoặc "Batch"
+          quantity: 1, // Batch có số lượng, KoiFish mặc định là 1
+          unitPrice: consignment.shopPrice,
+        },
+      ],
+    };
+
+    try {
+      const response = await apiOrder.post("add-order", orderRequest, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
+      const paymentUrl = response.data; // Giả sử backend trả về paymentUrl
+
+      // Chuyển hướng sang trang thanh toán
+      window.location.href = paymentUrl;
+    } catch (error) {
+      console.error("There was an error processing the order!", error);
+      alert("Error creating order. Please try again.");
+    }
+  };
+
   useEffect(() => {
     const fetchConsignment = async () => {
       try {
@@ -19,7 +53,7 @@ function Consignment() {
           "http://localhost:8080/api/consignments/getforCustomer",
           {
             headers: {
-              Authorization: `Bearer ${user.token}`, // Gửi token trong header
+              Authorization: `Bearer ${user.token}`,
             },
           }
         );
@@ -35,7 +69,6 @@ function Consignment() {
   }, [user.token]);
 
   const columns = [
-    
     {
       title: "Tên cá",
       dataIndex: "fishName",
@@ -59,10 +92,23 @@ function Consignment() {
       render: (status) => (status ? "Hoàn thành" : "Chưa hoàn thành"),
     },
     {
-      title: "Giá bán tại cửa hàng",
+      title: "Tổng phí",
       dataIndex: "shopPrice",
       key: "shopPrice",
       render: (price) => `${price.toLocaleString()} VND`,
+    },
+    {
+      title: "Xác nhận ký gửi",
+      dataIndex: "action",
+      render: (text, record) => (
+        <span>
+          {record.status !== true && record.shopPrice !== 0 && (
+            <Button type="primary" onClick={() => handleConssign(record)}>
+              Ký gửi
+            </Button>
+          )}
+        </span>
+      ),
     },
   ];
 
@@ -77,14 +123,19 @@ function Consignment() {
   return (
     <div className="consignment">
       <h1>Danh sách ký gửi</h1>
-      <Button style={{width: 100}} type="primary" onClick={() => navigate("/consignmentKoi")}>Ký gửi</Button>
+      <Button
+        style={{ width: 100 }}
+        type="primary"
+        onClick={() => navigate("/consignmentKoi")}
+      >
+        Ký gửi
+      </Button>
       <Table
         columns={columns}
         dataSource={consignments}
         rowKey={(record) => record.id}
         bordered
       />
-      
     </div>
   );
 }

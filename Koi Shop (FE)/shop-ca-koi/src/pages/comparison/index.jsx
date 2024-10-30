@@ -1,13 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import apiKoi from "../../config/koi-api";
-import { Button, Col, Descriptions, Image, Row, Spin } from "antd";
-import "./index.scss";
-import { RollbackOutlined } from "@ant-design/icons";
-import HeaderLoged from "../../components/header(loged)";
-function CompareKoi() {
+import { Col, Descriptions, Image, Row, Spin } from "antd";
+
+function CompareKoi () {
+
   const [koi1, setKoi1] = useState(null);
   const [koi2, setKoi2] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,11 +15,14 @@ function CompareKoi() {
 
   const fetchKoiById = async (koiId) => {
     try {
-      const response = await apiKoi.get(`koiFish/${koiId}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await apiKoi.get(
+        `koiFish/${koiId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.log(error.toString());
@@ -50,88 +52,50 @@ function CompareKoi() {
   }
   return (
     <div>
-      <h1 className="title">
-        So sánh {koi1.fishName} và {koi2.fishName}{" "}
-      </h1>
-      <h4 className="infor">Thông tin cơ bản: </h4>
+      <h1>So sánh cá koi</h1>
       <Row gutter={16}>
         <Col span={12}>
+          <h2>{koi1.fishName}</h2>
           <Descriptions bordered column={1}>
-            <Descriptions.Item label="Tên cá: ">
-              {koi1.fishName}
-            </Descriptions.Item>
-            <Descriptions.Item label="Mô tả">
-              {koi1.description}
-            </Descriptions.Item>
-            <Descriptions.Item label="Giống cá">{koi1.breed}</Descriptions.Item>
-            <Descriptions.Item label="Xuất Xứ">{koi1.origin}</Descriptions.Item>
-            <Descriptions.Item label="Giới tính">
-              {koi1.gender ? "Giống đực" : "Giống cái"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Ngày sinh">
-              {koi1.birthDate}
-            </Descriptions.Item>
-            <Descriptions.Item label="Chế độ ăn">{koi1.diet}</Descriptions.Item>
-            <Descriptions.Item label="Kích thước">
-              {koi1.size}
-            </Descriptions.Item>
-            <Descriptions.Item label="Thức ăn">{koi1.food}</Descriptions.Item>
-            <Descriptions.Item label="Thế hệ">
-              {koi1.screeningRate}
-            </Descriptions.Item>
-            <Descriptions.Item label="Giá tham khảo">
-              {koi1.price}
-            </Descriptions.Item>
-            <Descriptions.Item label="Hình ảnh">
-              <Image width={200} src={koi1.image} alt={koi1.fishName} />
+            <Descriptions.Item label="Fish Name">{koi1.fishName}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi1.description}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi1.breed}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi1.origin}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi1.gender ? "Male" : "Female"}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi1.birthDate}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi1.diet}</Descriptions.Item>
+            <Descriptions.Item label="Size">{koi1.size}</Descriptions.Item>
+            <Descriptions.Item label="Price">{koi1.food}</Descriptions.Item>
+            <Descriptions.Item label="Price">{koi1.screeningRate}</Descriptions.Item>
+            <Descriptions.Item label="Image">
+              <Image width={100} src={koi1.image} alt={koi1.fishName} />
             </Descriptions.Item>
             {/* Các thuộc tính khác của koi1 */}
           </Descriptions>
         </Col>
         <Col span={12}>
+          <h2>{koi2.fishName}</h2>
           <Descriptions bordered column={1}>
-            <Descriptions.Item label="Tên cá:">
-              {koi2.fishName}
-            </Descriptions.Item>
-            <Descriptions.Item label="Mô tả">
-              {koi2.description}
-            </Descriptions.Item>
-            <Descriptions.Item label="Giống cá">{koi2.breed}</Descriptions.Item>
-            <Descriptions.Item label="Xuất xứ">{koi2.origin}</Descriptions.Item>
-            <Descriptions.Item label="Giới tính">
-              {koi2.gender ? "Giống đực" : "Giống cái"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Ngày sinh">
-              {koi2.birthDate}
-            </Descriptions.Item>
-            <Descriptions.Item label="Chế độ ăn">{koi2.diet}</Descriptions.Item>
-            <Descriptions.Item label="Kích thước">
-              {koi2.size}
-            </Descriptions.Item>
-            <Descriptions.Item label="Thức ăn">{koi2.food}</Descriptions.Item>
-            <Descriptions.Item label="Thế hệ">
-              {koi2.screeningRate}
-            </Descriptions.Item>
-            <Descriptions.Item label="Giá tham khảo">
-              {koi2.price}
-            </Descriptions.Item>
-            <Descriptions.Item label="Hình ảnh">
-              <Image width={200} src={koi2.image} alt={koi2.fishName} />
+            <Descriptions.Item label="Fish Name">{koi2.fishName}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi2.description}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi2.breed}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi2.origin}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi2.gender ? "Male" : "Female"}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi2.birthDate}</Descriptions.Item>
+            <Descriptions.Item label="Breed">{koi2.diet}</Descriptions.Item>
+            <Descriptions.Item label="Size">{koi2.size}</Descriptions.Item>
+            <Descriptions.Item label="Price">{koi2.food}</Descriptions.Item>
+            <Descriptions.Item label="Price">{koi2.screeningRate}</Descriptions.Item>
+            <Descriptions.Item label="Image">
+              <Image width={100} src={koi2.image} alt={koi2.fishName} />
             </Descriptions.Item>
             {/* Các thuộc tính khác của koi1 */}
           </Descriptions>
         </Col>
       </Row>
-      <div>
-        <Link to="/home">
-          <Button>
-            <RollbackOutlined />
-            Trở về
-          </Button>
-        </Link>
-      </div>
     </div>
-  );
+
+  )
 }
 
-export default CompareKoi;
+export default CompareKoi 

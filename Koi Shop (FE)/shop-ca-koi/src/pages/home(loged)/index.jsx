@@ -4,6 +4,7 @@ import { CartProvider } from "../../helper/CartContext";
 import BatchList from "../../components/batch-list";
 import "./index.scss";
 import Footer from "../../components/footer";
+import Blog_Carousel from "../../components/blog-carousel";
 
 function HomeLoged() {
   return (
@@ -27,7 +28,11 @@ function HomeLoged() {
           <hr />
           <BatchList />
         </CartProvider>
+        <hr />
+        <Blog_Carousel/>
       </div>
+
+      
 
       <Footer />
     </div>

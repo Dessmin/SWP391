@@ -14,7 +14,6 @@ import Breed from "./pages/admin/breed-management";
 import Origin from "./pages/admin/origin-management";
 import Koi from "./pages/admin/koi-management";
 import PaymentSuccess from "./components/successPayment";
-import FailPayment from "./components/failPayment";
 import OrderDetailsPage from "./components/orderDetailPage";
 import Consignment from "./pages/consignment";
 import ConsignmentManagement from "./pages/admin/consignment-management";
@@ -37,7 +36,12 @@ import StatSummary from "./pages/admin/stat-summary";
 import Income from "./pages/admin/income";
 import RatingFeedback from "./pages/admin/rating&feedback-management";
 import Koi_introduction from "./pages/Koi-introduction";
+import ProtectedRoute from "./components/phanQuyen/ProtectedRoute";
+import BlogPage from "./pages/blog-detail";
+import { CartProvider } from "./helper/CartContext";
 import Posting from "./pages/admin/posting-management";
+import FailPayment from "./components/failPayment";
+import FeedBackUI from "./pages/feedBack";
 
 function App() {
   const router = createBrowserRouter([
@@ -59,19 +63,35 @@ function App() {
     },
     {
       path: "/home/dashboard",
-      element: <Dashboard />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Dashboard />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/user",
-      element: <User />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <User />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/consignment",
-      element: <ConsignmentManagement />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <ConsignmentManagement />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/order",
-      element: <OrderManagement />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <OrderManagement />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "cart",
@@ -79,7 +99,11 @@ function App() {
     },
     {
       path: "/detailKoi/:id",
-      element: <DetailKoi />,
+      element: (
+        <CartProvider>
+          <DetailKoi />
+        </CartProvider>
+      ),
     },
     {
       path: "/detailUser/:id",
@@ -87,27 +111,51 @@ function App() {
     },
     {
       path: "/home/dashboard/koi/koidetail/:koiID",
-      element: <KoiDetail />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <KoiDetail />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/user/:id/detail",
-      element: <UserDetail />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <UserDetail />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/koi/origin",
-      element: <Origin />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Origin />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/koi/breed",
-      element: <Breed />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Breed />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/koi",
-      element: <Koi />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Koi />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/stat",
-      element: <StatSummary />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <StatSummary />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/success/:orderId",
@@ -127,7 +175,11 @@ function App() {
     },
     {
       path: "/home/dashboard/koi/certificate/:koiId",
-      element: <Certificate />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Certificate />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/koi-comparison/:id/:compareId",
@@ -143,11 +195,19 @@ function App() {
     },
     {
       path: "/home/dashboard/batch",
-      element: <Batch />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Batch />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/promotion",
-      element: <Promotion />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Promotion />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/orderHistory",
@@ -183,7 +243,11 @@ function App() {
     },
     {
       path: "/home/dashboard/rating_feedback",
-      element: <RatingFeedback />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <RatingFeedback />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/koi_introduction",
@@ -191,19 +255,35 @@ function App() {
     },
     {
       path: "/home/dashboard/income",
-      element: <Income />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <Income />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/home/dashboard/rating_feedback",
-      element: <RatingFeedback />,
+      element: (
+        <ProtectedRoute roleRequired="Manager">
+          <RatingFeedback />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/koi_introduction",
       element: <Koi_introduction />,
     },
     {
+      path: "/blogDetail/:id",
+      element: <BlogPage />,
+    },
+    {
       path: "/home/dashboard/posting",
       element: <Posting />,
+    },
+    {
+      path: "/feedbackUser",
+      element: <FeedBackUI />,
     },
   ]);
 

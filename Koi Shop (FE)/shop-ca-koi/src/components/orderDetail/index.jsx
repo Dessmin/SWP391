@@ -92,43 +92,44 @@ const OrderDetails = () => {
           bordered
           style={{ textAlign: "left", display: "inline-block" }}
         >
-          <Descriptions.Item label="Mã đơn hàng">
-            {order.orderId}
-          </Descriptions.Item>
+          
           <Descriptions.Item label="Tổng tiền">
-            {order.totalAmount} VND
+            {order.totalAmount.toLocaleString()} VND
           </Descriptions.Item>
           <Descriptions.Item label="Chi tiết sản phẩm">
             {order.orderDetails.map((item, index) => (
               <div key={index}>
-                <p>Id: {item.productId}</p>
+                
                 <p>Sản phẩm: {item.productType}</p>
                 <p>Số lượng: {item.quantity}</p>
                 <p>Giá: {item.unitPrice.toLocaleString()} VND</p>
-                {item.productType === "KoiFish" && (
-                  <>
-                    <Radio.Group
-                      onChange={(e) =>
-                        handleConsignmentTypeChange(
-                          item.productId,
-                          e.target.value
-                        )
-                      }
-                      value={consignmentTypes[item.productId] || "Offline"} // Lấy giá trị của sản phẩm cụ thể
-                      style={{ marginBottom: "10px" }}
-                    >
-                      <Radio value="Online">Online</Radio>
-                      <Radio value="Offline">Offline</Radio>
-                    </Radio.Group>
-                    <Button
-                      type="default"
-                      onClick={() => handleConsignment(item.productId)}
-                      style={{ marginTop: "10px" }}
-                    >
-                      Ký gửi
-                    </Button>
-                  </>
-                )}
+                
+                {item.productType === "KoiFish" &&
+                  order.type !== "Consignment" && (
+                    <>
+                      <Radio.Group
+                        onChange={(e) =>
+                          handleConsignmentTypeChange(
+                            item.productId,
+                            e.target.value
+                          )
+                        }
+                        value={consignmentTypes[item.productId] || "Offline"} // Lấy giá trị của sản phẩm cụ thể
+                        style={{ marginBottom: "10px" }}
+                      >
+                        <Radio value="Online">Online</Radio>
+                        <Radio value="Offline">Offline</Radio>
+                      </Radio.Group>
+                      <Button
+                        type="default"
+                        onClick={() => handleConsignment(item.productId)}
+                        style={{ marginTop: "10px" }}
+                      >
+                        Ký gửi
+                      </Button>
+                    </>
+                  )}
+
                 <hr />
               </div>
             ))}

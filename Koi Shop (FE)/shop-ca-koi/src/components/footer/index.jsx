@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.scss";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -24,6 +25,7 @@ function Footer() {
           <a href="/fish">Fish</a>
           <a href="/blogs">Blogs</a>
           <a href="/about">About us</a>
+          <Link to="/feedbackUser">Xem đánh giá người dùng</Link>
         </nav>
       </div>
 

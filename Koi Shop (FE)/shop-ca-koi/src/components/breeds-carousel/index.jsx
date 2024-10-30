@@ -5,21 +5,18 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./index.scss"; // Đảm bảo bạn liên kết đúng với file SCSS
 // import required modules
-import { Pagination, Autoplay, Navigation } from "swiper/modules";
+import { Pagination, Navigation } from "swiper/modules";
 import { Image } from "antd";
 
 export default function Breeds_Carousel() {
   return (
     <Swiper
       navigation={true}
-      modules={[Autoplay, Navigation, Pagination]}
+      modules={[ Navigation, Pagination]}
       className="Carousel"
       slidesPerView={4}
       spaceBetween={20}
-      autoplay={{
-        delay: 5000,
-        disableOnInteraction: false,
-      }}
+      
     >
       <SwiperSlide className="slide">
         <Image

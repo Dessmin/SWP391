@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Spin, Alert } from "antd";
+import { Button, Spin, Alert, Form, Rate, Input } from "antd";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import apiOrder from "../../config/api-order";
+import { toast } from "react-toastify";
+import './index.scss'
 
 const PaymentSuccess = () => {
   const user = useSelector((state) => state.user);
@@ -12,6 +14,55 @@ const PaymentSuccess = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [feedback, setFeedback] = useState();
+  const [value, setValue] = useState();
+  const desc = ["1", "2", "3", "4", "5"];
+
+  const points = sessionStorage.getItem("point")
+
+  const updateUserPoints = async (points) => {
+    try {
+      await axios.put(
+        `http://localhost:8080/api/user/usePoint`,
+        {
+          point: points,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      console.log("User points updated successfully");
+    } catch (error) {
+      console.error("Error updating user points", error);
+    }
+  };
+
+  const handleFeedBack = async () => {
+    const values = {
+      ordersId: orderId,
+      rating: value,
+      feedback: feedback,
+    };
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/ratings-feedbacks/add-ratingsfeedback",
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        toast.success("Gửi feedback thành công");
+        
+      }
+    } catch (error) {
+      console.log(error.toString());
+    }
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -59,6 +110,9 @@ const PaymentSuccess = () => {
         // Gọi hàm thêm giao dịch
         await addTransaction(); // Gọi hàm thêm giao dịch sau khi nhận được đơn hàng
         await updateOrderStatus("PAID"); // Giả sử trạng thái là PAID
+        if (points) {
+          await updateUserPoints(points);
+        }
       } catch (err) {
         setError("Không thể tải thông tin đơn hàng.");
         setLoading(false);
@@ -82,7 +136,7 @@ const PaymentSuccess = () => {
 
     // Fetch order details only if payment was successful
     fetchOrder();
-  }, [orderId, navigate, user.token]);
+  }, [orderId, navigate, user.token, points]);
 
   const handleContinueShopping = () => {
     navigate("/home");
@@ -104,11 +158,15 @@ const PaymentSuccess = () => {
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Thanh toán thành công!</h1>
       <p>
-        Cảm ơn bạn đã mua hàng. Đơn hàng của bạn có mã:{" "}
-        <strong>{orderId}</strong> đã được thanh toán thành công.
+        Cảm ơn bạn đã mua hàng. Đơn hàng 
+         đã được thanh toán thành công.
       </p>
       {order && (
         <div style={{ marginTop: "20px" }}>
+          
+            <p><strong>Loại: </strong>{order.type}</p>
+          
+          
           <p>
             <strong>Tổng tiền:</strong> {order.totalAmount.toLocaleString()} VND
           </p>
@@ -128,6 +186,28 @@ const PaymentSuccess = () => {
         </Button>
         <Button onClick={handleViewOrderDetails}>Xem chi tiết đơn hàng</Button>
       </div>
+      <div className="form-ctn">
+      <div className="form-fb">
+      <Form onFinish={handleFeedBack}>
+        <Form.Item>
+          <Rate tooltips={desc} onChange={setValue} value={value} />
+          {value ? <span>{desc[value - 1]}</span> : null}
+        </Form.Item>
+        <Form.Item>
+          <Input
+            placeholder="Feedback"
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+          />
+        </Form.Item>
+        <Button style={{ width: "100%" }} type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form>
+      </div>
+      </div>
+      
+      
     </div>
   );
 };

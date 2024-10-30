@@ -1,8 +1,10 @@
 import { useState } from "react";
 import {
   BarChartOutlined,
-  RollbackOutlined,
+  FileOutlined,
+  ProductOutlined,
   ShoppingCartOutlined,
+  
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,16 +38,17 @@ const items = [
   getItem("Koi", "2", <FontAwesomeIcon icon={faFish} />, [
     getItem("Breed", "2-1", <FontAwesomeIcon icon={faDna} />), // Mục con cho Koi
     getItem("Origin", "2-2", <FontAwesomeIcon icon={faGlobe} />),
-    getItem("Koi", "2-3", <FontAwesomeIcon icon={faFish} />), // Mục con cho Koi
+    getItem("Koi", "2-3", <FontAwesomeIcon icon={faFish} />),
+    getItem("Batch", "2-4", <FontAwesomeIcon icon={faBoxesStacked} />), // Mục con cho Koi
   ]),
   getItem("Consignment", "3", <FontAwesomeIcon icon={faHandshake} />),
   getItem("Order", "4", <ShoppingCartOutlined />),
-  getItem("Batch", "5", <FontAwesomeIcon icon={faBoxesStacked} />),
-  getItem("Promotion", "6", <FontAwesomeIcon icon={faPercent} />),
-  getItem("Statistic", "7", <BarChartOutlined />),
-  getItem("Icome", "8", <FontAwesomeIcon icon={faMoneyBillWave} />),
-  getItem("Rating&Feedback", "9", <FontAwesomeIcon icon={faComment} />),
-  getItem("Posting", "10", <FontAwesomeIcon icon={faNewspaper} />),
+  
+  getItem("Promotion", "5", <FontAwesomeIcon icon={faPercent} />),
+  getItem("Statistic", "6", <BarChartOutlined />),
+  getItem("Icome", "7", <FontAwesomeIcon icon={faMoneyBillWave} />),
+  getItem("Rating&Feedback", "8", <FontAwesomeIcon icon={faComment} />),
+  getItem("Posting", "9", <FontAwesomeIcon icon={faNewspaper} />),
 ];
 
 const Dashboard = ({ children }) => {
@@ -76,22 +79,22 @@ const Dashboard = ({ children }) => {
     if (item.key === "4") {
       navigate("/home/dashboard/order");
     }
-    if (item.key === "5") {
+    if (item.key === "2-4") {
       navigate("/home/dashboard/batch");
     }
-    if (item.key === "6") {
+    if (item.key === "5") {
       navigate("/home/dashboard/promotion");
     }
-    if (item.key === "7") {
+    if (item.key === "6") {
       navigate("/home/dashboard/stat");
     }
-    if (item.key === "8") {
+    if (item.key === "7") {
       navigate("/home/dashboard/income");
     }
-    if (item.key === "9") {
+    if (item.key === "8") {
       navigate("/home/dashboard/rating_feedback");
     }
-    if (item.key === "10") {
+    if (item.key === "9") {
       navigate("/home/dashboard/posting");
     }
   };
@@ -118,10 +121,7 @@ const Dashboard = ({ children }) => {
         {children}
         <div>
           <Link to="/home">
-            <Button>
-              <RollbackOutlined />
-              Trở về
-            </Button>
+            <Button>Trở về</Button>
           </Link>
         </div>
       </Layout>
