@@ -18,9 +18,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -37,8 +35,6 @@ public class OrdersService {
     @Autowired
     PaymentRepository paymentRepository;
     @Autowired
-    KoiFishService koiFishService;
-    @Autowired
     BatchService batchService;
     @Autowired
     EmailService emailService;
@@ -51,9 +47,8 @@ public class OrdersService {
 
 
     public Orders getOderById(Integer id) {
-        Orders order = ordersRepository.findById(id)
+        return ordersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found!"));
-        return order;
     }
 
     public List<OrderResponse> getAllOrders() {
@@ -198,10 +193,6 @@ public class OrdersService {
         Orders existingOrder = ordersRepository.findByOrderID(orderId);
         if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
         if (status.equals("PAID")){
-            User customer = existingOrder.getUser();
-            int point = (int) Math.round(customer.getPointsBalance() + existingOrder.getTotalAmount() * 0.01);
-            customer.setPointsBalance(point);
-            userRepository.save(customer);
             if (existingOrder.getType().equals(TypeOrder.Consignment)){
                 for (OrderDetails orderDetail: orderDetailsRepository.findByOrders_OrderID(existingOrder.getOrderID())) {
                     KoiFish fish = koiFishRepository.findKoiFishByKoiID(orderDetail.getProductId());
@@ -233,7 +224,7 @@ public class OrdersService {
 
         // Code của mình
         Orders orders = createOrder(orderRequest);
-        Double money = orders.getTotalAmount() * 100;
+        double money = orders.getTotalAmount() * 100;
         String amount = String.valueOf((int) Math.round(money));
 
 
@@ -326,6 +317,8 @@ public class OrdersService {
         transactions1.setPayment(payment);
         transactions1.setStatus(TransactionsStatus.Success);
         transactions1.setDescription("VNPAY to Customer");
+        int point = (int) Math.round(customer.getPointsBalance() + orders.getTotalAmount() * 0.01);
+        customer.setPointsBalance(point);
         setTransactions.add(transactions1);
 
 
@@ -392,14 +385,14 @@ public class OrdersService {
 
 
     public void deleteOrder(Integer id) {
-        // Lấy đối tượng Orders dựa vào id
         Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found for this id :: " + id));
-
-        // Đặt trạng thái deleted cho Orders
-        order.setDeleted(true);
-        // Lưu thay đổi vào cơ sở dữ liệu
-        ordersRepository.save(order);
+        try {
+            ordersRepository.delete(order);
+        }catch (Exception e) {
+            order.setDeleted(true);
+            ordersRepository.save(order);
+        }
     }
 
 
