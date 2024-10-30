@@ -10,7 +10,7 @@ function Home() {
     <div className="body">
       <Header />
       <div className="body__banner">
-        {/* <div className="body__slogan">
+        <div className="body__slogan">
           <span className="slogan1">Cá Koi</span>
           <hr />
           <span className="slogan2">Biểu Tượng</span>
@@ -18,7 +18,7 @@ function Home() {
           <span className="slogan2">May Mắn</span>
           <span className="slogan2">Và</span>
           <span className="slogan2">Thịnh Vượng</span>
-        </div> */}
+        </div>
       </div>
       <div className="body__content">
         <h2 style={{ color: "white" }}>Shop Koi</h2>
