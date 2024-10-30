@@ -102,12 +102,10 @@ function DetailUser() {
     <div className="user-detail">
       <h1>Hồ sơ của {userDetails?.userName}</h1>
       <div className="user-info">
-        
-
-        <Row >
+        <Row>
           <Col className="table-user" span={16}>
             {userDetails && (
-              <Descriptions className="tble"  bordered column={1}>
+              <Descriptions className="tble" bordered column={1}>
                 <Descriptions.Item label="User Name">
                   {userDetails.userName}
                 </Descriptions.Item>
@@ -137,36 +135,35 @@ function DetailUser() {
                     </Button>
                   </div>
                 </Descriptions.Item>
-                <Descriptions.Item label="Lịch sử mua hàng">
+                {/* <Descriptions.Item label="Lịch sử mua hàng">
                   <Link className="link" to="/orderHistory">
                     <Button>
                       Lịch sử mua hàng <ClockCircleOutlined />
                     </Button>
                   </Link>
-                </Descriptions.Item>
+                </Descriptions.Item> */}
               </Descriptions>
             )}
           </Col>
           <Col className="img-cnt" span={8}>
-            <img className="profile-img"
+            <img
+              className="profile-img"
               height={200}
               width={200}
-              src="https://i.pinimg.com/736x/da/0d/69/da0d698073a0074d641c8ab579188904.jpg"
+              src="https://imgcdn.stablediffusionweb.com/2024/4/10/3c1a053e-a5e5-4c92-b603-e7c1a0c4811c.jpg"
               alt=""
             />
           </Col>
         </Row>
-
-        
       </div>
       <Button
-          style={{ width: 200 }}
-          className="bttnn"
-          type="primary"
-          onClick={() => navigate("/home")}
-        >
-          Trang chủ
-        </Button>
+        style={{ width: 200 }}
+        className="bttnn"
+        type="primary"
+        onClick={() => navigate("/home")}
+      >
+        Trang chủ
+      </Button>
 
       <Modal
         title="Edit User Details"

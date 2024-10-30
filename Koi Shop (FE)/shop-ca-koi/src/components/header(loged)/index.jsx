@@ -50,11 +50,11 @@ function HeaderLoged() {
           <Link to="/home">
             <li>Trang chủ</li>
           </Link>
-          
+
           <Link to="/consignment">
             <li>Ký gửi cá Koi</li>
           </Link>
-          <Link to="/home/dashboard">
+          <Link to="/home/dashboard/stat">
             <li>Dashboard</li>
           </Link>
           <li className="search">

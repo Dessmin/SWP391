@@ -4,6 +4,9 @@ import { useSelector } from "react-redux";
 import { Table, Button, Input, InputNumber } from "antd";
 import apiOrder from "../../config/api-order";
 import axios from "axios";
+import "./index.scss";
+import { Link } from "react-router-dom";
+import { RollbackOutlined } from "@ant-design/icons";
 
 const Cart = () => {
   const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
@@ -144,6 +147,7 @@ const Cart = () => {
     // Tạo đối tượng orderRequest chứa danh sách orderDetails từ cartItems
     const orderRequest = {
       totalAmount: totalAmount,
+      type: "Normal",
       orderDetails: cartItems.map((item) => ({
         productId: item.id,
         productType: item.type, // "KoiFish" hoặc "Batch"
@@ -184,7 +188,7 @@ const Cart = () => {
       dataIndex: "image",
       key: "image",
       render: (image) => (
-        <img src={image} alt="Product" width={50} height={50} />
+        <img src={image} alt="Product" width={100} height={100} />
       ),
     },
     {
@@ -235,60 +239,82 @@ const Cart = () => {
   ];
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>Your cart</h1>
-      {cartItems.length === 0 ? (
-        <p style={{ textAlign: "center" }}>No items in cart</p>
-      ) : (
-        <div>
-          <Table columns={columns} dataSource={cartItems} rowKey="id" />
-
-          <span style={{ marginLeft: "20px" }}>
-            Bạn có <strong>{userPoint}</strong> điểm
-          </span>
-          <div style={{ marginTop: "20px" }}>
-            <Input
-              type="number"
-              placeholder="Enter points to use"
-              value={points}
-              onChange={(e) => setPoints(Number(e.target.value))}
-              style={{ width: "200px", marginRight: "10px" }}
+    <div className="cart-container">
+      <div>
+        <h1 className="cart-title">Your cart</h1>
+        {cartItems.length === 0 ? (
+          <p className="empty-cart-message">No items in cart</p>
+        ) : (
+          <div>
+            <Table
+              className="cart-table"
+              columns={columns}
+              dataSource={cartItems}
+              rowKey="id"
             />
-            <span>Points</span>
-          </div>
 
-          {/* Nhập voucher */}
-          <div style={{ marginTop: "20px" }}>
-            <Input
-              placeholder="Enter voucher code"
-              value={voucherCode}
-              onChange={(e) => setVoucherCode(e.target.value)}
-              style={{ width: "200px", marginRight: "10px" }}
-            />
-            <Button type="primary" onClick={handleVoucherApply}>
-              Apply Voucher
-            </Button>
-          </div>
+            <div className="points-amount-section">
+              <div className="points-section">
+                <span>
+                  Bạn có <strong>{userPoint}</strong> điểm
+                </span>
+                <Input
+                  type="number"
+                  placeholder="Enter points to use"
+                  value={points}
+                  onChange={(e) => setPoints(Number(e.target.value))}
+                  className="points-input"
+                />
+                <span className="points-label">Points</span>
+              </div>
 
-          {/* Hiển thị tổng tiền */}
-          <div style={{ marginTop: "20px" }}>
-            <h3>Total Amount: {totalAmount.toLocaleString()} VND</h3>
-          </div>
+              <h3 className="total-amount">
+                Total Amount: {totalAmount.toLocaleString()} VND
+              </h3>
+            </div>
 
-          {/* Nút Checkout */}
-          <Button
-            type="primary"
-            onClick={handleCheckout}
-            style={{ marginTop: "20px" }}
-            disabled={points > userPoint || cartItems.length === 0} // Điều kiện disabled
-          >
-            Checkout
+            <div className="voucher-checkout-section">
+              <div className="voucher-section">
+                <Input
+                  placeholder="Enter voucher code"
+                  value={voucherCode}
+                  onChange={(e) => setVoucherCode(e.target.value)}
+                  className="voucher-input"
+                />
+                <Button
+                  type="primary"
+                  onClick={handleVoucherApply}
+                  className="apply-voucher-btn"
+                >
+                  Apply Voucher
+                </Button>
+              </div>
+
+              <div className="amount-checkout-section">
+                <Button
+                  type="primary"
+                  onClick={handleCheckout}
+                  className="checkout-btn"
+                  disabled={points > userPoint || cartItems.length === 0}
+                >
+                  Checkout
+                </Button>
+                {points > userPoint && (
+                  <p className="insufficient-points-message">Không đủ điểm</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <div>
+        <Link to="/home">
+          <Button>
+            <RollbackOutlined />
+            Trở về
           </Button>
-          {points > userPoint && (
-            <p style={{ color: "red", marginTop: "10px" }}>Không đủ điểm</p>
-          )}
-        </div>
-      )}
+        </Link>
+      </div>
     </div>
   );
 };

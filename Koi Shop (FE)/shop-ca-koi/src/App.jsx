@@ -37,6 +37,7 @@ import StatSummary from "./pages/admin/stat-summary";
 import Income from "./pages/admin/income";
 import RatingFeedback from "./pages/admin/rating&feedback-management";
 import Koi_introduction from "./pages/Koi-introduction";
+import Posting from "./pages/admin/posting-management";
 
 function App() {
   const router = createBrowserRouter([
@@ -190,7 +191,7 @@ function App() {
     },
     {
       path: "/home/dashboard/income",
-      element: <Income/>,
+      element: <Income />,
     },
     {
       path: "/home/dashboard/rating_feedback",
@@ -200,7 +201,10 @@ function App() {
       path: "/koi_introduction",
       element: <Koi_introduction />,
     },
-  
+    {
+      path: "/home/dashboard/posting",
+      element: <Posting />,
+    },
   ]);
 
   return <RouterProvider router={router} />;

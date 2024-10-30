@@ -1,13 +1,24 @@
 import { useState } from "react";
 import {
   BarChartOutlined,
-  FileOutlined,
-  ProductOutlined,
+  RollbackOutlined,
   ShoppingCartOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBoxesStacked,
+  faComment,
+  faDna,
+  faFish,
+  faGlobe,
+  faHandshake,
+  faMoneyBillWave,
+  faNewspaper,
+  faPercent,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
 const { Header, Sider } = Layout;
 
@@ -21,19 +32,20 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem("User", "1", <UserOutlined />),
-  getItem("Koi", "2", <FileOutlined />, [
-    getItem("Breed", "2-1", <FileOutlined />), // Mục con cho Koi
-    getItem("Origin", "2-2", <FileOutlined />),
-    getItem("Koi", "2-3", <FileOutlined />), // Mục con cho Koi
+  getItem("User", "1", <FontAwesomeIcon icon={faUsers} />),
+  getItem("Koi", "2", <FontAwesomeIcon icon={faFish} />, [
+    getItem("Breed", "2-1", <FontAwesomeIcon icon={faDna} />), // Mục con cho Koi
+    getItem("Origin", "2-2", <FontAwesomeIcon icon={faGlobe} />),
+    getItem("Koi", "2-3", <FontAwesomeIcon icon={faFish} />), // Mục con cho Koi
   ]),
-  getItem("Consignment", "3", <ProductOutlined />),
+  getItem("Consignment", "3", <FontAwesomeIcon icon={faHandshake} />),
   getItem("Order", "4", <ShoppingCartOutlined />),
-  getItem("Batch", "5", <FileOutlined />),
-  getItem("Promotion", "6", <FileOutlined />),
+  getItem("Batch", "5", <FontAwesomeIcon icon={faBoxesStacked} />),
+  getItem("Promotion", "6", <FontAwesomeIcon icon={faPercent} />),
   getItem("Statistic", "7", <BarChartOutlined />),
-  getItem("Icome", "8", <BarChartOutlined />),
-  getItem("Rating&Feedback", "9", <FileOutlined />),
+  getItem("Icome", "8", <FontAwesomeIcon icon={faMoneyBillWave} />),
+  getItem("Rating&Feedback", "9", <FontAwesomeIcon icon={faComment} />),
+  getItem("Posting", "10", <FontAwesomeIcon icon={faNewspaper} />),
 ];
 
 const Dashboard = ({ children }) => {
@@ -79,6 +91,9 @@ const Dashboard = ({ children }) => {
     if (item.key === "9") {
       navigate("/home/dashboard/rating_feedback");
     }
+    if (item.key === "10") {
+      navigate("/home/dashboard/posting");
+    }
   };
 
   return (
@@ -103,7 +118,10 @@ const Dashboard = ({ children }) => {
         {children}
         <div>
           <Link to="/home">
-            <Button>Trở về</Button>
+            <Button>
+              <RollbackOutlined />
+              Trở về
+            </Button>
           </Link>
         </div>
       </Layout>

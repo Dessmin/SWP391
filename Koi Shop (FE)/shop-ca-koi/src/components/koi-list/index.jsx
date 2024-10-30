@@ -48,7 +48,6 @@ function KoiList() {
   // const handleInputChange = (e) => {
   //   setSearchTerm(e.target.value); // Cập nhật từ khóa tìm kiếm khi người dùng nhập
   // };
-  
 
   const fetchKoiBySearchTerm = async () => {
     if (!searchTerm) {
@@ -106,8 +105,7 @@ function KoiList() {
   };
 
   useEffect(() => {
-    fetchKoiBySearchTerm(),
-    fetchBreeds(); // Lấy danh sách breed khi component mount
+    fetchKoiBySearchTerm(), fetchBreeds(); // Lấy danh sách breed khi component mount
     // Lấy danh sách Koi theo breed đã chọn
     if (selectedBreed === "All") {
       fetchKoi(page); // Gọi hàm fetch cho "All"
@@ -129,34 +127,32 @@ function KoiList() {
     <div className="koi">
       <h2>Danh sách Koi</h2>
       <div className="action">
-      
-      <div className="filter">
-        <strong style={{ color: "white" }}>Breed</strong>
-        <Select
-          defaultValue="All"
-          style={{ width: 200, marginBottom: "20px" }}
-          onChange={handleBreedChange}
-        >
-          <Option value="All">All</Option>
-          {breeds.map((breed, index) => (
-            <Option key={index} value={breed}>
-              {breed}
-            </Option>
-          ))}
-        </Select>
+        <div className="filter">
+          <strong style={{ color: "white" }}>Breed</strong>
+          <Select
+            defaultValue="All"
+            style={{ width: 200, marginBottom: "20px" }}
+            onChange={handleBreedChange}
+          >
+            <Option value="All">All</Option>
+            {breeds.map((breed, index) => (
+              <Option key={index} value={breed}>
+                {breed}
+              </Option>
+            ))}
+          </Select>
+        </div>
       </div>
-      
-      </div>
-
-      
 
       <div className="koi__list">
         {kois
           .filter((koi) => {
-            // Nếu không có từ khóa tìm kiếm hoặc danh sách 'name' trống, hiển thị tất cả
-            if (name.length === 0) return true;
-            // Nếu có tìm kiếm, chỉ hiển thị những cá Koi có tên nằm trong danh sách 'name'
-            return name.includes(koi.fishName);
+            // Kiểm tra nếu từ khóa tìm kiếm không có và breed là "All", hiển thị tất cả
+            if (selectedBreed === "All" && name.length === 0) return true;
+            // Nếu có từ khóa tìm kiếm, chỉ hiển thị những cá Koi có tên nằm trong danh sách 'name'
+            if (name.length > 0) return name.includes(koi.fishName);
+            // Nếu có breed đã chọn (không phải "All"), chỉ hiển thị những cá Koi có breed tương ứng
+            return koi.breed === selectedBreed;
           })
           .map((koi, index) => (
             <CardKoi key={index} koi={koi} />
