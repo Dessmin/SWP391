@@ -42,7 +42,7 @@ function FeedBackUI() {
           <div className="fb-form" key={fb.id}>
             {" "}
             {/* Thêm key nếu có trường id */}
-            <p>{fb.userName}</p>
+            <p><strong>Khách hàng: </strong>{fb.userName}</p>
             <div className="fb-star">
               <div className="star">
                 <Rate disabled value={fb.rating} tooltips={desc} />

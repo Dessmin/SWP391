@@ -9,12 +9,12 @@
 
     .fb-contain{
         display: flex;
-        
+        box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
         padding-top: 50px;
         padding-left: 100px;
         padding-right: 100px;
         border: 1px solid rgba(0, 0, 0, 0.2);
-        height: 100dvh;
+        padding-bottom: 50px;
         background-color: white;
         border-radius: 10px;
         flex-direction: column;
