@@ -3,7 +3,6 @@ package com.koishop.api;
 import com.koishop.models.batch_model.BatchDetailUpdate;
 import com.koishop.models.batch_model.BatchForManager;
 import com.koishop.models.batch_model.BatchResponse;
-import com.koishop.models.batch_model.BatchView;
 import com.koishop.service.BatchService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = {"http://localhost:5173", "https://deploy-fe-kappa.vercel.app"})
 @SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/batches")
