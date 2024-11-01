@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to KoiAuction.vn</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #e0f7fa; /* Light cyan background */
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .header {
+        background-color: #009688; /* Teal color */
+        color: #ffffff;
+        text-align: center;
+        padding: 40px 20px;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .content {
+        padding: 30px;
+        text-align: left;
+    }
+    .content h1 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #00695c; /* Darker teal */
+    }
+    .content p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 15px 0;
+        color: #555;
+    }
+    .password-box {
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #f1f8e9; /* Light green background */
+        padding: 15px;
+        margin: 20px 0;
+        text-align: center;
+        border-radius: 8px;
+        color: #388e3c; /* Green color */
+        letter-spacing: 1px;
+    }
+    .button {
+        display: inline-block;
+        background-color: #ff9800; /* Orange */
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #ffc107; /* Light orange */
+    }
+    .footer {
+        background-color: #f1f1f1; /* Light gray */
+        text-align: center;
+        padding: 20px;
+        color: #888;
+        font-size: 14px;
+        border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    Welcome to KoiAuction.vn
+  </div>
+  <div class="content">
+    <h1>Hello [[${name}]],</h1>
+    <p>Thank you for joining KoiAuction.vn! Your account has been successfully created, and you’re all set to explore our platform.</p>
+    <p><strong>Your temporary password is:</strong></p>
+    <div class="password-box">[[${randomPassword}]]</div>
+    <p>To secure your account, please log in and update your password as soon as possible.</p>
+    <p>If you need any help, feel free to reach out to our support team.</p>
+    <p>To enhance your account security, please set a new password by clicking the button below:</p>
+    <p><a class="button" th:href="${link}">Set Your New Password</a></p>
+    <p>Happy exploring!</p>
+  </div>
+  <div class="footer">
+    Best regards,<br>
+    The KoiAuction.vn Team
+  </div>
+</div>
+</body>
+</html>
