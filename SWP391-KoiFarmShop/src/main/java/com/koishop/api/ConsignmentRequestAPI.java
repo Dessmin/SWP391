@@ -5,8 +5,10 @@ import com.koishop.models.consignment_modle.ConsignmentView;
 import com.koishop.models.consignment_modle.ResponseWithFishId;
 import com.koishop.service.ConsignmentRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,16 +39,18 @@ public class ConsignmentRequestAPI {
     }
 
     @PostMapping("add-consignment")
-    public ConsignmentRequestForCustomer createConsignmentRequest(@RequestBody ConsignmentRequestForCustomer request) {
+    public ConsignmentRequestForCustomer createConsignmentRequest(@Valid @RequestBody ConsignmentRequestForCustomer request) {
         return consignmentRequestService.createConsignmentRequest(request);
     }
 
     @PutMapping("/{consignmentID}/update")
-    public ConsignmentView updateConsignmentRequest(@PathVariable int consignmentID, @RequestBody ConsignmentView requestDetails) {
+    @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
+    public ConsignmentView updateConsignmentRequest(@PathVariable int consignmentID, @Valid @RequestBody ConsignmentView requestDetails) {
         return consignmentRequestService.updateConsignmentRequest(consignmentID, requestDetails);
     }
 
     @DeleteMapping("/{consignmentID}")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity<Void> deleteConsignmentRequest(@PathVariable int consignmentID) {
         consignmentRequestService.deleteConsignmentRequest(consignmentID);
         return ResponseEntity.noContent().build();

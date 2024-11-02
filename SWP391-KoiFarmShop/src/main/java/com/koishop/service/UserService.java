@@ -1,5 +1,6 @@
 package com.koishop.service;
 
+import com.koishop.Config.EnvironmentConfig;
 import com.koishop.entity.Role;
 import com.koishop.entity.User;
 import com.koishop.exception.DuplicateEntity;
@@ -40,6 +41,8 @@ public class UserService implements UserDetailsService {
     TokenService tokenService;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    EnvironmentConfig environmentConfig;
 
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -69,7 +72,12 @@ public class UserService implements UserDetailsService {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(savedUser);
             emailDetail.setSubject("Welcome to Koi Shop");
-            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user));
+
+            String baseUrl = environmentConfig.isProductionEnvironment()
+                    ? "https://deploy-fe-kappa.vercel.app"
+                    : "http://localhost:5173";
+
+            emailDetail.setLink(baseUrl + "/confirmResetPassword/?token=" + tokenService.generateToken(user));
             emailService.sentEmail(emailDetail);
             return modelMapper.map(savedUser, CustomerRequest.class);
         } catch (Exception e) {
@@ -162,7 +170,11 @@ public class UserService implements UserDetailsService {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(user);
             emailDetail.setSubject("Password Reset Confirmation");
-            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user)); // Link tới trang của bạn
+            String baseUrl = environmentConfig.isProductionEnvironment()
+                    ? "https://deploy-fe-kappa.vercel.app"
+                    : "http://localhost:5173";
+
+            emailDetail.setLink(baseUrl + "/confirmResetPassword/?token=" + tokenService.generateToken(user));
             emailService.sendResetPasswordEmail(emailDetail);
         }
     }

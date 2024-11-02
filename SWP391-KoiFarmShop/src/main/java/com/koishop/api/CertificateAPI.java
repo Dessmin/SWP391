@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +28,14 @@ public class CertificateAPI {
 
 
     @PostMapping("/{koiId}/add-certificate")
+    @PreAuthorize("hasAuthority('Manager')")
     public CertificateView createCertificate(@PathVariable Integer koiId , @Valid @RequestBody CertificateRequest certificate) {
         return certificateService.createCertificate(koiId, certificate);
     }
 
     @PutMapping("/{certificateID}")
-    public CertificateView updateCertificate(@PathVariable int certificateID, @RequestBody CertificateView certificateDetails) {
+    @PreAuthorize("hasAuthority('Manager')")
+    public CertificateView updateCertificate(@PathVariable int certificateID, @Valid @RequestBody CertificateView certificateDetails) {
         return certificateService.updateCertificate(certificateID, certificateDetails);
     }
 
@@ -47,6 +50,7 @@ public class CertificateAPI {
     }
 
     @DeleteMapping("/{certificateID}")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity<Void> deleteCertificate(@PathVariable int certificateID) {
         certificateService.deleteCertificate(certificateID);
         return ResponseEntity.noContent().build();

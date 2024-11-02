@@ -6,9 +6,11 @@ import com.koishop.models.orders_model.OrderResponse;
 import com.koishop.models.orders_model.ViewOrdersOnly;
 import com.koishop.service.OrdersService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +34,7 @@ public class OrdersAPI {
     }
 
     @GetMapping("list-all-orders")
+    @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
     public ResponseEntity getAllOrders() {
         List<OrderResponse> orders = ordersService.getAllOrders();
         return  ResponseEntity.ok(orders);
@@ -44,6 +47,7 @@ public class OrdersAPI {
     }
 
     @GetMapping("/list-orders/summary")
+    @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
     public ResponseEntity getOrdersSummary() {
         List<ViewOrdersOnly> orders = ordersService.getOrdersSummary();
         return  ResponseEntity.ok(orders);
@@ -81,7 +85,7 @@ public class OrdersAPI {
     }
 
     @PostMapping("add-order")
-    public ResponseEntity createOrder(@RequestBody OrderRequest orderRequest) throws Exception {
+    public ResponseEntity createOrder(@Valid @RequestBody OrderRequest orderRequest) throws Exception {
         String vnPayURL = ordersService.createUrl(orderRequest);
         return ResponseEntity.ok(vnPayURL);
     }
@@ -109,6 +113,7 @@ public class OrdersAPI {
 
 
     @PutMapping("/{orderID}/remove")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity<Void> deleteOrder(@PathVariable int orderID) {
         ordersService.deleteOrder(orderID);
         return ResponseEntity.noContent().build();

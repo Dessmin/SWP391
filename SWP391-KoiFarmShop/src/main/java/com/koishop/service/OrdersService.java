@@ -1,5 +1,6 @@
 package com.koishop.service;
 
+import com.koishop.Config.EnvironmentConfig;
 import com.koishop.entity.*;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
@@ -44,6 +45,8 @@ public class OrdersService {
     private OrderDetailsRepository orderDetailsRepository;
     @Autowired
     private ConsignmentRequestRepository consignmentRequestRepository;
+    @Autowired
+    EnvironmentConfig environmentConfig;
 
 
     public Orders getOderById(Integer id) {
@@ -379,7 +382,12 @@ public class OrdersService {
         EmailDetail customerEmail = new EmailDetail();
         customerEmail.setUser(customer);
         customerEmail.setSubject("Payment Successful for Order #" + orders.getOrderID());
-        customerEmail.setLink("http://koishop.vn/orders/" + orders.getOrderID()); // Adjust the URL
+        String baseUrl = environmentConfig.isProductionEnvironment()
+                ? "https://deploy-fe-kappa.vercel.app"
+                : "http://localhost:5173";
+
+        // Tạo liên kết chi tiết đơn hàng
+        customerEmail.setLink(baseUrl + "/orders/" + orders.getOrderID());
         emailService.sendPaymentSuccessEmail(customerEmail, String.valueOf(orders.getTotalAmount()), payment.getPaymentID().toString());
     }
 

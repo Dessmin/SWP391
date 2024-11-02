@@ -5,6 +5,7 @@ import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orderdetails_model.OrderDetailsResponse;
 import com.koishop.service.OrderDetailsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class OrderDetailsAPI {
 //    }
 
     @PutMapping("/{orderDetailID}")
-    public ResponseEntity<OrderDetailsResponse> updateOrderDetail(@PathVariable int orderDetailID, @RequestBody OrderDetailsRequest orderDetailsRequest) {
+    public ResponseEntity<OrderDetailsResponse> updateOrderDetail(@PathVariable int orderDetailID, @Valid @RequestBody OrderDetailsRequest orderDetailsRequest) {
         try {
             OrderDetailsResponse updatedOrderDetail = orderDetailService.updateOrderDetail(orderDetailID, orderDetailsRequest);
             return ResponseEntity.ok(updatedOrderDetail);
