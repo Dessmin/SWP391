@@ -7,35 +7,35 @@ import './index.scss'
 import { Descriptions } from "antd";
 
 function StatSummary() {
-  const [stats, setStats] = useState(null); // Lưu trữ dữ liệu từ API
-  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [stats, setStats] = useState(null); 
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    // Hàm gọi API
+    
     const fetchStats = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/dashboard/stats",
+          "http://14.225.210.143:8080/api/dashboard/stats",
           {
             headers: {
-              Authorization: `Bearer ${user.token}`, // Gửi token trong header
+              Authorization: `Bearer ${user.token}`, 
             },
           }
         );
-        setStats(response.data); // Lưu dữ liệu vào state
+        setStats(response.data); 
       } catch (err) {
-        setError("Không thể tải dữ liệu!"); // Xử lý lỗi
+        setError("Không thể tải dữ liệu!"); 
       } finally {
-        setLoading(false); // Kết thúc trạng thái tải
+        setLoading(false); 
       }
     };
 
     fetchStats();
   }, []);
 
-  if (loading) return <p>Đang tải dữ liệu...</p>; // Hiển thị khi đang tải
+  if (loading) return <p>Đang tải dữ liệu...</p>; 
   if (error) return <p>{error}</p>;
 
   return (

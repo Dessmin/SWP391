@@ -14,7 +14,7 @@ function Consignment() {
   const navigate = useNavigate();
 
   const handleConssign = async (consignment) => {
-    // Nhận bản ghi ký gửi
+    
     const orderRequest = {
       totalAmount: consignment.shopPrice,
       type: "Consignment",
@@ -22,8 +22,8 @@ function Consignment() {
         // Chuyển sang mảng
         {
           productId: consignment.koiFishId,
-          productType: "KoiFish", // Hoặc "Batch"
-          quantity: 1, // Batch có số lượng, KoiFish mặc định là 1
+          productType: "KoiFish", 
+          quantity: 1, 
           unitPrice: consignment.shopPrice,
         },
       ],
@@ -36,9 +36,9 @@ function Consignment() {
         },
       });
 
-      const paymentUrl = response.data; // Giả sử backend trả về paymentUrl
+      const paymentUrl = response.data; 
 
-      // Chuyển hướng sang trang thanh toán
+      
       window.location.href = paymentUrl;
     } catch (error) {
       console.error("There was an error processing the order!", error);
@@ -50,7 +50,7 @@ function Consignment() {
     const fetchConsignment = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/consignments/getforCustomer",
+          "http://14.225.210.143:8080/api/consignments/getforCustomer",
           {
             headers: {
               Authorization: `Bearer ${user.token}`,

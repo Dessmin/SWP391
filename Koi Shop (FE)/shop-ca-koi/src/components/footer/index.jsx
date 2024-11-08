@@ -21,11 +21,11 @@ function Footer() {
 
       <div className="footer-section links">
         <nav>
-          <a href="/">Home</a>
-          <a href="/fish">Fish</a>
-          <a href="/blogs">Blogs</a>
-          <a href="/about">About us</a>
-          <Link to="/feedbackUser">Xem đánh giá người dùng</Link>
+          <a href="/">Trang chủ</a>
+          <a href="/fish">Cá Koi</a>
+          
+          
+          <Link to="/feedbackUser">Phản hồi người dùng</Link>
         </nav>
       </div>
 

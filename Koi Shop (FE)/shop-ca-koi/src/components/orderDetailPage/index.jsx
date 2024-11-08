@@ -3,7 +3,7 @@ import OrderDetails from "../orderDetail";
 
 const OrderDetailsPage = () => {
   const location = useLocation();
-  const returnPath = location.state?.returnPath; // Lấy returnPath từ state nếu có
+  const returnPath = location.state?.returnPath; 
 
   return <OrderDetails returnPath={returnPath} />;
 };

@@ -18,9 +18,9 @@ function CardKoi({ koi }) {
       image,
       quantity: 1,
       price,
-      type: "KoiFish", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
+      type: "KoiFish", 
     };
-    addToCart(product); // Thêm sản phẩm vào giỏ hàng
+    addToCart(product); 
   };
   const { id, fishName, breed, origin, size, price, image } = koi;
 

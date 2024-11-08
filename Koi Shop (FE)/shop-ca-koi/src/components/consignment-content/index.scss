@@ -1,4 +1,4 @@
-/* Định dạng chung cho nội dung */
+
 .content-container {
     background-color: #450000;
     color: #f8f8f8;
@@ -17,14 +17,14 @@
     line-height: 1.6;
   }
   
-  /* Định dạng cho phần chữ "Quy trình ký gửi cá Koi" */
+  
   .highlight-text {
     font-weight: bold;
     text-decoration: underline;
-    color: #f1c40f; /* Màu chữ cho nổi bật hơn */
+    color: #f1c40f; 
   }
   
-  /* Định dạng cho nút bấm "Xem thêm" */
+  
   .toggle-btn {
     background-color: #f39c12;
     color: white;
@@ -43,7 +43,7 @@
     background-color: #e67e22;
   }
   
-  /* Định dạng danh sách */
+  
   ul {
     list-style-type: disc;
     padding-left: 20px;

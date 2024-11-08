@@ -10,8 +10,8 @@ import { RollbackOutlined } from "@ant-design/icons";
 
 
 const Cart = () => {
-  const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
-  const [cartItems, setCartItems] = useState([]); // State để lưu giỏ hàng từ session
+  const user = useSelector((state) => state.user); 
+  const [cartItems, setCartItems] = useState([]); 
   const [totalAmount, setTotalAmount] = useState(0);
   const [points, setPoints] = useState(0);
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -19,14 +19,14 @@ const Cart = () => {
   const [userPoint, setUserPoint] = useState();
 
 
-  // Lấy giỏ hàng từ session theo user id
+  
   useEffect(() => {
     if (user) {
-      const cartFromSession = getCartFromSession(user.id).map((item) => ({
+      const cartFromSession = getCartFromSession(user.userId).map((item) => ({
         ...item,
-        initialQuantity: item.quantity, // Lưu giá trị ban đầu của số lượng
+        initialQuantity: item.quantity, 
       }));
-      setCartItems(cartFromSession || []); // Nếu session không có giỏ hàng, gán giá trị mảng rỗng
+      setCartItems(cartFromSession || []); 
     }
   }, [user]);
 
@@ -42,7 +42,7 @@ const Cart = () => {
   const calculateTotalAmount = () => {
     const subtotal = calculateSubtotal();
     const discountFromVoucher = (subtotal * discountPercent) / 100;
-    const discountFromPoints = points; // Giả sử mỗi điểm trừ trực tiếp 1 đơn vị tiền
+    const discountFromPoints = points; 
     const total = subtotal - discountFromVoucher - discountFromPoints;
     setTotalAmount(total > 0 ? total : 0); // Đảm bảo tổng không âm
   };
@@ -50,9 +50,9 @@ const Cart = () => {
 
   const handleVoucherApply = async () => {
     try {
-      // Gọi API với phương thức GET và truyền mã voucher vào URL
+      
       const response = await axios.get(
-        `http://localhost:8080/api/promotions/${voucherCode}/discount`,
+        `http://14.225.210.143:8080/api/promotions/${voucherCode}/discount`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -62,9 +62,9 @@ const Cart = () => {
       console.log();
 
 
-      // Giả sử API trả về giá trị discountPercent
-      setDiscountPercent(response.data); // Lưu phần trăm giảm giá vào state
-      calculateTotalAmount(); // Tính toán lại tổng tiền sau khi nhận phần trăm giảm giá
+      
+      setDiscountPercent(response.data); 
+      calculateTotalAmount(); 
     } catch (error) {
       console.error("Error applying voucher", error);
       alert("Invalid voucher code.");
@@ -77,30 +77,13 @@ const Cart = () => {
   }, [cartItems, points, discountPercent]);
 
 
-  // const updateUserPoints = async (points) => {
-  //   try {
-  //     await axios.put(
-  //       `http://localhost:8080/api/user/usePoint`,
-  //       {
-  //         point: points,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${user.token}`,
-  //         },
-  //       }
-  //     );
-  //     console.log("User points updated successfully");
-  //   } catch (error) {
-  //     console.error("Error updating user points", error);
-  //   }
-  // };
+
 
 
   const fetchPoint = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/user/customer-point`,
+        `http://14.225.210.143:8080/api/user/customer-point`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -125,29 +108,29 @@ const Cart = () => {
       if (item.id === productId && item.type === productType) {
         return {
           ...item,
-          quantity: value > item.initialQuantity ? item.initialQuantity : value, // Không cho phép vượt quá số lượng ban đầu
+          quantity: value > item.initialQuantity ? item.initialQuantity : value, 
         };
       }
       return item;
     });
     setCartItems(updatedCart);
-    saveCartToSession(user.id, updatedCart); // Cập nhật giỏ hàng trong session
+    saveCartToSession(user.userId, updatedCart); 
   };
 
 
-  // Hàm xử lý xóa sản phẩm khỏi giỏ hàng
+  
   const handleRemoveFromCart = (productId, productType) => {
-    // Xóa sản phẩm dựa trên cả id và type
+    
     const updatedCart = cartItems.filter(
       (item) => !(item.id === productId && item.type === productType)
     );
 
 
     setCartItems(updatedCart);
-    saveCartToSession(user.id, updatedCart); // Cập nhật giỏ hàng theo userId
+    saveCartToSession(user.userId, updatedCart); 
 
 
-    // Tải lại trang sau khi cập nhật giỏ hàng
+   
     window.location.reload();
   };
 
@@ -159,41 +142,41 @@ const Cart = () => {
     }
 
 
-    // Tạo đối tượng orderRequest chứa danh sách orderDetails từ cartItems
+    
     const orderRequest = {
       totalAmount: totalAmount,
       type: "Normal",
       orderDetails: cartItems.map((item) => ({
         productId: item.id,
-        productType: item.type, // "KoiFish" hoặc "Batch"
-        quantity: item.type === "Batch" ? item.quantity : 1, // Batch có số lượng, KoiFish mặc định là 1
+        productType: item.type, 
+        quantity: item.type === "Batch" ? item.quantity : 1, 
         unitPrice: item.price,
       })),
     };
 
 
     try {
-      // Gọi API tạo đơn hàng và lấy URL thanh toán
+      
       const response = await apiOrder.post("add-order", orderRequest, {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
 
 
-      const paymentUrl = response.data; // Giả sử backend trả về paymentUrl
+      const paymentUrl = response.data; 
 
 
-      // Chuyển hướng sang trang thanh toán
+      
       window.location.href = paymentUrl;
       if (points > 0) {
         sessionStorage.setItem("point", points);
       }
 
 
-      // Xóa giỏ hàng sau khi thanh toán thành công
+      
       setCartItems([]);
-      saveCartToSession(user.id, []);
+      saveCartToSession(user.userId, []);
     } catch (error) {
       console.error("There was an error processing the order!", error);
       alert("Error creating order. Please try again.");
@@ -201,7 +184,7 @@ const Cart = () => {
   };
 
 
-  // Định nghĩa các cột cho bảng
+  
   const columns = [
     {
       title: "Image",

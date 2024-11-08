@@ -7,22 +7,25 @@ import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import axios from "axios";
 
+
 function AddConsignment() {
-  const [koisId, setKoisId] = useState(""); // Thay đổi tên biến để phản ánh rằng nó chứa ID
+  const [koisId, setKoisId] = useState(""); 
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const [breeds, setBreeds] = useState([]); // State để lưu danh sách breed
+  const [breeds, setBreeds] = useState([]); 
   const [origins, setOrigins] = useState([]);
+
 
   const handleAddConsignment = async (values) => {
     try {
       const response = await apiKoi.post("fish-consign", values, {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
-      setKoisId(response.data); // Giả định rằng API trả về id
+      setKoisId(response.data); 
       toast.success("Add successfully!");
+
 
       // Điều hướng đến đường dẫn với ID
       navigate(`/confirm/${response.data}`);
@@ -33,32 +36,33 @@ function AddConsignment() {
   const fetchBreeds = async () => {
     try {
       const response = await apiKoi.get(
-        "http://localhost:8080/api/breeds/list-breedName",
+        "http://14.225.210.143:8080/api/breeds/list-breedName",
         {
-          // Giả sử API lấy danh sách breed là /breeds
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setBreeds(response.data); // Giả sử response.data là mảng danh sách breed
+      setBreeds(response.data); 
     } catch (e) {
       console.log(e);
     }
   };
 
+
   const fetchOrigins = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/origin/list-originName",
+        "http://14.225.210.143:8080/api/origin/list-originName",
         {
-          // Giả sử API lấy danh sách breed là /origin
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setOrigins(response.data); // Giả sử response.data là mảng danh sách origin
+      setOrigins(response.data); 
     } catch (e) {
       console.log(e);
     }
@@ -67,6 +71,7 @@ function AddConsignment() {
     fetchBreeds();
     fetchOrigins();
   }, []);
+
 
   return (
     <div className="background">
@@ -93,6 +98,7 @@ function AddConsignment() {
               <Input placeholder="Enter the fish name" />
             </Form.Item>
 
+
             {/* Description */}
             <Form.Item
               label="Description"
@@ -106,6 +112,7 @@ function AddConsignment() {
             >
               <Input.TextArea placeholder="Enter a description" />
             </Form.Item>
+
 
             {/* Gender */}
             <Form.Item
@@ -124,6 +131,7 @@ function AddConsignment() {
               </Select>
             </Form.Item>
 
+
             {/* Birth Date */}
             <Form.Item
               label="Birth Date"
@@ -137,6 +145,7 @@ function AddConsignment() {
             >
               <DatePicker placeholder="Select birth date" />
             </Form.Item>
+
 
             {/* Diet */}
             <Form.Item
@@ -152,6 +161,7 @@ function AddConsignment() {
               <Input placeholder="Enter the diet" />
             </Form.Item>
 
+
             {/* Size */}
             <Form.Item
               label="Size"
@@ -165,6 +175,7 @@ function AddConsignment() {
             >
               <InputNumber min={1} placeholder="Enter the size" />
             </Form.Item>
+
 
             {/* Breed */}
             <Form.Item
@@ -181,6 +192,7 @@ function AddConsignment() {
               </Select>
             </Form.Item>
 
+
             {/* Origin */}
             <Form.Item
               label="Origin"
@@ -196,6 +208,7 @@ function AddConsignment() {
               </Select>
             </Form.Item>
 
+
             {/* Food */}
             <Form.Item
               label="Food"
@@ -209,6 +222,7 @@ function AddConsignment() {
             >
               <Input placeholder="Enter the food" />
             </Form.Item>
+
 
             {/* Screening Rate */}
             <Form.Item
@@ -224,6 +238,7 @@ function AddConsignment() {
               <Input placeholder="Enter the screening rate" />
             </Form.Item>
 
+
             {/* Image URL */}
             <Form.Item
               label="Image URL"
@@ -237,6 +252,7 @@ function AddConsignment() {
             >
               <Input placeholder="Enter the image URL" />
             </Form.Item>
+
 
             {/* Submit Button */}
             <Form.Item
@@ -259,5 +275,6 @@ function AddConsignment() {
     </div>
   );
 }
+
 
 export default AddConsignment;

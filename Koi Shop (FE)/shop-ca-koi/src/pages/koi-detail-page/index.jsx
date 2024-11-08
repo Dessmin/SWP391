@@ -17,19 +17,19 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 
 function KoiDetail() {
-  const [koi, setKoi] = useState(null); // State to store Koi details
+  const [koi, setKoi] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const { koiID } = useParams(); // Get koiID from URL params
-  const user = useSelector((state) => state.user); // Get user from Redux
-  const navigate = useNavigate(); // Hook to navigate between pages
+  const { koiID } = useParams();
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   // Fetch Koi details when component loads
   useEffect(() => {
     async function fetchKoiDetails() {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/koi-fishes/koiFish/${koiID}`,
+          `http://14.225.210.143:8080/api/koi-fishes/koiFish/${koiID}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -44,12 +44,11 @@ function KoiDetail() {
     fetchKoiDetails();
   }, [koiID, user.token]);
 
-  // Handle opening and closing the edit modal
   const handleEditModalOpen = () => {
     setIsEditModalOpen(true);
     form.setFieldsValue({
       ...koi,
-      birthDate: moment(koi.birthDate), // Convert birthDate to moment for DatePicker
+      birthDate: moment(koi.birthDate),
     });
   };
 
@@ -57,14 +56,13 @@ function KoiDetail() {
     setIsEditModalOpen(false);
   };
 
-  // Handle form submission to update Koi details
   const handleUpdate = async (values) => {
     try {
       await axios.put(
-        `http://localhost:8080/api/koi-fishes/${koiID}/update`, // Cập nhật URL API
+        `http://14.225.210.143:8080/api/koi-fishes/${koiID}/update`,
         {
           ...values,
-          birthDate: values.birthDate ? values.birthDate.toISOString() : null, // Đảm bảo giá trị birthDate là chuỗi ISO
+          birthDate: values.birthDate ? values.birthDate.toISOString() : null,
         },
         {
           headers: {
@@ -72,7 +70,7 @@ function KoiDetail() {
           },
         }
       );
-      // Update koi details in state after successful update
+
       setKoi({ ...koi, ...values });
       setIsEditModalOpen(false);
       message.success("Koi Fish updated successfully!");
@@ -139,7 +137,6 @@ function KoiDetail() {
             </Button>
           </div>
 
-          {/* Edit Koi Modal */}
           <Modal
             title="Edit Koi Details"
             open={isEditModalOpen}

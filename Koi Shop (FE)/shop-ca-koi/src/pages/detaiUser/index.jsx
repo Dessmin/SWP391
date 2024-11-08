@@ -30,7 +30,7 @@ function DetailUser() {
   const fetchUserById = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/user/${id}/detail`,
+        `http://14.225.210.143:8080/api/user/${id}/detail`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -62,7 +62,7 @@ function DetailUser() {
     try {
       // Gửi yêu cầu update
       const response = await axios.put(
-        `http://localhost:8080/api/user/${id}/customer-update`,
+        `http://14.225.210.143:8080/api/user/${id}/customer-update`,
         {
           ...values,
         },

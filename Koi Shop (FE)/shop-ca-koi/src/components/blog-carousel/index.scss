@@ -24,7 +24,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: auto; /* Đẩy nút xuống đáy */
+            margin-top: auto; 
             padding-top: 10px;
             margin-bottom: 10px;
         }
@@ -41,7 +41,7 @@
         }
 
         .content {
-            max-height: 130px; /* Giới hạn chiều cao */
+            max-height: 130px; 
             overflow: hidden;
             position: relative;
             word-wrap: break-word;
@@ -54,7 +54,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 30px; /* Độ cao của lớp mờ */
+            height: 30px; 
             background: linear-gradient(transparent, rgba(110, 68, 68, 0.9));
         }
     }

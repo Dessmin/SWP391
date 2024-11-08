@@ -10,28 +10,28 @@ import { useState } from "react";
 
 function HeaderLoged() {
   const { Search } = Input;
-  const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux store
+  const user = useSelector((state) => state.user); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showMenu, setShowMenu] = useState(false); // Trạng thái hiển thị menu
+  const [showMenu, setShowMenu] = useState(false); 
 
   const handleSearch = (value) => {
-    dispatch(setSearchTerm(value)); // Cập nhật từ khóa tìm kiếm trong Redux
-    navigate("/home"); // Điều hướng đến trang home (nơi có KoiList)
+    dispatch(setSearchTerm(value)); 
+    navigate("/home"); 
   };
 
   const handleLogout = () => {
-    // Xóa thông tin người dùng khỏi Redux
+    
     dispatch(logout());
 
-    // Xóa token khỏi localStorage (nếu bạn đang sử dụng token)
-    localStorage.removeItem("user"); // Hoặc xóa cookie nếu bạn lưu trữ ở đó
+    
+    localStorage.removeItem("user"); 
     sessionStorage.removeItem("user");
     sessionStorage.removeItem(`cart_${user.id}`);
-    // Hiển thị thông báo
+    
     toast.success("Tạm biệt");
 
-    // Điều hướng về trang đăng nhập
+    
     navigate("/");
   };
 

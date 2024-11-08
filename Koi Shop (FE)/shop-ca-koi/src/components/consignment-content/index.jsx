@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "./index.scss"; // Import file CSS cho phần định dạng
+import "./index.scss"; 
 
 const ConsignmentContent = () => {
-  const [isExpanded, setIsExpanded] = useState(false); // Trạng thái hiển thị nội dung
+  const [isExpanded, setIsExpanded] = useState(false); 
 
   const shortContent = (
     <div>
@@ -216,7 +216,7 @@ const ConsignmentContent = () => {
     </div>
   );
 
-  // Hàm xử lý khi nhấn vào nút "Xem thêm" hoặc "Thu gọn"
+  
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };

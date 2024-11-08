@@ -13,16 +13,16 @@ const OrderDetails = () => {
   const [error, setError] = useState(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const [consignmentTypes, setConsignmentTypes] = useState({}); // Mặc định là "Offline"
+  const [consignmentTypes, setConsignmentTypes] = useState({}); 
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/orders/${orderId}`,
+          `http://14.225.210.143:8080/api/orders/${orderId}`,
           {
             headers: {
-              Authorization: `Bearer ${user.token}`, // Gửi token trong header
+              Authorization: `Bearer ${user.token}`, 
             },
           }
         );
@@ -51,7 +51,7 @@ const OrderDetails = () => {
 
     try {
       await axios.post(
-        "http://localhost:8080/api/consignments/add-consignment",
+        "http://14.225.210.143:8080/api/consignments/add-consignment",
         consignmentData,
         {
           headers: {
@@ -68,7 +68,7 @@ const OrderDetails = () => {
   const handleConsignmentTypeChange = (productId, value) => {
     setConsignmentTypes((prev) => ({
       ...prev,
-      [productId]: value, // Cập nhật consignmentType cho từng sản phẩm
+      [productId]: value, 
     }));
   };
 
@@ -114,7 +114,7 @@ const OrderDetails = () => {
                             e.target.value
                           )
                         }
-                        value={consignmentTypes[item.productId] || "Offline"} // Lấy giá trị của sản phẩm cụ thể
+                        value={consignmentTypes[item.productId] || "Offline"} 
                         style={{ marginBottom: "10px" }}
                       >
                         <Radio value="Online">Online</Radio>

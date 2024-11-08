@@ -12,7 +12,7 @@ function RatingFeedback() {
   async function loadRatingFeedbackList() {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/ratings-feedbacks/list-ratingsfeedbacks",
+        "http://14.225.210.143:8080/api/ratings-feedbacks/list-ratingsfeedbacks",
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -25,20 +25,23 @@ function RatingFeedback() {
     }
   }
 
-  // Hàm xóa Rating_Feedback
-  async function deleteRatingFeedback(id) {
-    try {
-      await axios.delete(`http://localhost:8080/api/ratings-feedbacks/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      setDataSource(dataSource.filter((rating) => rating.ratingID !== id));
-      message.success("Xóa feedback thành công!");
-    } catch (error) {
-      message.error("Lỗi khi xóa feedback.");
-    }
+  
+async function deleteRatingFeedback(id) {
+  try {
+    await axios.delete(`http://14.225.210.143:8080/api/ratings-feedbacks/${id}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    message.success("Xóa feedback thành công!");
+    
+    
+    loadRatingFeedbackList();
+  } catch (error) {
+    message.error("Lỗi khi xóa feedback.");
   }
+}
+
 
   useEffect(() => {
     loadRatingFeedbackList();
@@ -87,7 +90,7 @@ function RatingFeedback() {
         <Button
           type="primary"
           danger
-          onClick={() => deleteRatingFeedback(record.ratingID)}
+          onClick={() => deleteRatingFeedback(record.id)}
         >
           Delete
         </Button>

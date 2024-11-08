@@ -14,17 +14,17 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 
 function Promotion() {
-  const [dataSource, setDataSource] = useState([]); // Store promotion list
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
-  const [selectedPromotion, setSelectedPromotion] = useState(null); // Store promotion for editing
+  const [dataSource, setDataSource] = useState([]); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedPromotion, setSelectedPromotion] = useState(null); 
   const [form] = Form.useForm();
   const user = useSelector((state) => state.user);
 
-  // Fetch promotion list
+  
   async function loadPromotionList() {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/promotions/list-promotions",
+        "http://14.225.210.143:8080/api/promotions/list-promotions",
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -41,7 +41,7 @@ function Promotion() {
     loadPromotionList();
   }, []);
 
-  // Handle creating/updating promotion
+  
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
@@ -53,27 +53,27 @@ function Promotion() {
 
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Thêm token vào header
+          Authorization: `Bearer ${user.token}`, 
         },
       };
 
       if (selectedPromotion) {
-        // Cập nhật promotion
+        
         await axios.put(
-          `http://localhost:8080/api/promotions/${selectedPromotion.promotionID}`,
+          `http://14.225.210.143:8080/api/promotions/${selectedPromotion.promotionID}`,
           promotionData,
-          config // Đưa config vào đây
+          config 
         );
       } else {
         // Thêm mới promotion
         await axios.post(
-          "http://localhost:8080/api/promotions/add-promotion",
+          "http://14.225.210.143:8080/api/promotions/add-promotion",
           promotionData,
-          config // Đưa config vào đây
+          config 
         );
       }
 
-      // Tải lại danh sách promotion sau khi cập nhật hoặc thêm mới
+      
       loadPromotionList();
       setIsModalOpen(false);
       form.resetFields();
@@ -83,11 +83,11 @@ function Promotion() {
     }
   };
 
-  // Handle deleting promotion
+  
   const deletePromotion = async (promotionID) => {
     try {
       await axios.delete(
-        `http://localhost:8080/api/promotions/${promotionID}`,
+        `http://14.225.210.143:8080/api/promotions/${promotionID}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -102,7 +102,7 @@ function Promotion() {
     }
   };
 
-  // Open modal for creating or editing promotion
+  
   const openModal = (promotion = null) => {
     setSelectedPromotion(promotion);
     if (promotion) {

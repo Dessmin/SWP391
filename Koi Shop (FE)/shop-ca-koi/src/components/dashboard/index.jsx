@@ -1,8 +1,6 @@
 import { useState } from "react";
 import {
   BarChartOutlined,
-  FileOutlined,
-  ProductOutlined,
   ShoppingCartOutlined,
   
 } from "@ant-design/icons";
@@ -53,25 +51,25 @@ const items = [
 
 const Dashboard = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedKey, setSelectedKey] = useState("1"); // State để theo dõi mục đã chọn
+  const [selectedKey, setSelectedKey] = useState("1"); 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const navigate = useNavigate(); // Dùng để điều hướng
+  const navigate = useNavigate(); 
 
   const onMenuClick = (item) => {
-    setSelectedKey(item.key); // Cập nhật mục đã chọn
+    setSelectedKey(item.key); 
     if (item.key === "1") {
       navigate("/home/dashboard/user");
     }
     if (item.key === "2-1") {
-      navigate("/home/dashboard/koi/breed"); // Đường dẫn cho mục Batch
+      navigate("/home/dashboard/koi/breed"); 
     }
     if (item.key === "2-2") {
-      navigate("/home/dashboard/koi/origin"); // Đường dẫn cho mục Origin
+      navigate("/home/dashboard/koi/origin"); 
     }
     if (item.key === "2-3") {
-      navigate("/home/dashboard/koi"); // Đường dẫn cho mục Koi
+      navigate("/home/dashboard/koi"); 
     }
     if (item.key === "3") {
       navigate("/home/dashboard/consignment");
@@ -111,7 +109,7 @@ const Dashboard = ({ children }) => {
           onClick={onMenuClick}
           theme="dark"
           defaultSelectedKeys={["1"]}
-          selectedKeys={[selectedKey]} // Sử dụng selectedKeys để đánh dấu mục hiện tại
+          selectedKeys={[selectedKey]} 
           mode="inline"
           items={items}
         />

@@ -70,7 +70,7 @@ function CompareKoi () {
             <Descriptions.Item label="Image">
               <Image width={100} src={koi1.image} alt={koi1.fishName} />
             </Descriptions.Item>
-            {/* Các thuộc tính khác của koi1 */}
+            
           </Descriptions>
         </Col>
         <Col span={12}>
@@ -89,7 +89,7 @@ function CompareKoi () {
             <Descriptions.Item label="Image">
               <Image width={100} src={koi2.image} alt={koi2.fishName} />
             </Descriptions.Item>
-            {/* Các thuộc tính khác của koi1 */}
+            
           </Descriptions>
         </Col>
       </Row>

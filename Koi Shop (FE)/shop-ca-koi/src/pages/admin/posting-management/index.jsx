@@ -6,19 +6,19 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 function Posting() {
-  const [dataSource, setDataSource] = useState([]); // State lưu trữ danh sách Posting
+  const [dataSource, setDataSource] = useState([]); 
   const [form] = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
-  const [postDetail, setPostDetail] = useState(null); // State lưu trữ thông tin chi tiết của post
-  const user = useSelector((state) => state.user); // Lấy token từ Redux
+  const [postDetail, setPostDetail] = useState(null);
+  const user = useSelector((state) => state.user); 
 
-  // Hàm để tải danh sách các post
+  
   async function loadPostingList() {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/posting/list-postings",
+        "http://14.225.210.143:8080/api/posting/list-postings",
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -31,11 +31,11 @@ function Posting() {
     }
   }
 
-  // Hàm để thêm một post mới
+  
   async function addPosting(data) {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/posting/add-posting",
+        "http://14.225.210.143:8080/api/posting/add-posting",
         data,
         {
           headers: {
@@ -50,11 +50,11 @@ function Posting() {
     }
   }
 
-  // Hàm để xóa một post
+  
   async function deletePosting(id) {
     try {
       await axios.delete(
-        `http://localhost:8080/api/posting/${id}/delete-posting`,
+        `http://14.225.210.143:8080/api/posting/${id}/delete-posting`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -67,11 +67,11 @@ function Posting() {
     }
   }
 
-  // Hàm để cập nhật một post
+  
   async function updatePosting(id, data) {
     try {
       await axios.put(
-        `http://localhost:8080/api/posting/${id}/update-posting`,
+        `http://14.225.210.143:8080/api/posting/${id}/update-posting`,
         data,
         {
           headers: {
@@ -85,26 +85,26 @@ function Posting() {
     }
   }
 
-  // Hàm để lấy thông tin chi tiết của post
+  
   async function fetchPostDetail(id) {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/posting/${id}/get-posting`,
+        `http://14.225.210.143:8080/api/posting/${id}/get-posting`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setPostDetail(response.data); // Lưu thông tin chi tiết vào state
-      setIsDetailModalOpen(true); // Mở modal chi tiết
+      setPostDetail(response.data); 
+      setIsDetailModalOpen(true); 
     } catch (error) {
       console.error("Error fetching post detail:", error);
     }
   }
 
   useEffect(() => {
-    loadPostingList(); // Tải danh sách post khi component được mount
+    loadPostingList(); 
   }, []);
 
   const handleHideModel = () => {
@@ -114,9 +114,9 @@ function Posting() {
 
   const handleSubmit = (values) => {
     if (editingPost) {
-      updatePosting(editingPost.id, values); // Cập nhật post
+      updatePosting(editingPost.id, values); 
     } else {
-      addPosting(values); // Thêm post mới
+      addPosting(values); 
     }
     form.resetFields();
     handleHideModel();
@@ -157,7 +157,7 @@ function Posting() {
           </Button>
           <Button
             type="primary"
-            onClick={() => fetchPostDetail(record.id)} // Gọi hàm để lấy chi tiết post
+            onClick={() => fetchPostDetail(record.id)} 
             style={{ marginRight: 8 }}
           >
             Detail
@@ -197,7 +197,7 @@ function Posting() {
         </div>
         <Table dataSource={dataSource} columns={columns} rowKey="id" />
 
-        {/* Modal để thêm hoặc chỉnh sửa post */}
+        
         <Modal
           title={
             <div style={{ textAlign: "center" }}>
@@ -238,7 +238,7 @@ function Posting() {
           </Form>
         </Modal>
 
-        {/* Modal hiển thị chi tiết post */}
+        
         <Modal
           title="Post Details"
           open={isDetailModalOpen}

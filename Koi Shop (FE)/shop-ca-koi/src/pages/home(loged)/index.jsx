@@ -29,7 +29,9 @@ function HomeLoged() {
           <BatchList />
         </CartProvider>
         <hr />
+        
         <Blog_Carousel />
+        
       </div>
 
       <Footer />

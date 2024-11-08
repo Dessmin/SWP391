@@ -12,7 +12,7 @@ function PaymentAdmin() {
   const fetchPaymentByOrderId = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/payments/${id}/order-payment`,
+        `http://14.225.210.143:8080/api/payments/${id}/order-payment`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
