@@ -9,9 +9,9 @@ import axios from "axios";
 
 function KoiList() {
   const [kois, setKois] = useState([]);
-  const [page, setPage] = useState(0); // Số trang hiện tại
+  const [page, setPage] = useState(0); 
   const [totalPages, setTotalPages] = useState(1);
-  const [breeds, setBreeds] = useState([]); // State để lưu danh sách breed
+  const [breeds, setBreeds] = useState([]); 
   const [selectedBreed, setSelectedBreed] = useState("All");
   const [name, setName] = useState([]);
 
@@ -22,29 +22,29 @@ function KoiList() {
     try {
       const response = await apiKoi.get(`list?page=${page}`, {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
-      setKois(response.data.content); // Lưu danh sách cá koi
-      setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
+      setKois(response.data.content); 
+      setTotalPages(response.data.totalPages); 
     } catch (e) {
-      console.log(e); // Ghi lại lỗi không phải axios
+      console.log(e); 
     }
   };
 
   const fetchKoiByBreed = async (breed, page = 0) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/koi-fishes/${breed}?page=${page}`, {
+      const response = await axios.get(`http://14.225.210.143:8080/api/koi-fishes/${breed}?page=${page}`, {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
-      setKois(response.data.content); // Lưu danh sách cá koi
+      setKois(response.data.content); 
       console.log(response.data.content);
       
-      setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
+      setTotalPages(response.data.totalPages); 
     } catch (e) {
-      console.log(e); // Ghi lại lỗi không phải axios
+      console.log(e); 
     }
   };
 
@@ -73,15 +73,15 @@ function KoiList() {
   const fetchBreeds = async () => {
     try {
       const response = await apiKoi.get(
-        "http://localhost:8080/api/breeds/list-breedName",
+        "http://14.225.210.143:8080/api/breeds/list-breedName",
         {
-          // Giả sử API lấy danh sách breed là /breeds
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setBreeds(response.data); // Giả sử response.data là mảng danh sách breed
+      setBreeds(response.data); 
     } catch (e) {
       console.log(e);
     }
@@ -89,22 +89,22 @@ function KoiList() {
 
   useEffect(() => {
     fetchKoiBySearchTerm(),
-    fetchBreeds(); // Lấy danh sách breed khi component mount
-    // Lấy danh sách Koi theo breed đã chọn
+    fetchBreeds(); 
+   
     if (selectedBreed === "All") {
-      fetchKoi(page); // Gọi hàm fetch cho "All"
+      fetchKoi(page); 
     } else {
-      fetchKoiByBreed(selectedBreed, page); // Gọi hàm fetch cho breed đã chọn
+      fetchKoiByBreed(selectedBreed, page); 
     }
   }, [page, selectedBreed, searchTerm]);
 
   const handlePageChange = (newPage) => {
-    setPage(newPage); // Cập nhật số trang
+    setPage(newPage); 
   };
 
   const handleBreedChange = (value) => {
-    setSelectedBreed(value); // Cập nhật breed đã chọn
-    setPage(0); // Reset về trang đầu khi thay đổi breed
+    setSelectedBreed(value); 
+    setPage(0); 
   };
 
   return (
@@ -135,11 +135,11 @@ function KoiList() {
       <div className="koi__list">
         {kois
           .filter((koi) => {
-            // Kiểm tra nếu từ khóa tìm kiếm không có và breed là "All", hiển thị tất cả
+            
             if (selectedBreed === "All" && name.length === 0) return true;
-            // Nếu có từ khóa tìm kiếm, chỉ hiển thị những cá Koi có tên nằm trong danh sách 'name'
+           
             if (name.length > 0) return name.includes(koi.fishName);
-            // Nếu có breed đã chọn (không phải "All"), chỉ hiển thị những cá Koi có breed tương ứng
+            
             return koi.breed === selectedBreed;
           })
           .map((koi, index) => (

@@ -5,19 +5,19 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 function BreedDetail() {
-  const [breed, setBreed] = useState(null); // State để lưu thông tin chi tiết của breed
+  const [breed, setBreed] = useState(null); 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const { breedName } = useParams(); // Lấy breedName từ URL params
-  const user = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux
-  const navigate = useNavigate(); // Hook để điều hướng giữa các trang
+  const { breedName } = useParams(); 
+  const user = useSelector((state) => state.user); 
+  const navigate = useNavigate(); 
 
-  // Fetch thông tin breed khi component được tải
+  
   useEffect(() => {
     async function fetchBreedDetails() {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/breeds/${breedName}`,
+          `http://14.225.210.143:8080/api/breeds/${breedName}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -32,21 +32,21 @@ function BreedDetail() {
     fetchBreedDetails();
   }, [breedName, user.token]);
 
-  // Mở và đóng modal chỉnh sửa
+  
   const handleEditModalOpen = () => {
     setIsEditModalOpen(true);
-    form.setFieldsValue(breed); // Thiết lập giá trị của form với breed hiện tại
+    form.setFieldsValue(breed); 
   };
 
   const handleEditModalClose = () => {
     setIsEditModalOpen(false);
   };
 
-  // Xử lý gửi form để cập nhật thông tin breed
+  
   const handleUpdate = async (values) => {
     try {
       await axios.put(
-        `http://localhost:8080/api/breeds/${breedName}/update`, // Cập nhật URL API
+        `http://14.225.210.143:8080/api/breeds/${breedName}/update`, 
         values,
         {
           headers: {
@@ -54,7 +54,7 @@ function BreedDetail() {
           },
         }
       );
-      // Cập nhật breed details trong state sau khi cập nhật thành công
+      
       setBreed({ ...breed, ...values });
       setIsEditModalOpen(false);
       message.success("Breed updated successfully!");
@@ -89,7 +89,7 @@ function BreedDetail() {
           <div style={{ marginTop: 20 }}>
             <Button
               type="primary"
-              onClick={() => navigate("/home/dashboard/breeds")} // Quay lại trang danh sách breed
+              onClick={() => navigate("/home/dashboard/breeds")} 
             >
               Back
             </Button>
@@ -102,7 +102,7 @@ function BreedDetail() {
             </Button>
           </div>
 
-          {/* Modal chỉnh sửa thông tin breed */}
+          
           <Modal
             title="Edit Breed Details"
             open={isEditModalOpen}

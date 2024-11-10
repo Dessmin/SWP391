@@ -6,7 +6,7 @@ import './index.scss'
 import { Button } from "antd";
 function BatchList() {
   const [batches, setbatches] = useState([]);
-  const [page, setPage] = useState(0); // Số trang hiện tại
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
   const user = useSelector((state) => state.user);
@@ -15,13 +15,13 @@ function BatchList() {
     try {
       const response = await apiBatch.get(`list-batch?page=${page}`, {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
-      setbatches(response.data.content); // Lưu danh sách cá koi (tùy thuộc vào cấu trúc response)
-      setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
+      setbatches(response.data.content); 
+      setTotalPages(response.data.totalPages); 
     } catch (e) {
-      console.log(e); // Ghi lại lỗi không phải axios
+      console.log(e); 
     }
   };
 
@@ -30,7 +30,7 @@ function BatchList() {
   }, [page]);
 
   const handlePageChange = (newPage) => {
-    setPage(newPage); // Cập nhật số trang
+    setPage(newPage); 
   };
   return (
     <div className="batch">

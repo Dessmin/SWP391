@@ -7,21 +7,21 @@ import { toast } from "react-toastify";
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const user = useSelector((state) => state.user); // Lấy user từ Redux
+  const user = useSelector((state) => state.user); 
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    if (user && user.id) {
-      const sessionCart = getCartFromSession(user.id); // Lấy giỏ hàng theo userId
+    if (user && user.userId) {
+      const sessionCart = getCartFromSession(user.userId); 
       setCartItems(sessionCart);
     }
   }, [user]);
 
   const addToCart = (product) => {
-    // Lấy giỏ hàng từ session dựa trên user id, nếu chưa có thì sử dụng giá trị hiện tại của cartItems
-    const currentCart = getCartFromSession(user.id) || cartItems;
+    
+    const currentCart = getCartFromSession(user.userId) || cartItems;
     toast.success("Thêm thành công")
-    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng dựa trên type và id
+    
     const isItemInCart = currentCart.some(item =>  item.id === product.id && item.type === product.type);
     
   
@@ -29,24 +29,24 @@ export const CartProvider = ({ children }) => {
       
       
       console.log(`Product with ID ${product.id} and type ${product.type} is already in the cart.`);
-      return; // Nếu đã tồn tại, không thêm sản phẩm vào giỏ hàng
+      return; 
     }
   
-    // Nếu không trùng lặp, thêm vào giỏ hàng
+    
     const updatedCart = [...currentCart, product];
     setCartItems(updatedCart);
-    saveCartToSession(user.id, updatedCart); // Lưu giỏ hàng theo userId vào session
+    saveCartToSession(user.userId, updatedCart); 
   };
   
   
   const removeFromCart = (productId, productType) => {
-    // Xóa sản phẩm dựa trên cả id và type
+    
     const updatedCart = cartItems.filter(
       (item) => !(item.id === productId && item.type === productType)
     );
     
     setCartItems(updatedCart);
-    saveCartToSession(user.id, updatedCart); // Cập nhật giỏ hàng theo userId
+    saveCartToSession(user.id, updatedCart); 
   };
   
 

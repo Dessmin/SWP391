@@ -10,64 +10,64 @@
     text-align: center;
   }
     .points-amount-section {
-      display: flex; // Đặt chế độ hiển thị flex để các phần tử nằm cùng hàng
-      justify-content: space-between; // Căn giữa các phần tử trong hàng
-      align-items: center; // Căn chỉnh theo chiều dọc
-      margin-top: 20px; // Thêm khoảng cách trên
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-top: 20px; 
   
   
       .points-section {
         display: flex;
-        align-items: center; // Căn giữa các phần tử trong hàng
-        gap: 10px; // Khoảng cách giữa các phần tử
+        align-items: center; 
+        gap: 10px; 
   
   
         .points-input {
-          width: 150px; // Chiều rộng của ô nhập điểm
+          width: 150px; 
         }
       }
   
   
       .total-amount {
-        font-size: 18px; // Kích thước font chữ
-        font-weight: bold; // Đậm
-        color: #ff7a00; // Màu sắc
+        font-size: 18px; 
+        font-weight: bold; 
+        color: #ff7a00; 
       }
     }
   
   
     .voucher-checkout-section {
-      display: flex; // Đặt chế độ hiển thị flex
-      justify-content: space-between; // Căn giữa các phần tử trong hàng
-      align-items: center; // Căn chỉnh theo chiều dọc
-      margin-top: 10px; // Thêm khoảng cách trên
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-top: 10px; 
   
   
       .voucher-section {
-        display: flex; // Đặt chế độ hiển thị flex
-        align-items: center; // Căn giữa các phần tử trong hàng
-        gap: 10px; // Khoảng cách giữa các phần tử
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
   
   
         .voucher-input {
-          width: 150px; // Chiều rộng của ô nhập voucher
+          width: 150px; 
         }
       }
   
   
       .amount-checkout-section {
-        display: flex; // Đặt chế độ hiển thị flex
-        flex-direction: column; // Chiều dọc
-        align-items: flex-end; // Căn phải
+        display: flex; 
+        flex-direction: column; 
+        align-items: flex-end; 
   
   
         .checkout-btn {
-          background-color: #52c41a; // Màu nền nút
-          color: #fff; // Màu chữ
+          background-color: #52c41a; 
+          color: #fff; 
   
   
           &:hover {
-            background-color: #73d13d; // Màu nền khi hover
+            background-color: #73d13d; 
           }
         }
       }

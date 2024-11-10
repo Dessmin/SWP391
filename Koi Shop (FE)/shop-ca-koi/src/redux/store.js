@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { userSlice } from './features/userSlice';
 import { searchSlice } from './features/searchSlice';
 
-const userFromStorage = JSON.parse(sessionStorage.getItem('user') || 'null'); // Nếu không có, gán null
+const userFromStorage = JSON.parse(sessionStorage.getItem('user') || 'null'); 
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +10,6 @@ export const store = configureStore({
     search: searchSlice.reducer,
   },
   preloadedState: {
-    user: userFromStorage, // Khôi phục state người dùng từ sessionStorage
+    user: userFromStorage, 
   },
 });

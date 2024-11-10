@@ -2,8 +2,9 @@ import { Button, Descriptions, Image, Radio } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import './index.scss'
 
 function ConfirmConsign() {
   const { id } = useParams();
@@ -25,7 +26,7 @@ function ConfirmConsign() {
 
     try {
       await axios.post(
-        "http://localhost:8080/api/consignments/add-consignment",
+        "http://14.225.210.143:8080/api/consignments/add-consignment",
         consignmentData,
         {
           headers: {
@@ -42,7 +43,7 @@ function ConfirmConsign() {
   const fetchKoiById = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/koi-fishes/koiFish/${id}`,
+        `http://14.225.210.143:8080/api/koi-fishes/koiFish/${id}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -96,8 +97,8 @@ function ConfirmConsign() {
       )}
 
       <Radio.Group
-        onChange={(e) => setConsignmentTypes(e.target.value)} // Cập nhật giá trị khi thay đổi
-        value={consignmentTypes} // Sử dụng giá trị của loại ký gửi
+        onChange={(e) => setConsignmentTypes(e.target.value)} 
+        value={consignmentTypes} 
         style={{ marginBottom: "10px" }}
       >
         <Radio value="Online">Online</Radio>
@@ -111,6 +112,13 @@ function ConfirmConsign() {
       >
         Ký gửi
       </Button>
+      <div>
+        <Link to ="/home">
+        <Button>
+          Trở về
+        </Button>
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 .footer-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;  // Dàn đều các section
+    justify-content: space-between;  
     padding: 20px;
     background-color: #000;
     color: #fff;
@@ -47,10 +47,10 @@
     }
   
     .copyright {
-      position: absolute; // Dùng absolute positioning để đưa phần này xuống giữa
+      position: absolute; 
       bottom: 10px;
       left: 50%;
-      transform: translateX(-50%); // Căn giữa theo chiều ngang
+      transform: translateX(-50%); 
       text-align: center;
       width: 100%;
       margin-top: 20px;

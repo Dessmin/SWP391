@@ -26,35 +26,31 @@ export default function Blog_Carousel() {
   }, []);
   return (
     <div>
-      <h2 style={{color:'white'}}>Các bài viết</h2>
+      <h2 style={{ color: "white", textAlign: "center" }}>Các bài viết</h2>
       <Swiper
-      navigation={true}
-      modules={[Navigation, Pagination]}
-      className="carousel"
-      slidesPerView={4}
-      spaceBetween={20}
-    >
-      
-      {blogs.map((blog) => (
-        <SwiperSlide key={blog.id} className="blog-slide">
-          
-          <img src={blog.image} alt="" />
-          <div className="title-content">
-            <div className="title">
-              <strong>Tiêu đề bài viết: </strong> {blog.title}
+        navigation={true}
+        modules={[Navigation, Pagination]}
+        className="carousel"
+        slidesPerView={4}
+        spaceBetween={20}
+      >
+        {blogs.map((blog) => (
+          <SwiperSlide key={blog.id} className="blog-slide">
+            <img src={blog.image} alt="" />
+            <div className="title-content">
+              <div className="title">
+                <strong>{blog.title}</strong>
+              </div>
+              <div className="content">{blog.content}</div>
             </div>
-            <div className="content">
-              <strong>Nội dung: </strong>
-              {blog.content}
+            <div className="bton">
+              <Button onClick={() => navigate(`/blogDetail/${blog.id}`)}>
+                Xem thêm
+              </Button>
             </div>
-          </div>
-          <div className="bton">
-            <Button onClick={() => navigate(`/blogDetail/${blog.id}`)}>Xem thêm</Button>
-          </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
-    
   );
 }

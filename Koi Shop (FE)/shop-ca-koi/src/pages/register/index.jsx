@@ -27,7 +27,7 @@ function Register() {
             span: 24,
           }}
         >
-          {/* User Name */}
+          
           <Form.Item
             label="User Name"
             name="userName"
@@ -43,7 +43,7 @@ function Register() {
 
           
 
-          {/* Email */}
+          
           <Form.Item
             label="Email"
             name="email"
@@ -58,7 +58,7 @@ function Register() {
             <Input placeholder="Enter your email" />
           </Form.Item>
 
-          {/* Phone Number */}
+          
           <Form.Item
             label="Phone Number"
             name="phoneNumber"
@@ -72,7 +72,7 @@ function Register() {
             <Input placeholder="Enter your phone number" />
           </Form.Item>
 
-          {/* Address */}
+          
           <Form.Item
             label="Address"
             name="address"
@@ -86,7 +86,7 @@ function Register() {
             <Input placeholder="Enter your address" />
           </Form.Item>
 
-          {/* Submit Button */}
+          
           <Form.Item
             wrapperCol={{
               offset: 8,

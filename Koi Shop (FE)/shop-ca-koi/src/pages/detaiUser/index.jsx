@@ -1,5 +1,5 @@
 import {
-  Avatar,
+  
   Button,
   Col,
   Descriptions,
@@ -13,9 +13,9 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import "./index.scss";
-import { ClockCircleOutlined, EditOutlined } from "@ant-design/icons";
+import {  EditOutlined } from "@ant-design/icons";
 
 function DetailUser() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ function DetailUser() {
   const fetchUserById = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/user/${id}/detail`,
+        `http://14.225.210.143:8080/api/user/${id}/detail`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -60,9 +60,9 @@ function DetailUser() {
   const handleUpdate = async (values) => {
     setLoading(true);
     try {
-      // Gửi yêu cầu update
+      
       const response = await axios.put(
-        `http://localhost:8080/api/user/${id}/customer-update`,
+        `http://14.225.210.143:8080/api/user/${id}/customer-update`,
         {
           ...values,
         },
@@ -137,13 +137,7 @@ function DetailUser() {
                     </Button>
                   </div>
                 </Descriptions.Item>
-                {/* <Descriptions.Item label="Lịch sử mua hàng">
-                  <Link className="link" to="/orderHistory">
-                    <Button>
-                      Lịch sử mua hàng <ClockCircleOutlined />
-                    </Button>
-                  </Link>
-                </Descriptions.Item> */}
+               
               </Descriptions>
             )}
           </Col>

@@ -54,7 +54,6 @@ function Home() {
         </div>
         <hr />
         <div className="body__blog">
-          <h2>Các bài viết</h2>
           <Blog_Carousel />
         </div>
       </div>

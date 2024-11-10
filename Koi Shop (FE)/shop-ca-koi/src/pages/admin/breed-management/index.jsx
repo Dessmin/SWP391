@@ -6,18 +6,18 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 function Breed() {
-  const [dataSource, setDatasource] = useState([]); // State lưu trữ danh sách Breed
+  const [dataSource, setDatasource] = useState([]); 
   const [form] = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false); // State cho modal chi tiết
-  const [currentBreed, setCurrentBreed] = useState(null); // State để lưu breed hiện tại đang được xem chi tiết
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false); 
+  const [currentBreed, setCurrentBreed] = useState(null); 
   const user = useSelector((state) => state.user);
 
-  // Hàm để thêm một breed mới
+  
   async function fetchBreed(data) {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/breeds/add-breed", // Thay đổi endpoint nếu cần
+        "http://14.225.210.143:8080/api/breeds/add-breed", 
         data,
         {
           headers: {
@@ -25,50 +25,50 @@ function Breed() {
           },
         }
       );
-      // Cập nhật lại dataSource với breed mới
+      
       setDatasource([...dataSource, response.data]);
-      loadBreedList(); // Tải lại danh sách sau khi thêm thành công
+      loadBreedList(); 
     } catch (error) {
       console.error("Error adding breed:", error);
     }
   }
 
-  // Hàm để tải danh sách các breed
+  
   async function loadBreedList() {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/breeds/list-breeds", // Sử dụng endpoint bạn cung cấp
+        "http://14.225.210.143:8080/api/breeds/list-breeds", 
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      // Cập nhật state với dữ liệu nhận được từ server
+      
       setDatasource(response.data);
     } catch (error) {
       console.error("Error fetching breed list:", error);
     }
   }
 
-  // Hàm để xóa một breed
+  
   async function deleteBreed(id) {
     try {
-      await axios.delete(`http://localhost:8080/api/breeds/${id}`, {
+      await axios.delete(`http://14.225.210.143:8080/api/breeds/${id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      // Sau khi xóa, cập nhật lại danh sách
+      
       setDatasource(dataSource.filter((breed) => breed.breedID !== id));
     } catch (error) {
       console.error("Error deleting breed:", error);
     }
   }
 
-  // Gọi loadBreedList khi component được tải lần đầu
+  
   useEffect(() => {
-    loadBreedList(); // Chỉ gọi một lần khi component mount
+    loadBreedList(); 
   }, []);
 
   const handleHideModel = () => {
@@ -76,7 +76,7 @@ function Breed() {
   };
 
   const handleSubmit = (values) => {
-    fetchBreed(values); // Thêm breed mới
+    fetchBreed(values); 
     form.resetFields();
     handleHideModel();
   };
@@ -102,18 +102,18 @@ function Breed() {
       key: "actions",
       render: (text, record) => (
         <div>
-          {/* Nút chi tiết */}
+          
           <Button
             type="primary"
             onClick={() => {
-              setCurrentBreed(record); // Lưu breed hiện tại
-              setIsDetailModalOpen(true); // Mở modal chi tiết
+              setCurrentBreed(record); 
+              setIsDetailModalOpen(true); 
             }}
             style={{ marginRight: 8 }}
           >
             Detail
           </Button>
-          {/* Nút xóa */}
+          
           <Button
             type="primary"
             danger
@@ -127,19 +127,19 @@ function Breed() {
     },
   ];
 
-  // Hiển thị modal thêm breed mới
+ 
   const handleShowModal = () => {
     setIsModalOpen(true);
   };
 
-  // Đóng modal
+  
   const handleCancel = () => {
     setIsModalOpen(false);
-    setIsDetailModalOpen(false); // Đóng modal chi tiết
-    setCurrentBreed(null); // Đặt lại breed hiện tại
+    setIsDetailModalOpen(false); 
+    setCurrentBreed(null); 
   };
 
-  // Submit form thêm breed mới
+  
   function handleOk() {
     form.submit();
   }
@@ -153,7 +153,7 @@ function Breed() {
           </Button>
         </div>
         <Table dataSource={dataSource} columns={columns} />{" "}
-        {/* Hiển thị danh sách breed */}
+        
         <Modal
           title={<div style={{ textAlign: "center" }}>Add New Breed</div>}
           open={isModalOpen}
@@ -184,7 +184,7 @@ function Breed() {
             </Form.Item>
           </Form>
         </Modal>
-        {/* Modal chi tiết breed */}
+        
         <Modal
           title={<div style={{ textAlign: "center" }}>Breed Details</div>}
           open={isDetailModalOpen}

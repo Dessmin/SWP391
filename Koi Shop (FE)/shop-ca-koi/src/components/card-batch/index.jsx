@@ -4,8 +4,8 @@ import "./index.scss";
 import { useContext } from "react";
 import { CartContext } from "../../helper/CartContext";
 function CardBatch({ batch }) {
-  const { id, breedName, description, image, quantity, price } = batch;
-  const { addToCart } = useContext(CartContext); // Lấy hàm addToCart từ CartContext
+  
+  const { addToCart } = useContext(CartContext); 
 
   const handleAddToCart = () => {
     const product = {
@@ -14,10 +14,11 @@ function CardBatch({ batch }) {
       image,
       quantity,
       price,
-      type: "Batch", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
+      type: "Batch", 
     };
-    addToCart(product); // Thêm sản phẩm vào giỏ hàng
+    addToCart(product); 
   };
+  const { id, breedName, description, image, quantity, price } = batch;
 
   return (
     <div className="batch-card">
@@ -36,7 +37,7 @@ function CardBatch({ batch }) {
       </div>
 
       <Button
-        onClick={handleAddToCart} // Gọi hàm thêm sản phẩm vào giỏ hàng
+        onClick={handleAddToCart} 
         style={{ width: "100%", height: "50px" }}
         type="primary"
       >

@@ -23,15 +23,15 @@
 
 .user-menu {
   position: absolute;
-  top: 25px; // Đặt menu ngay bên dưới icon user (chỉnh giá trị này nếu cần)
-  left: 50%; // Đặt ở giữa phần tử chứa
-  transform: translateX(-50%); // Dịch chuyển để căn giữa
+  top: 25px; 
+  left: 50%; 
+  transform: translateX(-50%); 
   
   background-color: black;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  padding: 15px; // Tăng padding để menu rộng hơn
-  width: 150px; // Tăng chiều rộng menu
+  padding: 15px; 
+  width: 150px; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 10;
   
@@ -42,7 +42,7 @@
     padding-left: 0;
 
     li {
-      padding: 10px 15px; // Tăng khoảng cách bên trong các mục menu
+      padding: 10px 15px; 
       cursor: pointer;
       color: #333;
       font-size: 16px;
@@ -77,7 +77,7 @@
           
           .search-container {
             position: relative;
-            width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng mong muốn */
+            width: 100%; 
             
           }
         

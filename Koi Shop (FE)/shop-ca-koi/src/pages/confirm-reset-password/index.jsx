@@ -8,7 +8,7 @@ function ConfirmResetPassword() {
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const token = queryParams.get('token'); // Trích xuất token
+    const token = queryParams.get('token'); 
 
     const handleConfirmReset = async (values) => {
         try {
@@ -17,7 +17,7 @@ function ConfirmResetPassword() {
             values,
             {
               headers: {
-                Authorization: `Bearer ${token}`, // Thêm token vào header
+                Authorization: `Bearer ${token}`, 
               },
             }
           );

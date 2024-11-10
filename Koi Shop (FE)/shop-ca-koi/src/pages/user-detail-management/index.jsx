@@ -19,19 +19,19 @@ import moment from "moment";
 const { Option } = Select;
 
 function UserDetail() {
-  const [userDetails, setUserDetails] = useState(null); // State để lưu chi tiết người dùng
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State để điều khiển mở Modal
-  const { id } = useParams(); // Lấy ID người dùng từ URL
-  const user = useSelector((state) => state.user); // Lấy thông tin user từ Redux
-  const navigate = useNavigate(); // Hook để điều hướng giữa các trang
-  const [form] = Form.useForm(); // Ant Design form instance
+  const [userDetails, setUserDetails] = useState(null); 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
+  const { id } = useParams(); 
+  const user = useSelector((state) => state.user); 
+  const navigate = useNavigate(); 
+  const [form] = Form.useForm(); 
 
-  // Lấy thông tin chi tiết người dùng khi component được tải
+  
   useEffect(() => {
     async function fetchUserDetails() {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/user/${id}/detail`,
+          `http://14.225.210.143:8080/api/user/${id}/detail`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -46,12 +46,12 @@ function UserDetail() {
     fetchUserDetails();
   }, [id, user.token]);
 
-  // Hàm mở Modal và thiết lập giá trị của form
+  
   const handleEditModalOpen = () => {
     setIsEditModalOpen(true);
     form.setFieldsValue({
       ...userDetails,
-      joinDate: moment(userDetails.joinDate), // Chuyển đổi joinDate thành moment cho DatePicker
+      joinDate: moment(userDetails.joinDate), 
     });
   };
 
@@ -59,14 +59,14 @@ function UserDetail() {
     setIsEditModalOpen(false);
   };
 
-  // Hàm xử lý cập nhật thông tin người dùng
+  
   const handleUpdate = async (values) => {
     try {
       await axios.put(
-        `http://localhost:8080/api/user/${id}/update`,
+        `http://14.225.210.143:8080/api/user/${id}/update`,
         {
           ...values,
-          joinDate: values.joinDate ? values.joinDate.toISOString() : null, // Chuyển đổi joinDate thành chuỗi ISO
+          joinDate: values.joinDate ? values.joinDate.toISOString() : null, 
         },
         {
           headers: {
@@ -74,7 +74,7 @@ function UserDetail() {
           },
         }
       );
-      // Cập nhật lại thông tin user sau khi update
+      
       setUserDetails({ ...userDetails, ...values });
       setIsEditModalOpen(false);
       message.success("User updated successfully!");

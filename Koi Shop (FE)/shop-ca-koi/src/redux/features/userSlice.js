@@ -6,8 +6,8 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        login: (state, action) => action.payload, // action.payload = thông tin user
-        logout: () => initialState, // reset về null khi logout
+        login: (state, action) => action.payload, 
+        logout: () => initialState, 
     },
 });
 

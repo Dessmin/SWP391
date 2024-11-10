@@ -8,21 +8,21 @@ import Dashboard from "../../../components/dashboard";
 
 function Income() {
     const [incomeData, setIncomeData] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Mặc định là năm hiện tại
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); 
   const [availableYears, setAvailableYears] = useState([selectedYear]);
   const user = useSelector((state) => state.user);
 
-  // Hàm lấy dữ liệu từ API
+  
   const fetchIncomeData = async (year) => {
     try {
-      const response = await axios.get("http://localhost:8080/api/dashboard/income", {
+      const response = await axios.get("http://14.225.210.143:8080/api/dashboard/income", {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
       const data = response.data.incomeMonthly;
 
-      // Lọc dữ liệu theo năm và định dạng 12 tháng đầy đủ
+      
       const filteredData = Array.from({ length: 12 }, (_, i) => {
         const month = (i + 1).toString().padStart(2, '0');
         const monthData = data.find(
@@ -30,11 +30,11 @@ function Income() {
         );
         return {
           month: `${year}-${month}`,
-          income: monthData ? monthData.Income : 0, // Nếu không có dữ liệu, đặt thu nhập là 0
+          income: monthData ? monthData.Income : 0, 
         };
       });
 
-      // Lưu dữ liệu cho biểu đồ và tạo danh sách năm có sẵn
+      
       setIncomeData(filteredData);
       setAvailableYears([...new Set(data.map(item => item.Year))]);
     } catch (error) {
@@ -42,12 +42,12 @@ function Income() {
     }
   };
 
-  // Khi thay đổi năm được chọn, cập nhật dữ liệu biểu đồ
+  
   useEffect(() => {
     fetchIncomeData(selectedYear);
   }, [selectedYear]);
 
-  // Xử lý thay đổi năm trong select
+  
   const handleYearChange = (year) => {
     setSelectedYear(year);
   };

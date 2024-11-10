@@ -1,44 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table, Modal, Form, Input, message } from "antd"; // Import thêm message
+import { Button, Table, Modal, Form, Input, message } from "antd"; 
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 function Certificate() {
-  const [dataSource, setDataSource] = useState([]); // State lưu trữ danh sách chứng chỉ
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal để thêm chứng chỉ
+  const [dataSource, setDataSource] = useState([]); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [form] = Form.useForm();
   const user = useSelector((state) => state.user);
-  const { koiId } = useParams(); // Lấy id của cá koi từ URL
+  const { koiId } = useParams(); 
 
-  // Hàm để tải danh sách chứng chỉ của một cá koi
+  
   async function listCertificates() {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/certificates/${koiId}/fish-certificate`,
+        `http://14.225.210.143:8080/api/certificates/${koiId}/fish-certificate`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setDataSource(response.data); // Cập nhật danh sách chứng chỉ
+      setDataSource(response.data); 
     } catch (error) {
       console.error("Error fetching certificates list:", error);
     }
   }
 
-  // Hàm để thêm một chứng chỉ mới
+  
   async function addCertificate(values) {
     if (!values.image) {
       console.error("Image URL is required.");
-      return; // Dừng lại nếu image bị trống
+      return; 
     }
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/certificates/${koiId}/add-certificate`,
-        { image: values.image }, // Đảm bảo image được truyền đúng
+        `http://14.225.210.143:8080/api/certificates/${koiId}/add-certificate`,
+        { image: values.image }, 
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -46,57 +46,57 @@ function Certificate() {
           },
         }
       );
-      setDataSource((prevData) => [...prevData, response.data]); // Cập nhật danh sách chứng chỉ
+      setDataSource((prevData) => [...prevData, response.data]); 
       message.success("Added new certificate successfully");
     } catch (error) {
       console.error("Error adding certificate:", error.response || error);
       if (error.response) {
-        console.error("Response data:", error.response.data); // Xem chi tiết lỗi từ API
+        console.error("Response data:", error.response.data); 
       }
     }
   }
 
-  // Hàm để xóa một chứng chỉ
+  
   async function deleteCertificate(id) {
     try {
-      await axios.delete(`http://localhost:8080/api/certificates/${id}`, {
+      await axios.delete(`http://14.225.210.143:8080/api/certificates/${id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      // Cập nhật lại danh sách sau khi xóa
+      
       setDataSource((prevData) =>
         prevData.filter((certificate) => certificate.certificateID !== id)
       );
-      message.success("Deleted certificate successfully"); // Hiển thị thông báo khi xóa thành công
+      message.success("Deleted certificate successfully"); 
     } catch (error) {
       console.error("Error deleting certificate:", error);
       message.error("Failed to delete certificate");
     }
   }
 
-  // Gọi listCertificates khi component được mount
+  
   useEffect(() => {
     listCertificates();
-  }, []); // Chỉ gọi một lần khi component mount
+  }, []); 
 
-  // Xử lý khi nhấn nút "Add New Certificate"
+  
   const handleSubmit = (values) => {
-    console.log("Image URL: ", values.image); // Kiểm tra xem giá trị image có tồn tại không
+    console.log("Image URL: ", values.image); 
     addCertificate(values);
   };
 
-  // Hiển thị modal thêm chứng chỉ
+  
   const showAddCertificateModal = () => {
     setIsModalOpen(true);
   };
 
-  // Đóng modal
+  
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  // Các cột của bảng chứng chỉ
+  
   const columns = [
     {
       title: "ID",
@@ -135,7 +135,7 @@ function Certificate() {
       </Button>
       <Table dataSource={dataSource} columns={columns} rowKey="certificateID" />
 
-      {/* Modal thêm chứng chỉ */}
+      
       <Modal
         title="Add New Certificate"
         open={isModalOpen}

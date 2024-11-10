@@ -19,10 +19,10 @@ function ConsignmentManagement() {
     const fetchConsignment = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/consignments/list-consignments",
+          "http://14.225.210.143:8080/api/consignments/list-consignments",
           {
             headers: {
-              Authorization: `Bearer ${user.token}`, // Gửi token trong header
+              Authorization: `Bearer ${user.token}`, 
             },
           }
         );
@@ -40,7 +40,7 @@ function ConsignmentManagement() {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/consignments/${id}`,
+        `http://14.225.210.143:8080/api/consignments/${id}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -61,7 +61,7 @@ function ConsignmentManagement() {
   };
 
   const handleUpdate = (consignment) => {
-    setCurrentConsignment(consignment); // Lưu thông tin ký gửi hiện tại
+    setCurrentConsignment(consignment); 
     form.setFieldsValue({
       userName: consignment.userName,
       fishName: consignment.fishName,
@@ -80,7 +80,7 @@ function ConsignmentManagement() {
     try {
       const updatedValues = form.getFieldsValue();
       const response = await axios.put(
-        `http://localhost:8080/api/consignments/${currentConsignment.id}/update`, // Sử dụng currentConsignment.id
+        `http://14.225.210.143:8080/api/consignments/${currentConsignment.id}/update`, 
         updatedValues,
         {
           headers: {
@@ -92,7 +92,7 @@ function ConsignmentManagement() {
         setConsignments((prevConsignments) =>
           prevConsignments.map((item) =>
             item.id === currentConsignment.id
-              ? { ...item, ...updatedValues } // Cập nhật thông tin ký gửi trong danh sách
+              ? { ...item, ...updatedValues } 
               : item
           )
         );

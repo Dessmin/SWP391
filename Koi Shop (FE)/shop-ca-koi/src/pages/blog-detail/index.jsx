@@ -14,7 +14,7 @@ function BlogPage() {
     try {
       const response = await api.get(`posting/${id}/get-posting`, {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
       setBlog(response.data);
@@ -27,9 +27,9 @@ function BlogPage() {
     fetchBlogById();
   }, [id]);
 
-  // Kiểm tra xem blog có tồn tại không trước khi render
+  
   if (!blog) {
-    return <div>Đang tải dữ liệu...</div>; // Hoặc có thể hiển thị một spinner/loading indicator
+    return <div>Đang tải dữ liệu...</div>; 
   }
 
   return (

@@ -9,16 +9,16 @@ function ChangePassword() {
 
   const handleChange = async (values) => {
     try {
-      const oldPassword = values.oldPassword; // Lấy giá trị của oldPassword từ form
-      const newPassword = { password: values.password }; // Tạo object chứa mật khẩu mới
+      const oldPassword = values.oldPassword; 
+      const newPassword = { password: values.password }; 
 
-      // Gọi API với oldPassword dưới dạng query parameter
+      
       const response = await api.put(
         `user/reset-password?oldPassword=${oldPassword}`,
         newPassword,
         {
           headers: {
-            Authorization: `Bearer ${user.token}`, // Gửi token trong header
+            Authorization: `Bearer ${user.token}`, 
           },
         }
       );

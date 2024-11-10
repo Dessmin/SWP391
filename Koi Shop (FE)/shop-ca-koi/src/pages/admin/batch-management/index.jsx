@@ -17,14 +17,14 @@ import { useSelector } from "react-redux";
 import apiKoi from "../../../config/koi-api";
 
 function Batch() {
-  const [dataSource, setDataSource] = useState([]); // Store batch list
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
-  const [selectedBatch, setSelectedBatch] = useState(null); // Store batch for editing
+  const [dataSource, setDataSource] = useState([]); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedBatch, setSelectedBatch] = useState(null); 
   const [form] = Form.useForm();
   const user = useSelector((state) => state.user);
-  const [breeds, setBreeds] = useState([]); // State để lưu danh sách breed
+  const [breeds, setBreeds] = useState([]); 
 
-  // Function to open notifications
+  
   const openNotificationWithIcon = (type, message, description) => {
     notification[type]({
       message: message,
@@ -32,11 +32,11 @@ function Batch() {
     });
   };
 
-  // Fetch batch list
+  
   async function loadBatchList() {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/batches/getbatches",
+        "http://14.225.210.143:8080/api/batches/getbatches",
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -61,48 +61,48 @@ function Batch() {
 
   const fetchBreeds = async () => {
     try {
-      const response = await apiKoi.get(
-        "http://localhost:8080/api/breeds/list-breedName",
+      const response = await axios.get(
+        "http://14.225.210.143:8080/api/breeds/list-breedName",
         {
-          // Giả sử API lấy danh sách breed là /breeds
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setBreeds(response.data); // Giả sử response.data là mảng danh sách breed
+      setBreeds(response.data); 
     } catch (e) {
       console.log(e);
     }
   };
 
-  // Handle creating/updating batch
+  
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
       console.log("Form values before processing:", values);
 
       const batchData = {
-        breed: values.breed, // Đảm bảo breed không undefined
-        description: values.description, // Đảm bảo description không undefined
-        image: values.image, // Đảm bảo image không undefined
-        quantity: values.quantity || 0, // Nếu quantity không có, đặt mặc định là 0
-        price: values.price || 0, // Nếu price không có, đặt mặc định là 0
-        isSale: values.isSale || false, // Nếu isSale không có, đặt mặc định là false
+        breed: values.breed, 
+        description: values.description, 
+        image: values.image, 
+        quantity: values.quantity || 0, 
+        price: values.price || 0, 
+        isSale: values.isSale || false, 
       };
 
       console.log("Processed batch data before submitting:", batchData);
 
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Token để xác thực
+          Authorization: `Bearer ${user.token}`, 
         },
       };
 
       if (selectedBatch) {
-        // Gọi API PUT khi cập nhật batch
+        
         await axios.put(
-          `http://localhost:8080/api/batches/${selectedBatch.id}/update`,
+          `http://14.225.210.143:8080/api/batches/${selectedBatch.id}/update`,
           batchData,
           config
         );
@@ -112,9 +112,9 @@ function Batch() {
           "Batch has been successfully updated."
         );
       } else {
-        // Gọi API POST khi tạo batch mới
+        
         await axios.post(
-          "http://localhost:8080/api/batches/create-batch",
+          "http://14.225.210.143:8080/api/batches/create-batch",
           batchData,
           config
         );
@@ -125,10 +125,10 @@ function Batch() {
         );
       }
 
-      loadBatchList(); // Tải lại danh sách batch sau khi thêm/cập nhật
-      setIsModalOpen(false); // Đóng modal
-      form.resetFields(); // Reset form
-      setSelectedBatch(null); // Reset batch đã chọn
+      loadBatchList(); 
+      setIsModalOpen(false); 
+      form.resetFields(); 
+      setSelectedBatch(null); 
     } catch (error) {
       openNotificationWithIcon(
         "error",
@@ -139,12 +139,12 @@ function Batch() {
     }
   };
 
-  // Handle deleting batch
+  
   const deleteBatch = async (id) => {
-    console.log("Batch ID to delete:", id); // Kiểm tra giá trị id
+    console.log("Batch ID to delete:", id); 
     try {
       await axios.put(
-        `http://localhost:8080/api/batches/${id}/delete`,
+        `http://14.225.210.143:8080/api/batches/${id}/delete`,
         {},
         {
           headers: {
@@ -154,7 +154,7 @@ function Batch() {
       );
       setDataSource((prevData) =>
         prevData.map(
-          (batch) => (batch.id === id ? { ...batch, deleted: true } : batch) // Đánh dấu batch là đã xóa
+          (batch) => (batch.id === id ? { ...batch, deleted: true } : batch) 
         )
       );
       message.success("Xóa lô cá thành công!");
@@ -164,9 +164,9 @@ function Batch() {
     }
   };
 
-  // Open modal for creating or editing batch
+  
   const openModal = (batch = null) => {
-    setSelectedBatch(batch); // Lưu lại batch hiện tại
+    setSelectedBatch(batch); 
     if (batch) {
       form.setFieldsValue({
         breed: batch.breed,
@@ -176,17 +176,17 @@ function Batch() {
         price: batch.price,
       });
     } else {
-      form.resetFields(); // Reset nếu tạo mới
+      form.resetFields(); 
     }
     setIsModalOpen(true);
   };
 
-  // Hàm để cập nhật trạng thái bán
+  
   const handleIsForSaleChange = async (id, currentStatus) => {
     try {
-      // Gửi yêu cầu cập nhật trạng thái isForSale
+      
       await axios.put(
-        `http://localhost:8080/api/batches/${id}/update-isSale`,
+        `http://14.225.210.143:8080/api/batches/${id}/update-isSale`,
         {},
         {
           headers: {
@@ -195,7 +195,7 @@ function Batch() {
         }
       );
 
-      // Cập nhật trạng thái ngay lập tức trong dataSource
+      
       setDataSource((prevBatch) =>
         prevBatch.map((batch) =>
           batch.id === id ? { ...batch, forSale: !currentStatus } : batch
@@ -258,7 +258,7 @@ function Batch() {
         <div>
           <Button
             type="primary"
-            onClick={() => openModal(record)} // Mở modal với dữ liệu batch
+            onClick={() => openModal(record)} 
             style={{ marginRight: 8 }}
           >
             Update

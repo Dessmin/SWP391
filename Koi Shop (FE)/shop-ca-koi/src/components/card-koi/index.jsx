@@ -18,9 +18,9 @@ function CardKoi({ koi }) {
       image,
       quantity: 1,
       price,
-      type: "KoiFish", // Đánh dấu đây là sản phẩm batch, vì bạn có 2 loại sản phẩm: batch và koiFish
+      type: "KoiFish", 
     };
-    addToCart(product); // Thêm sản phẩm vào giỏ hàng
+    addToCart(product); 
   };
   const { id, fishName, breed, origin, size, price, image } = koi;
 
@@ -44,7 +44,7 @@ function CardKoi({ koi }) {
       </div>
       <Button onClick={() => navigate("/detailKoi/"+id)}>Chi tiết</Button>
       <Button 
-        onClick={handleAddToCart} // Gọi hàm thêm sản phẩm vào giỏ hàng
+        onClick={handleAddToCart} 
         style={{ width: "100%", height: "50px" }}
         type="primary"
       >

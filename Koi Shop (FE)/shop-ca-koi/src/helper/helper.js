@@ -16,9 +16,9 @@ export const fetchKoiFishById = async ( koiFishId, user) => {
         
         const response = await apiKoi.get(`koiFish/${koiFishId}`, {
             headers: {
-                Authorization: `Bearer ${user.token}`, // Gửi token trong header
+                Authorization: `Bearer ${user.token}`, 
             },
-        }); // Thay URL này bằng API của bạn
+        }); 
         return response.data;
     } catch (error) {
         console.error('Failed to fetch KoiFish:', error);
