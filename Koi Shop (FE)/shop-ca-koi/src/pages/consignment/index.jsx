@@ -19,7 +19,7 @@ function Consignment() {
       totalAmount: consignment.shopPrice,
       type: "Consignment",
       orderDetails: [
-        // Chuyển sang mảng
+        
         {
           productId: consignment.koiFishId,
           productType: "KoiFish", 

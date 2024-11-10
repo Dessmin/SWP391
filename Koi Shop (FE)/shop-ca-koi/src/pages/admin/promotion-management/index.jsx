@@ -65,7 +65,7 @@ function Promotion() {
           config 
         );
       } else {
-        // Thêm mới promotion
+        
         await axios.post(
           "http://14.225.210.143:8080/api/promotions/add-promotion",
           promotionData,

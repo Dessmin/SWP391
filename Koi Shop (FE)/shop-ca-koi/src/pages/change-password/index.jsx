@@ -12,7 +12,7 @@ function ChangePassword() {
       const oldPassword = values.oldPassword; 
       const newPassword = { password: values.password }; 
 
-      // Gọi API với oldPassword dưới dạng query parameter
+      
       const response = await api.put(
         `user/reset-password?oldPassword=${oldPassword}`,
         newPassword,

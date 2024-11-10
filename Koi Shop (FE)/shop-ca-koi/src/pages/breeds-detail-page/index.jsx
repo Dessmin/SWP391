@@ -32,7 +32,7 @@ function BreedDetail() {
     fetchBreedDetails();
   }, [breedName, user.token]);
 
-  // Mở và đóng modal chỉnh sửa
+  
   const handleEditModalOpen = () => {
     setIsEditModalOpen(true);
     form.setFieldsValue(breed); 
@@ -42,7 +42,7 @@ function BreedDetail() {
     setIsEditModalOpen(false);
   };
 
-  // Xử lý gửi form để cập nhật thông tin breed
+  
   const handleUpdate = async (values) => {
     try {
       await axios.put(

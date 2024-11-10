@@ -102,7 +102,7 @@ function Breed() {
       key: "actions",
       render: (text, record) => (
         <div>
-          {/* Nút chi tiết */}
+          
           <Button
             type="primary"
             onClick={() => {
@@ -113,7 +113,7 @@ function Breed() {
           >
             Detail
           </Button>
-          {/* Nút xóa */}
+          
           <Button
             type="primary"
             danger
@@ -132,7 +132,7 @@ function Breed() {
     setIsModalOpen(true);
   };
 
-  // Đóng modal
+  
   const handleCancel = () => {
     setIsModalOpen(false);
     setIsDetailModalOpen(false); 
@@ -184,7 +184,7 @@ function Breed() {
             </Form.Item>
           </Form>
         </Modal>
-        {/* Modal chi tiết breed */}
+        
         <Modal
           title={<div style={{ textAlign: "center" }}>Breed Details</div>}
           open={isDetailModalOpen}

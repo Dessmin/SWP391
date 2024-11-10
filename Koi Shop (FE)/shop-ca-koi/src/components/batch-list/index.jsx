@@ -6,7 +6,7 @@ import './index.scss'
 import { Button } from "antd";
 function BatchList() {
   const [batches, setbatches] = useState([]);
-  const [page, setPage] = useState(0); // Số trang hiện tại
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
   const user = useSelector((state) => state.user);

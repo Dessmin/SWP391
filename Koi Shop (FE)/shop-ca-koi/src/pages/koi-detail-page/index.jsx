@@ -24,7 +24,7 @@ function KoiDetail() {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  // Fetch Koi details when component loads
+  
   useEffect(() => {
     async function fetchKoiDetails() {
       try {

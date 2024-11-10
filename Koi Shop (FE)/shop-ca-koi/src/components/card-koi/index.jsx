@@ -44,7 +44,7 @@ function CardKoi({ koi }) {
       </div>
       <Button onClick={() => navigate("/detailKoi/"+id)}>Chi tiết</Button>
       <Button 
-        onClick={handleAddToCart} // Gọi hàm thêm sản phẩm vào giỏ hàng
+        onClick={handleAddToCart} 
         style={{ width: "100%", height: "50px" }}
         type="primary"
       >

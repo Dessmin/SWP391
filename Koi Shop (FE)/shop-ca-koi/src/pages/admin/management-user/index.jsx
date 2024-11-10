@@ -10,7 +10,7 @@ function User() {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate(); 
 
-  // Fetch user list
+  
   async function loadUserList() {
     try {
       const response = await axios.get(
@@ -21,7 +21,7 @@ function User() {
           },
         }
       );
-      // Update the state with the data from the server
+      
       setDataSource(response.data);
     } catch (error) {
       console.error("Error fetching user list:", error);

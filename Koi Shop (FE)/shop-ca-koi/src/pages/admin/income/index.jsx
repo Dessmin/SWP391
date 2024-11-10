@@ -12,17 +12,17 @@ function Income() {
   const [availableYears, setAvailableYears] = useState([selectedYear]);
   const user = useSelector((state) => state.user);
 
-  // Hàm lấy dữ liệu từ API
+  
   const fetchIncomeData = async (year) => {
     try {
       const response = await axios.get("http://14.225.210.143:8080/api/dashboard/income", {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Gửi token trong header
+          Authorization: `Bearer ${user.token}`, 
         },
       });
       const data = response.data.incomeMonthly;
 
-      // Lọc dữ liệu theo năm và định dạng 12 tháng đầy đủ
+      
       const filteredData = Array.from({ length: 12 }, (_, i) => {
         const month = (i + 1).toString().padStart(2, '0');
         const monthData = data.find(

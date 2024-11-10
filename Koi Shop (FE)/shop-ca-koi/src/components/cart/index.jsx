@@ -44,7 +44,7 @@ const Cart = () => {
     const discountFromVoucher = (subtotal * discountPercent) / 100;
     const discountFromPoints = points; 
     const total = subtotal - discountFromVoucher - discountFromPoints;
-    setTotalAmount(total > 0 ? total : 0); // Đảm bảo tổng không âm
+    setTotalAmount(total > 0 ? total : 0); 
   };
 
 

@@ -64,7 +64,7 @@ function Batch() {
       const response = await axios.get(
         "http://14.225.210.143:8080/api/breeds/list-breedName",
         {
-          // Giả sử API lấy danh sách breed là /breeds
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
@@ -95,12 +95,12 @@ function Batch() {
 
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Token để xác thực
+          Authorization: `Bearer ${user.token}`, 
         },
       };
 
       if (selectedBatch) {
-        // Gọi API PUT khi cập nhật batch
+        
         await axios.put(
           `http://14.225.210.143:8080/api/batches/${selectedBatch.id}/update`,
           batchData,
@@ -112,7 +112,7 @@ function Batch() {
           "Batch has been successfully updated."
         );
       } else {
-        // Gọi API POST khi tạo batch mới
+        
         await axios.post(
           "http://14.225.210.143:8080/api/batches/create-batch",
           batchData,
@@ -139,7 +139,7 @@ function Batch() {
     }
   };
 
-  // Handle deleting batch
+  
   const deleteBatch = async (id) => {
     console.log("Batch ID to delete:", id); 
     try {
@@ -258,7 +258,7 @@ function Batch() {
         <div>
           <Button
             type="primary"
-            onClick={() => openModal(record)} // Mở modal với dữ liệu batch
+            onClick={() => openModal(record)} 
             style={{ marginRight: 8 }}
           >
             Update

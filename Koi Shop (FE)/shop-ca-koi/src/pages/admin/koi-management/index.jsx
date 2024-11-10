@@ -72,7 +72,7 @@ function Koi() {
     try {
       await axios.put(
         `http://14.225.210.143:8080/api/koi-fishes/${id}/delete`,
-        {}, // body rỗng vì chỉ cập nhật trạng thái
+        {}, 
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -82,7 +82,7 @@ function Koi() {
 
       setDatasource((prevData) =>
         prevData.map(
-          (koi) => (koi.id === id ? { ...koi, deleted: true } : koi) // Đánh dấu cá là đã xóa
+          (koi) => (koi.id === id ? { ...koi, deleted: true } : koi) 
         )
       );
       message.success("Xóa cá Koi thành công!");
@@ -191,42 +191,7 @@ function Koi() {
     },
   ];
 
-  // const [previewOpen, setPreviewOpen] = useState(false);
-  // const [previewImage, setPreviewImage] = useState("");
-  // const [fileList, setFileList] = useState([]);
-  // const getBase64 = (file) =>
-  //   new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // const handlePreview = async (file) => {
-  //   if (!file.url && !file.preview) {
-  //     file.preview = await getBase64(file.originFileObj);
-  //   }
-  //   setPreviewImage(file.url || file.preview);
-  //   setPreviewOpen(true);
-  // };
-  // const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-  // const uploadButton = (
-  //   <button
-  //     style={{
-  //       border: 0,
-  //       background: "none",
-  //     }}
-  //     type="button"
-  //   >
-  //     <PlusOutlined />
-  //     <div
-  //       style={{
-  //         marginTop: 8,
-  //       }}
-  //     >
-  //       Upload
-  //     </div>
-  //   </button>
-  // );
+  
 
   const handleshowModal = () => {
     setIsModalOpen(true);
@@ -262,7 +227,7 @@ function Koi() {
       const response = await apiKoi.get(
         "http://14.225.210.143:8080/api/breeds/list-breedName",
         {
-          // Giả sử API lấy danh sách breed là /breeds
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
@@ -279,7 +244,7 @@ function Koi() {
       const response = await axios.get(
         "http://14.225.210.143:8080/api/origin/list-originName",
         {
-          // Giả sử API lấy danh sách breed là /origin
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },

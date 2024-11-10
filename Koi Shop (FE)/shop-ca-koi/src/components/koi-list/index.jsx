@@ -75,7 +75,7 @@ function KoiList() {
       const response = await apiKoi.get(
         "http://14.225.210.143:8080/api/breeds/list-breedName",
         {
-          // Giả sử API lấy danh sách breed là /breeds
+          
           headers: {
             Authorization: `Bearer ${user.token}`,
           },

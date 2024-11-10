@@ -8,7 +8,7 @@ function RatingFeedback() {
   const [dataSource, setDataSource] = useState([]);
   const user = useSelector((state) => state.user);
 
-  // Hàm tải danh sách Rating_Feedback
+  
   async function loadRatingFeedbackList() {
     try {
       const response = await axios.get(

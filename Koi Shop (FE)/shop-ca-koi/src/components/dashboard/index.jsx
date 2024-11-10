@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  BarChartOutlined,
-  ShoppingCartOutlined,
-  
-} from "@ant-design/icons";
+import { BarChartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,7 +37,7 @@ const items = [
   ]),
   getItem("Consignment", "3", <FontAwesomeIcon icon={faHandshake} />),
   getItem("Order", "4", <ShoppingCartOutlined />),
-  
+
   getItem("Promotion", "5", <FontAwesomeIcon icon={faPercent} />),
   getItem("Statistic", "6", <BarChartOutlined />),
   getItem("Icome", "7", <FontAwesomeIcon icon={faMoneyBillWave} />),
@@ -51,25 +47,25 @@ const items = [
 
 const Dashboard = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedKey, setSelectedKey] = useState("1"); 
+  const [selectedKey, setSelectedKey] = useState("1");
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const onMenuClick = (item) => {
-    setSelectedKey(item.key); 
+    setSelectedKey(item.key);
     if (item.key === "1") {
       navigate("/home/dashboard/user");
     }
     if (item.key === "2-1") {
-      navigate("/home/dashboard/koi/breed"); 
+      navigate("/home/dashboard/koi/breed");
     }
     if (item.key === "2-2") {
-      navigate("/home/dashboard/koi/origin"); 
+      navigate("/home/dashboard/koi/origin");
     }
     if (item.key === "2-3") {
-      navigate("/home/dashboard/koi"); 
+      navigate("/home/dashboard/koi");
     }
     if (item.key === "3") {
       navigate("/home/dashboard/consignment");
@@ -98,24 +94,44 @@ const Dashboard = ({ children }) => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout
+      style={{
+        minHeight: "100vh",
+      }}
+    >
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="demo-logo-vertical" />
+        <div style={{ display: "flex", alignItems: "center", padding: "10px" }}>
+          <Link to="/home">
+            <img
+              src="https://gudlogo.com/wp-content/uploads/2019/05/logo-ca-Koi-37.png"
+              alt="Logo cá Koi"
+              width={70}
+              height={70}
+            />
+          </Link>
+
+          <span style={{ color: "white", fontSize: "20px" }}>Koi Shop</span>
+        </div>
+
         <Menu
           onClick={onMenuClick}
           theme="dark"
           defaultSelectedKeys={["1"]}
-          selectedKeys={[selectedKey]} 
+          selectedKeys={[selectedKey]}
           mode="inline"
           items={items}
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header
+          style={{ padding: 0, backgroundColor: "white", fontSize: "25px" }}
+        >
+          <marquee color="white">Welcome Admin!</marquee>
+        </Header>
         {children}
         <div>
           <Link to="/home">

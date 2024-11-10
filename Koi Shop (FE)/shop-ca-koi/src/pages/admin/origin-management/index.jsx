@@ -11,7 +11,7 @@ function Origin() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useSelector((state) => state.user);
 
-  // Hàm để thêm một origin mới
+  
   async function fetchOrigin(data) {
     try {
       const response = await axios.post(
@@ -23,7 +23,7 @@ function Origin() {
           },
         }
       );
-      // Cập nhật lại dataSource với origin mới
+      
       setDatasource([...dataSource, response.data]);
       loadOriginList(); 
     } catch (error) {
@@ -31,7 +31,7 @@ function Origin() {
     }
   }
 
-  // Hàm để tải danh sách các origin
+  
   async function loadOriginList() {
     try {
       const response = await axios.get(
@@ -49,7 +49,7 @@ function Origin() {
     }
   }
 
-  // Hàm để xóa một origin
+  
   async function deleteOrigin(id) {
     try {
       await axios.delete(`http://14.225.210.143:8080/api/origin/${id}`, {
@@ -105,7 +105,7 @@ function Origin() {
       key: "actions",
       render: (text, record) => (
         <div>
-          {/* Nút xóa */}
+          
           <Button
             type="primary"
             danger
@@ -143,7 +143,7 @@ function Origin() {
           </Button>
         </div>
         <Table dataSource={dataSource} columns={columns} />{" "}
-        {/* Hiển thị danh sách origin */}
+        
         <Modal
           title={<div style={{ textAlign: "center" }}>Add New Origin</div>}
           open={isModalOpen}

@@ -27,7 +27,7 @@ function AddConsignment() {
       toast.success("Add successfully!");
 
 
-      // Điều hướng đến đường dẫn với ID
+      
       navigate(`/confirm/${response.data}`);
     } catch (error) {
       toast.error(error.response.data);
@@ -84,7 +84,7 @@ function AddConsignment() {
               span: 24,
             }}
           >
-            {/* Fish Name */}
+            
             <Form.Item
               label="Fish Name"
               name="fishName"
@@ -99,7 +99,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Description */}
+            
             <Form.Item
               label="Description"
               name="description"
@@ -114,7 +114,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Gender */}
+            
             <Form.Item
               label="Gender"
               name="gender"
@@ -132,7 +132,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Birth Date */}
+            
             <Form.Item
               label="Birth Date"
               name="birthDate"
@@ -147,7 +147,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Diet */}
+            
             <Form.Item
               label="Diet"
               name="diet"
@@ -162,7 +162,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Size */}
+            
             <Form.Item
               label="Size"
               name="size"
@@ -177,7 +177,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Breed */}
+            
             <Form.Item
               label="Breed"
               name="breed"
@@ -193,7 +193,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Origin */}
+            
             <Form.Item
               label="Origin"
               name="origin"
@@ -209,7 +209,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Food */}
+            
             <Form.Item
               label="Food"
               name="food"
@@ -224,7 +224,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Screening Rate */}
+            
             <Form.Item
               label="Screening Rate"
               name="screeningRate"
@@ -239,7 +239,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Image URL */}
+            
             <Form.Item
               label="Image URL"
               name="image"
@@ -254,7 +254,7 @@ function AddConsignment() {
             </Form.Item>
 
 
-            {/* Submit Button */}
+            
             <Form.Item
               wrapperCol={{
                 offset: 8,

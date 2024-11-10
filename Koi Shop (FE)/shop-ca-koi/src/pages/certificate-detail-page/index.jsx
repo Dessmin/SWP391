@@ -28,7 +28,7 @@ function Certificate() {
     }
   }
 
-  // Hàm để thêm một chứng chỉ mới
+  
   async function addCertificate(values) {
     if (!values.image) {
       console.error("Image URL is required.");
@@ -135,7 +135,7 @@ function Certificate() {
       </Button>
       <Table dataSource={dataSource} columns={columns} rowKey="certificateID" />
 
-      {/* Modal thêm chứng chỉ */}
+      
       <Modal
         title="Add New Certificate"
         open={isModalOpen}
