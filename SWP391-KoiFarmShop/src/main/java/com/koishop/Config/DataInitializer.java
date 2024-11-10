@@ -23,7 +23,7 @@ public class DataInitializer {
             if (userRepository.findFirstByRole(Role.Manager) == null) {
                 User manager = new User();
                 manager.setUserName("Quang Long");
-                manager.setPassword(passwordEncoder.encode("12345678")); // Set a secure password
+                manager.setPassword(passwordEncoder.encode("12345678"));
                 manager.setRole(Role.Manager);
                 manager.setEmail("quanglong281381@gmail.com");
                 manager.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
