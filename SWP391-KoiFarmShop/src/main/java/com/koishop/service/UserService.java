@@ -121,7 +121,6 @@ public class UserService implements UserDetailsService {
                     )
             );
 
-            // Lấy thông tin người dùng sau khi xác thực thành công
             User user = (User) authentication.getPrincipal();
             if (user.isDeleted()) throw new EntityNotFoundException("User not found!");
             UserResponse userResponse = modelMapper.map(user, UserResponse.class);
