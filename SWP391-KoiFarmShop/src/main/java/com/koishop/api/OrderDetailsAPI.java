@@ -1,6 +1,6 @@
 package com.koishop.api;
 
-import com.koishop.entity.OrderDetails;
+
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orderdetails_model.OrderDetailsResponse;
 import com.koishop.service.OrderDetailsService;
@@ -40,13 +40,6 @@ public class OrderDetailsAPI {
         return ResponseEntity.ok(response);
     }
 
-
-
-//    @PutMapping("/{orderId}/add-details")
-//    public ResponseEntity<List<OrderDetailsResponse>> addOrderDetails(@PathVariable Integer orderId, @RequestBody List<OrderDetailsRequest> orderDetailsRequests) {
-//        List<OrderDetailsResponse> addedOrderDetails = orderDetailService.addOrderDetails(orderId, orderDetailsRequests);
-//        return ResponseEntity.ok(addedOrderDetails);
-//    }
 
     @PutMapping("/{orderDetailID}")
     public ResponseEntity<OrderDetailsResponse> updateOrderDetail(@PathVariable int orderDetailID, @Valid @RequestBody OrderDetailsRequest orderDetailsRequest) {

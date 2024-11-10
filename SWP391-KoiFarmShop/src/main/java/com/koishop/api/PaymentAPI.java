@@ -1,6 +1,6 @@
 package com.koishop.api;
 
-import com.koishop.entity.Payment;
+
 import com.koishop.models.payment_model.PaymentResponse;
 import com.koishop.service.PaymentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,39 +37,6 @@ public class PaymentAPI {
         paymentService.deletePayment(paymentID);
         return ResponseEntity.noContent().build();
     }
-//    @GetMapping("/list-payments")
-//    public ResponseEntity getAllPayments() {
-//        List<PaymentResponse> response = paymentService.getAllPayments();
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @GetMapping("/list-user-payments")
-//    public ResponseEntity getPaymentByUser() {
-//        List<PaymentResponse> response = paymentService.getPaymentByUser();
-//        return ResponseEntity.ok(response);
-//    }
-
-
-
-
-
-//    // Create new payment
-//    @PostMapping("add-payment")
-//    public ResponseEntity createPayment(@RequestBody PaymentResponse paymentResponse) {
-//        PaymentResponse payment = paymentService.createPayment(paymentResponse);
-//        return ResponseEntity.ok(payment);
-//    }
-//
-//    // Update payment by ID
-//    @PutMapping("/{paymentID}")
-//    public ResponseEntity<Payment> updatePayment(@PathVariable int paymentID, @RequestBody Payment updatedPayment) {
-//        try {
-//            Payment payment = paymentService.updatePayment(paymentID, updatedPayment);
-//            return ResponseEntity.ok(payment);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
 
 }

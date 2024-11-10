@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://deploy-fe-kappa.vercel.app"})
 @SecurityRequirement(name = "api")
@@ -66,35 +66,12 @@ public class OrdersAPI {
         return ResponseEntity.ok("Success");
     }
 
-    @GetMapping("/vnpay-return")
-    public ResponseEntity<String> handleVnpayReturn(@RequestParam Map<String, String> params) throws Exception {
-        String responseCode = params.get("vnp_ResponseCode");
-        String txnRef = params.get("vnp_TxnRef");
-
-        try {
-            if ("00".equals(responseCode)) {
-                ordersService.updateOrderStatus(txnRef, "PAID");
-                return ResponseEntity.ok("Payment successful");
-            } else {
-                ordersService.updateOrderStatus(txnRef, "FAILED");
-                return ResponseEntity.status(400).body("Payment failed: Response Code " + responseCode);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error updating order status: " + e.getMessage());
-        }
-    }
 
     @PostMapping("add-order")
     public ResponseEntity createOrder(@Valid @RequestBody OrderRequest orderRequest) throws Exception {
         String vnPayURL = ordersService.createUrl(orderRequest);
         return ResponseEntity.ok(vnPayURL);
     }
-
-//    @PutMapping("/{orderID}/update")
-//    public ResponseEntity updateOrder(@PathVariable int orderID, @RequestBody OrderRequest orderRequest) {
-//        OrderResponse updatedOrder = ordersService.updateOrder(orderID, orderRequest);
-//        return ResponseEntity.ok(updatedOrder);
-//    }
 
 
     @PutMapping("/{orderId}/update-status")
@@ -108,8 +85,6 @@ public class OrdersAPI {
         ViewOrdersOnly updatedOrder = ordersService.updateOrderStatus(orderId, status);
         return ResponseEntity.ok(updatedOrder);
     }
-
-
 
 
     @PutMapping("/{orderID}/remove")
