@@ -88,19 +88,6 @@ public class ConsignmentRequestService {
         return requestDetails;
     }
 
-    public boolean updateConsignmentRequestStatus(int id) {
-        boolean isSuccess = false;
-        try {
-            ConsignmentRequest request = requestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
-            request.setStatus(!request.isStatus());
-            requestRepository.save(request);
-            isSuccess = true;
-        }catch (Exception e) {
-            throw new EntityNotFoundException("Not found");
-        }
-        return isSuccess;
-    }
-
     public void deleteConsignmentRequest(int id) {
         requestRepository.deleteById(id);
     }

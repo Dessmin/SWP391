@@ -20,9 +20,7 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner init() {
         return args -> {
-            // Check if a Manager role user already exists
             if (userRepository.findFirstByRole(Role.Manager) == null) {
-                // Create a new user with Manager role
                 User manager = new User();
                 manager.setUserName("Quang Long");
                 manager.setPassword(passwordEncoder.encode("12345678")); // Set a secure password

@@ -1,16 +1,13 @@
 package com.koishop.service;
 
-import com.koishop.entity.KoiFish;
 import com.koishop.entity.RatingsFeedbacks;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.ratingsFeedback_model.RFRequest;
 import com.koishop.models.ratingsFeedback_model.RFView;
-import com.koishop.repository.KoiFishRepository;
 import com.koishop.repository.OrdersRepository;
 import com.koishop.repository.RatingsFeedbacksRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

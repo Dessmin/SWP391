@@ -59,7 +59,6 @@ public class UserService implements UserDetailsService {
     }
 
     public CustomerRequest registerUser(RegisterRequest registerRequest) {
-        // map regis -> user
         User user = modelMapper.map(registerRequest, User.class);
         try {
             user.setPassword(passwordEncoder.encode(generateRandomPassword()));
@@ -86,13 +85,9 @@ public class UserService implements UserDetailsService {
             } else if (e.getMessage().contains(user.getEmail())) {
                 throw new DuplicateEntity("Duplicate email!");
             } else {
-                throw new RuntimeException("Error during registration process", e); // Xử lý ngoại lệ chung nếu có lỗi khác
+                throw new RuntimeException("Error during registration process", e);
             }
         }
-    }
-
-    public Optional<User> findByUserId(long id) {
-        return userRepository.findById(id);
     }
 
     public AdminViewUser updateUser(long id, AdminViewUser adminViewUser) {
@@ -119,11 +114,10 @@ public class UserService implements UserDetailsService {
 
     public UserResponse login(LoginRequest loginRequest) {
         try {
-            // Truyền mật khẩu thô từ loginRequest
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
-                            loginRequest.getPassword() // Mật khẩu thô, không mã hóa
+                            loginRequest.getPassword()
                     )
             );
 

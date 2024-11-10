@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -95,5 +96,10 @@ public class KoiFishAPI {
     public ResponseEntity<Void> deleteKoiFish(@PathVariable(value = "koiId") Integer koiId) {
         koiFishService.deleteKoiFish(koiId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{image}/upload_image")
+    public byte uploadImage(@PathVariable String image) {
+        return koiFishService.convertImage(image);
     }
 }
