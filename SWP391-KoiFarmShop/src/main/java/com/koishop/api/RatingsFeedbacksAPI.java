@@ -1,18 +1,19 @@
 package com.koishop.api;
 
-import com.koishop.entity.RatingsFeedbacks;
+
 import com.koishop.models.ratingsFeedback_model.RFRequest;
 import com.koishop.models.ratingsFeedback_model.RFView;
 import com.koishop.service.RatingsFeedbacksService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = {"http://localhost:5173", "https://deploy-fe-kappa.vercel.app"})
 @SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/ratings-feedbacks")
@@ -36,11 +37,12 @@ public class RatingsFeedbacksAPI {
     }
 
     @PostMapping("add-ratingsfeedback")
-    public RFView createRatingFeedback(@RequestBody RFRequest ratingFeedback) {
+    public RFView createRatingFeedback(@Valid @RequestBody RFRequest ratingFeedback) {
         return ratingsFeedbacksService.createRatingFeedback(ratingFeedback);
     }
 
     @DeleteMapping("/{ratingID}")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity<Void> deleteRatingFeedback(@PathVariable Integer ratingID) {
         ratingsFeedbacksService.deleteRatingFeedback(ratingID);
         return ResponseEntity.noContent().build();

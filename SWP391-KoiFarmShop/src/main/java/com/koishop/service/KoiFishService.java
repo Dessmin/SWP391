@@ -27,8 +27,6 @@ public class KoiFishService {
     @Autowired
     @Lazy
     ModelMapper modelMapper;
-    @Autowired
-    UserService userService;
 
     public FishResponse getAllKoiFish(int page, int size) {
         List<FishForList> fishForLists = new ArrayList<>();
@@ -171,5 +169,9 @@ public class KoiFishService {
         KoiFish koiFish = koiFishRepository.findById(koiId)
                 .orElseThrow(() -> new RuntimeException("KoiFish not found for this id :: " + koiId));
         return koiFish.getIsForSale();
+    }
+
+    public byte convertImage(String image) {
+        return (byte) Integer.parseInt(image, 16);
     }
 }

@@ -6,11 +6,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = {"http://localhost:5173", "https://deploy-fe-kappa.vercel.app"})
 @SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/koi-fishes")
@@ -38,7 +40,8 @@ public class KoiFishAPI {
 
     // Cập nhật KoiFish theo ID
     @PutMapping("/{koiId}/update")
-    public ResponseEntity updateKoiFish(@PathVariable Integer koiId, @RequestBody ViewFish koiFishDetails) {
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity updateKoiFish(@PathVariable Integer koiId, @Valid @RequestBody ViewFish koiFishDetails) {
         ViewFish defaultFish = koiFishService.updateKoiFish(koiId, koiFishDetails);
         return ResponseEntity.ok(defaultFish);
     }
@@ -49,6 +52,7 @@ public class KoiFishAPI {
     }
 
     @PutMapping("/{koiId}/updateIsForSale")
+    @PreAuthorize("hasAuthority('Manager')")
     public boolean updateIsForSale(@PathVariable Integer koiId) {
         return koiFishService.updateIsForSale(koiId);
     }
@@ -81,14 +85,21 @@ public class KoiFishAPI {
     }
 
     @GetMapping("listfish")
+    @PreAuthorize("hasAuthority('Manager')")
     public List<ListFishForManager> ListFish() {return koiFishService.ListFish();}
 
     @GetMapping("/{koiId}/fishName")
     public String getFishName(@PathVariable Integer koiId) {return koiFishService.getFishName(koiId);}
 
     @PutMapping("/{koiId}/delete")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity<Void> deleteKoiFish(@PathVariable(value = "koiId") Integer koiId) {
         koiFishService.deleteKoiFish(koiId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{image}/upload_image")
+    public byte uploadImage(@PathVariable String image) {
+        return koiFishService.convertImage(image);
     }
 }

@@ -26,13 +26,10 @@ public class EmailService {
             context.setVariable("name", emailDetail.getUser().getUsername());
             context.setVariable("button", "Go to KoiShop");
             context.setVariable("link", emailDetail.getLink());
-
             String template = templateEngine.process("welcome", context);
-
             // Creating a simple mail message
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-
             // Setting up necessary details
             mimeMessageHelper.setFrom("admin@gmail.com");
             mimeMessageHelper.setTo(emailDetail.getUser().getEmail());

@@ -1,5 +1,6 @@
 package com.koishop.service;
 
+import com.koishop.Config.EnvironmentConfig;
 import com.koishop.entity.Role;
 import com.koishop.entity.User;
 import com.koishop.exception.DuplicateEntity;
@@ -40,6 +41,8 @@ public class UserService implements UserDetailsService {
     TokenService tokenService;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    EnvironmentConfig environmentConfig;
 
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -56,7 +59,6 @@ public class UserService implements UserDetailsService {
     }
 
     public CustomerRequest registerUser(RegisterRequest registerRequest) {
-        // map regis -> user
         User user = modelMapper.map(registerRequest, User.class);
         try {
             user.setPassword(passwordEncoder.encode(generateRandomPassword()));
@@ -69,7 +71,12 @@ public class UserService implements UserDetailsService {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(savedUser);
             emailDetail.setSubject("Welcome to Koi Shop");
-            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user));
+
+            String baseUrl = environmentConfig.isProductionEnvironment()
+                    ? "https://deploy-fe-kappa.vercel.app"
+                    : "http://localhost:5173";
+
+            emailDetail.setLink(baseUrl + "/confirmResetPassword/?token=" + tokenService.generateToken(user));
             emailService.sentEmail(emailDetail);
             return modelMapper.map(savedUser, CustomerRequest.class);
         } catch (Exception e) {
@@ -78,13 +85,9 @@ public class UserService implements UserDetailsService {
             } else if (e.getMessage().contains(user.getEmail())) {
                 throw new DuplicateEntity("Duplicate email!");
             } else {
-                throw new RuntimeException("Error during registration process", e); // Xử lý ngoại lệ chung nếu có lỗi khác
+                throw new RuntimeException("Error during registration process", e);
             }
         }
-    }
-
-    public Optional<User> findByUserId(long id) {
-        return userRepository.findById(id);
     }
 
     public AdminViewUser updateUser(long id, AdminViewUser adminViewUser) {
@@ -111,11 +114,10 @@ public class UserService implements UserDetailsService {
 
     public UserResponse login(LoginRequest loginRequest) {
         try {
-            // Truyền mật khẩu thô từ loginRequest
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
-                            loginRequest.getPassword() // Mật khẩu thô, không mã hóa
+                            loginRequest.getPassword()
                     )
             );
 
@@ -162,7 +164,11 @@ public class UserService implements UserDetailsService {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setUser(user);
             emailDetail.setSubject("Password Reset Confirmation");
-            emailDetail.setLink("http://localhost:5173/confirmResetPassword/?token=" + tokenService.generateToken(user)); // Link tới trang của bạn
+            String baseUrl = environmentConfig.isProductionEnvironment()
+                    ? "https://deploy-fe-kappa.vercel.app"
+                    : "http://localhost:5173";
+
+            emailDetail.setLink(baseUrl + "/confirmResetPassword/?token=" + tokenService.generateToken(user));
             emailService.sendResetPasswordEmail(emailDetail);
         }
     }

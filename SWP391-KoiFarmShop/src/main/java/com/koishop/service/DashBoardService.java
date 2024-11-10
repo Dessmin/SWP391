@@ -25,8 +25,6 @@ public class DashBoardService {
     @Autowired
     private BreedsService breedsService;
     @Autowired
-    private OrdersService ordersService;
-    @Autowired
     private ConsignmentRequestRepository consignmentRequestRepository;
 
     public Map<String, Object> getDashboard(){

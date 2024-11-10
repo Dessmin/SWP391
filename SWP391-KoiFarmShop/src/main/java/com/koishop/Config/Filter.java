@@ -43,10 +43,7 @@ public class Filter extends OncePerRequestFilter {
     );
 
     public boolean checkIsPublicAPI(String uri) {
-        // uri: /api/register
-        // nếu gặp những cái api trong list ở trên => cho phép truy cập lun => true
         AntPathMatcher patchMatch = new AntPathMatcher();
-        // check token => false
         return AUTH_PERMISSION.stream().anyMatch(pattern -> patchMatch.match(pattern, uri));
     }
 
@@ -60,28 +57,21 @@ public class Filter extends OncePerRequestFilter {
         } else {
             String token = getToken(request);
             if (token == null) {
-                // ko được phép truy cập
                 resolver.resolveException(request, response, null, new AuthException("Empty token!"));
                 return;
             }
 
-            // => có token
-            // check xem token có đúng hay ko => lấy thông tin user từ token
             User user;
             try {
                 user = tokenService.getUserByToken(token);
             } catch (ExpiredJwtException e) {
-                // response token hết hạn
                 resolver.resolveException(request, response, null, new AuthException("Expired token!"));
                 return;
             } catch (MalformedJwtException malformedJwtException) {
-                // response token sai
                 resolver.resolveException(request, response, null, new AuthException("Invalid token!"));
                 return;
             }
-            // => token chuẩn
-            // => cho phép truy cập
-            // => lưu lại thông tin account
+
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     user,
                     token,
@@ -89,7 +79,6 @@ public class Filter extends OncePerRequestFilter {
             );
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            // token ok, cho vao`
             filterChain.doFilter(request, response);
         }
     }

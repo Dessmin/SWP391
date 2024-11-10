@@ -28,7 +28,6 @@ public class OrderDetailsService {
         List<OrderDetails> orderDetailsList = orderDetailsRepository.findAll();
         List<OrderDetailsResponse> orderDetailsResponseList = new ArrayList<>();
 
-        // Ánh xạ từ OrderDetails sang OrderDetailsResponse bằng vòng lặp for
         for (OrderDetails orderDetails : orderDetailsList) {
             if (orderDetails.getOrders().isDeleted()) {
                 throw new RuntimeException("Order with ID " + orderDetails.getOrders().getOrderID() + " has been deleted!");
@@ -43,7 +42,6 @@ public class OrderDetailsService {
 
 
     public List<OrderDetailsResponse> getOrderDetailsByOrder(Integer orderId) {
-        // Lấy danh sách OrderDetails theo orderId
         List<OrderDetails> orderDetailsList = orderDetailsRepository.findByOrders_OrderID(orderId);
         if (orderDetailsList.isEmpty()) {
             throw new EntityNotFoundException("No OrderDetails found for Order ID: " + orderId);
@@ -52,8 +50,6 @@ public class OrderDetailsService {
             throw new RuntimeException("Order with ID " + orderId + " has been deleted!");
         }
         List<OrderDetailsResponse> orderDetailsResponses = new ArrayList<>();
-
-        // Ánh xạ từ OrderDetails sang OrderDetailsResponse
         for (OrderDetails orderDetails : orderDetailsList) {
             OrderDetailsResponse response = modelMapper.map(orderDetails, OrderDetailsResponse.class);
 
@@ -69,7 +65,6 @@ public class OrderDetailsService {
     }
 
     public OrderDetailsResponse updateOrderDetail(int id, OrderDetailsRequest orderDetailsRequest) {
-        // Tìm OrderDetails theo id, nếu không tồn tại thì ném lỗi
         OrderDetails orderDetails = orderDetailsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order Detail not found"));
 
@@ -78,10 +73,7 @@ public class OrderDetailsService {
                     + orderDetails.getOrders().getOrderID() + " has been deleted.");
         }
 
-        // Ánh xạ từ OrderDetailsRequest vào thực thể orderDetails hiện tại
         modelMapper.map(orderDetailsRequest, orderDetails);
-
-        // Lưu lại thay đổi
         orderDetailsRepository.save(orderDetails);
 
         // Tạo OrderDetailsResponse để trả về

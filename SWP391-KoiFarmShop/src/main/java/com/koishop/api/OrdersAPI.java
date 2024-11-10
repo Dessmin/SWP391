@@ -6,15 +6,17 @@ import com.koishop.models.orders_model.OrderResponse;
 import com.koishop.models.orders_model.ViewOrdersOnly;
 import com.koishop.service.OrdersService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+
+@CrossOrigin(origins = {"http://localhost:5173", "https://deploy-fe-kappa.vercel.app"})
 @SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/orders")
@@ -32,6 +34,7 @@ public class OrdersAPI {
     }
 
     @GetMapping("list-all-orders")
+    @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
     public ResponseEntity getAllOrders() {
         List<OrderResponse> orders = ordersService.getAllOrders();
         return  ResponseEntity.ok(orders);
@@ -44,6 +47,7 @@ public class OrdersAPI {
     }
 
     @GetMapping("/list-orders/summary")
+    @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
     public ResponseEntity getOrdersSummary() {
         List<ViewOrdersOnly> orders = ordersService.getOrdersSummary();
         return  ResponseEntity.ok(orders);
@@ -62,35 +66,12 @@ public class OrdersAPI {
         return ResponseEntity.ok("Success");
     }
 
-    @GetMapping("/vnpay-return")
-    public ResponseEntity<String> handleVnpayReturn(@RequestParam Map<String, String> params) throws Exception {
-        String responseCode = params.get("vnp_ResponseCode");
-        String txnRef = params.get("vnp_TxnRef");
-
-        try {
-            if ("00".equals(responseCode)) {
-                ordersService.updateOrderStatus(txnRef, "PAID");
-                return ResponseEntity.ok("Payment successful");
-            } else {
-                ordersService.updateOrderStatus(txnRef, "FAILED");
-                return ResponseEntity.status(400).body("Payment failed: Response Code " + responseCode);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error updating order status: " + e.getMessage());
-        }
-    }
 
     @PostMapping("add-order")
-    public ResponseEntity createOrder(@RequestBody OrderRequest orderRequest) throws Exception {
+    public ResponseEntity createOrder(@Valid @RequestBody OrderRequest orderRequest) throws Exception {
         String vnPayURL = ordersService.createUrl(orderRequest);
         return ResponseEntity.ok(vnPayURL);
     }
-
-//    @PutMapping("/{orderID}/update")
-//    public ResponseEntity updateOrder(@PathVariable int orderID, @RequestBody OrderRequest orderRequest) {
-//        OrderResponse updatedOrder = ordersService.updateOrder(orderID, orderRequest);
-//        return ResponseEntity.ok(updatedOrder);
-//    }
 
 
     @PutMapping("/{orderId}/update-status")
@@ -106,9 +87,8 @@ public class OrdersAPI {
     }
 
 
-
-
     @PutMapping("/{orderID}/remove")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity<Void> deleteOrder(@PathVariable int orderID) {
         ordersService.deleteOrder(orderID);
         return ResponseEntity.noContent().build();

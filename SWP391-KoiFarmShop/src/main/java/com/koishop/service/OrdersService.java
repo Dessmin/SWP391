@@ -1,5 +1,6 @@
 package com.koishop.service;
 
+import com.koishop.Config.EnvironmentConfig;
 import com.koishop.entity.*;
 import com.koishop.exception.EntityNotFoundException;
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
@@ -44,6 +45,8 @@ public class OrdersService {
     private OrderDetailsRepository orderDetailsRepository;
     @Autowired
     private ConsignmentRequestRepository consignmentRequestRepository;
+    @Autowired
+    EnvironmentConfig environmentConfig;
 
 
     public Orders getOderById(Integer id) {
@@ -77,24 +80,19 @@ public class OrdersService {
     }
 
     public List<ViewOrdersOnly> getOrdersSummary() {
-        // Lấy danh sách tất cả các đơn hàng
         List<Orders> ordersList = ordersRepository.findByDeletedFalse();
         List<ViewOrdersOnly> viewOrdersOnlyList = new ArrayList<>();
 
-        // Duyệt qua từng đơn hàng trong danh sách
         for (Orders order : ordersList) {
-            // Sử dụng ModelMapper để ánh xạ các field chung giữa Orders và ViewOrdersOnly
             ViewOrdersOnly ordersOnly = modelMapper.map(order, ViewOrdersOnly.class);
 
             // Kiểm tra nếu User là null, vứt ra ngoại lệ
             if (order.getUser() == null) {
                 throw new RuntimeException("User not found for Order ID: " + order.getOrderID());
             }
-            // Thiết lập userName từ entity User
+
             ordersOnly.setUserName(order.getUser().getUsername());
 
-
-            // Thêm đối tượng đã ánh xạ vào danh sách kết quả
             viewOrdersOnlyList.add(ordersOnly);
         }
 
@@ -103,7 +101,6 @@ public class OrdersService {
 
 
     public List<ViewOrdersOnly> getOrdersSummaryByUser() {
-        // Lấy user hiện tại
         User currentUser = userService.getCurrentUser();
 
         // Danh sách để chứa các ViewOrdersOnly DTO
@@ -111,9 +108,7 @@ public class OrdersService {
 
         // Lấy danh sách tất cả các đơn hàng và lọc theo user hiện tại
         for (Orders order : ordersRepository.findByDeletedFalse()) {
-            // Kiểm tra nếu đơn hàng thuộc về user hiện tại
             if (order.getUser() != null && order.getUser().getUsername().equals(currentUser.getUsername())) {
-                // Ánh xạ đối tượng Orders sang ViewOrdersOnly DTO
                 ViewOrdersOnly viewOrder = modelMapper.map(order, ViewOrdersOnly.class);
 
                 // Thiết lập userName từ entity User (kiểm tra user có null không)
@@ -123,9 +118,6 @@ public class OrdersService {
                     throw new RuntimeException("User không tồn tại cho đơn hàng này.");
                 }
 
-
-
-                // Thêm đối tượng ViewOrdersOnly vào danh sách
                 viewOrdersOnlyList.add(viewOrder);
             }
         }
@@ -134,7 +126,6 @@ public class OrdersService {
     }
 
 
-    // Create Order
     public Orders createOrder(OrderRequest orderRequest) {
         User user = userService.getCurrentUser();
         Orders order = new Orders();
@@ -166,12 +157,11 @@ public class OrdersService {
     public void updateOrderStatus(String orderId, String status) {
         Orders order = ordersRepository.findById(Integer.parseInt(orderId))
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setOrderStatus(status); // Cập nhật trạng thái đơn hàng
-        ordersRepository.save(order); // Lưu đơn hàng đã cập nhật
+        order.setOrderStatus(status);
+        ordersRepository.save(order);
     }
 
     public ViewOrdersOnly updateOrderStatus(Integer orderId, String status) {
-        // Lấy thông tin đơn hàng hiện tại từ database
         User user = userService.getCurrentUser();
         Orders existingOrder = ordersRepository.findOrderByUserAndOrderID(user, orderId);
         if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
@@ -222,7 +212,6 @@ public class OrdersService {
         LocalDateTime createDate = LocalDateTime.now();
         String formattedCreateDate = createDate.format(formatter);
 
-        // Code của mình
         Orders orders = createOrder(orderRequest);
         double money = orders.getTotalAmount() * 100;
         String amount = String.valueOf((int) Math.round(money));
@@ -295,11 +284,10 @@ public class OrdersService {
 
 
     public void createTransactions(Integer id) {
-        // Tìm order
+
         Orders orders = ordersRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found!"));
 
-        // Tạo payment
         Payment payment = new Payment();
         payment.setOrders(orders);
         payment.setCreateAt(new Date());
@@ -308,9 +296,9 @@ public class OrdersService {
 
         Set<Transactions> setTransactions = new HashSet<>();
 
-        // Tạo transactions
+
         Transactions transactions1 = new Transactions();
-        // VNPAY to customer
+
         User customer = userService.getCurrentUser();
         transactions1.setFrom(null);
         transactions1.setTo(customer);
@@ -322,42 +310,8 @@ public class OrdersService {
         setTransactions.add(transactions1);
 
 
-//        Transactions transactions2 = new Transactions();
-//        // Customer to Admin
-//        User admin = userRepository.findUserByRole(Role.Admin);
-//        transactions2.setFrom(customer);
-//        transactions2.setTo(admin);
-//        transactions2.setPayment(payment);
-//        transactions2.setStatus(TransactionsStatus.Success);
-//        transactions2.setDescription("Customer to Admin");
-//        double newBalance = admin.getBalance() + orders.getTotalAmount()*0.1;
-//        admin.setBalance(newBalance);
-//        setTransactions.add(transactions2);
-
-
         Transactions transactions3 = new Transactions();
-        // Customer to Manager
-
-        // Lấy productType từ OrderDetails
-//        OrderDetails orderDetail = orders.getOrderDetails().get(0);
-//        ProductType productType = orderDetail.getProductType();
         User manager = userRepository.findFirstByRole(Role.Manager);
-
-// Kiểm tra loại sản phẩm để tìm Manager
-//        if (productType == ProductType.KoiFish) {
-//            // Tìm manger dựa trên sản phẩm cá thể
-//            KoiFish koiFish = koiFishRepository.findById(orderDetail.getProductId())
-//                    .orElseThrow(() -> new EntityNotFoundException("KoiFish not found!"));
-//            manager = koiFish.getManager();
-//        } else if (productType == ProductType.Batch) {
-//            // Tìm manager dựa trên batch
-//            Batch batch = batchRepository.findById(orderDetail.getProductId())
-//                    .orElseThrow(() -> new EntityNotFoundException("Batch not found!"));
-//            manager = batch.getManager();
-//        } else {
-//            throw new IllegalArgumentException("Unknown product type");
-//        }
-
 
         transactions3.setFrom(customer);
         transactions3.setTo(manager);
@@ -379,7 +333,11 @@ public class OrdersService {
         EmailDetail customerEmail = new EmailDetail();
         customerEmail.setUser(customer);
         customerEmail.setSubject("Payment Successful for Order #" + orders.getOrderID());
-        customerEmail.setLink("http://koishop.vn/orders/" + orders.getOrderID()); // Adjust the URL
+        String baseUrl = environmentConfig.isProductionEnvironment()
+                ? "https://deploy-fe-kappa.vercel.app"
+                : "http://localhost:5173";
+
+        customerEmail.setLink(baseUrl + "/orders/" + orders.getOrderID());
         emailService.sendPaymentSuccessEmail(customerEmail, String.valueOf(orders.getTotalAmount()), payment.getPaymentID().toString());
     }
 

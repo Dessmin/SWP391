@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = {"http://localhost:5173", "https://deploy-fe-kappa.vercel.app"})
 @RestController
 @RequestMapping("/api/user")
 @SecurityRequirement(name = "api")
@@ -29,6 +29,7 @@ public class UserAPI {
 
     // List API
     @GetMapping("/list-user")
+    @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
     public List<UserForList> getAllAccount(){
         return userService.getAllUsers();
     }
@@ -42,20 +43,21 @@ public class UserAPI {
 
     // Update API
     @PutMapping("/{id}/update")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity update(@PathVariable long id, @Valid @RequestBody AdminViewUser adminViewUser) {
         AdminViewUser existingUser = userService.updateUser(id, adminViewUser);
         return ResponseEntity.ok(existingUser);
     }
 
     @PutMapping("/{userId}/customer-update")
-    public ResponseEntity updateForCustomer( @RequestBody CustomerRequest updateRequest) {
+    public ResponseEntity updateForCustomer(@Valid @RequestBody CustomerRequest updateRequest) {
         CustomerRequest updatedUser = userService.updateForCustomer(updateRequest);
         return ResponseEntity.ok(updatedUser);  // Trả về HTTP 200 với UserResponse
     }
 
     // Delete API
     @PutMapping("/{id}/delete")
-    @PreAuthorize("hasRole('Manager')")
+    @PreAuthorize("hasAuthority('Manager')")
     public ResponseEntity delete(@PathVariable long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
@@ -80,7 +82,8 @@ public class UserAPI {
     }
 
     @PutMapping("/{userId}/update-role")
-    public ResponseEntity<AdminViewUser> updateRole(@PathVariable long userId, @RequestBody UpdateRoleRequest updateRoleRequest) {
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<AdminViewUser> updateRole(@PathVariable long userId, @Valid @RequestBody UpdateRoleRequest updateRoleRequest) {
         AdminViewUser adminViewUser = userService.updateRole(userId, updateRoleRequest);
         return ResponseEntity.ok(adminViewUser);  // Trả về HTTP 200 với UserResponse
     }
@@ -103,7 +106,7 @@ public class UserAPI {
     }
 
     @PutMapping("/usePoint")
-    public int usePoint(@RequestBody Point point) {
+    public int usePoint(@Valid @RequestBody Point point) {
         return userService.usePoint(point);
     }
 }

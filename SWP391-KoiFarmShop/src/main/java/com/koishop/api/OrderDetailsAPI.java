@@ -1,17 +1,18 @@
 package com.koishop.api;
 
-import com.koishop.entity.OrderDetails;
+
 import com.koishop.models.orderdetails_model.OrderDetailsRequest;
 import com.koishop.models.orderdetails_model.OrderDetailsResponse;
 import com.koishop.service.OrderDetailsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = {"http://localhost:5173", "https://deploy-fe-kappa.vercel.app"})
 @SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/order-details")
@@ -40,15 +41,8 @@ public class OrderDetailsAPI {
     }
 
 
-
-//    @PutMapping("/{orderId}/add-details")
-//    public ResponseEntity<List<OrderDetailsResponse>> addOrderDetails(@PathVariable Integer orderId, @RequestBody List<OrderDetailsRequest> orderDetailsRequests) {
-//        List<OrderDetailsResponse> addedOrderDetails = orderDetailService.addOrderDetails(orderId, orderDetailsRequests);
-//        return ResponseEntity.ok(addedOrderDetails);
-//    }
-
     @PutMapping("/{orderDetailID}")
-    public ResponseEntity<OrderDetailsResponse> updateOrderDetail(@PathVariable int orderDetailID, @RequestBody OrderDetailsRequest orderDetailsRequest) {
+    public ResponseEntity<OrderDetailsResponse> updateOrderDetail(@PathVariable int orderDetailID, @Valid @RequestBody OrderDetailsRequest orderDetailsRequest) {
         try {
             OrderDetailsResponse updatedOrderDetail = orderDetailService.updateOrderDetail(orderDetailID, orderDetailsRequest);
             return ResponseEntity.ok(updatedOrderDetail);
