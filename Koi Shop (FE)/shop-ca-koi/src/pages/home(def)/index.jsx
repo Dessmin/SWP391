@@ -57,7 +57,7 @@ function Home() {
           <Blog_Carousel />
         </div>
       </div>
-
+      
       <Footer />
     </div>
   );

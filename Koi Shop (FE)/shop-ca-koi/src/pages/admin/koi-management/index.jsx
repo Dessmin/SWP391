@@ -12,8 +12,8 @@ import {
   notification,
   Select,
   Upload,
-  Image,
 } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import Dashboard from "../../../components/dashboard";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
@@ -23,12 +23,40 @@ import { Link } from "react-router-dom";
 import apiKoi from "../../../config/koi-api";
 
 function Koi() {
+  // Dữ liệu mẫu
   const [dataSource, setDatasource] = useState([]);
   const [form] = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useSelector((state) => state.user);
-  const [breeds, setBreeds] = useState([]);
+  const [breeds, setBreeds] = useState([]); // State để lưu danh sách breed
   const [origins, setOrigins] = useState([]);
+
+  const handleImageUpload = async (info) => {
+    // Kiểm tra file trước khi xử lý
+    const file = info.file.originFileObj || info.file;
+
+    if (!file) {
+      console.error("File không được chọn hoặc không hợp lệ.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "r9i9xvu9"); // Sử dụng upload preset của bạn
+
+    try {
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/datccozty/image/upload`,
+        formData
+      );
+
+      // Lấy URL của ảnh đã tải lên và lưu vào form
+      const imageUrl = response.data.secure_url;
+      form.setFieldsValue({ image: imageUrl });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 
   async function fetchKoi(data) {
     try {
@@ -48,6 +76,7 @@ function Koi() {
     }
   }
 
+  // Hàm để tải danh sách các con cá Koi từ API
   async function loadKoiList() {
     try {
       const response = await axios.get(
@@ -68,21 +97,24 @@ function Koi() {
     }
   }
 
+  // Hàm để xóa một con cá Koi
+  // Hàm để xóa một con cá Koi
   const handleDeleteKoi = async (id) => {
     try {
+      // Thay đổi từ axios.delete sang axios.put để cập nhật trạng thái deleted
       await axios.put(
         `http://14.225.210.143:8080/api/koi-fishes/${id}/delete`,
-        {}, 
+        {}, // body rỗng vì chỉ cập nhật trạng thái
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-
+      // Cập nhật lại dataSource sau khi cập nhật trạng thái deleted
       setDatasource((prevData) =>
         prevData.map(
-          (koi) => (koi.id === id ? { ...koi, deleted: true } : koi) 
+          (koi) => (koi.id === id ? { ...koi, deleted: true } : koi) // Đánh dấu cá là đã xóa
         )
       );
       message.success("Xóa cá Koi thành công!");
@@ -92,8 +124,10 @@ function Koi() {
     }
   };
 
+  // Hàm để cập nhật trạng thái bán
   const handleIsForSaleChange = async (id, currentStatus) => {
     try {
+      // Gửi yêu cầu cập nhật trạng thái isForSale
       await axios.put(
         `http://14.225.210.143:8080/api/koi-fishes/${id}/updateIsForSale`,
         {},
@@ -103,7 +137,7 @@ function Koi() {
           },
         }
       );
-
+      // Cập nhật trạng thái mới trên giao diện
       setDatasource((prevFishes) =>
         prevFishes.map((fish) =>
           fish.id === id ? { ...fish, isForSale: !currentStatus } : fish
@@ -116,6 +150,7 @@ function Koi() {
     }
   };
 
+  // Cột cho bảng cá Koi
   const columns = [
     {
       title: "Fish Name",
@@ -168,6 +203,7 @@ function Koi() {
             <Button type="default">Detail</Button>
           </Link>
 
+          {/* Hiển thị trạng thái đã xóa hoặc nút xóa */}
           {record.deleted ? (
             <Button>
               <span style={{ color: "red" }}>Is Delete</span>
@@ -176,7 +212,7 @@ function Koi() {
             <Button
               type="primary"
               danger
-              onClick={() => handleDeleteKoi(record.id)}
+              onClick={() => handleDeleteKoi(record.id)} // Gọi hàm update deleted
               style={{ marginRight: 8 }}
             >
               Delete
@@ -191,8 +227,6 @@ function Koi() {
     },
   ];
 
-  
-
   const handleshowModal = () => {
     setIsModalOpen(true);
   };
@@ -206,8 +240,6 @@ function Koi() {
   };
 
   const handleSubmit = (values) => {
-    console.log(values);
-
     fetchKoi(values);
     form.resetFields();
     handleHideModel();
@@ -227,13 +259,13 @@ function Koi() {
       const response = await apiKoi.get(
         "http://14.225.210.143:8080/api/breeds/list-breedName",
         {
-          
+          // Giả sử API lấy danh sách breed là /breeds
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setBreeds(response.data);
+      setBreeds(response.data); // Giả sử response.data là mảng danh sách breed
     } catch (e) {
       console.log(e);
     }
@@ -244,13 +276,13 @@ function Koi() {
       const response = await axios.get(
         "http://14.225.210.143:8080/api/origin/list-originName",
         {
-          
+          // Giả sử API lấy danh sách breed là /origin
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         }
       );
-      setOrigins(response.data);
+      setOrigins(response.data); // Giả sử response.data là mảng danh sách origin
     } catch (e) {
       console.log(e);
     }
@@ -354,7 +386,7 @@ function Koi() {
               name="size"
               rules={[{ required: true, message: "Please input size!" }]}
             >
-              <InputNumber min={0} />
+              <InputNumber />
             </Form.Item>
 
             <Form.Item
@@ -362,7 +394,7 @@ function Koi() {
               name="price"
               rules={[{ required: true, message: "Please input price!" }]}
             >
-              <InputNumber min={0} />
+              <InputNumber />
             </Form.Item>
 
             <Form.Item
@@ -386,11 +418,16 @@ function Koi() {
             <Form.Item
               label="Hình ảnh"
               name="image"
-              rules={[
-                { required: true, message: "Vui lòng nhập URL hình ảnh" },
-              ]}
+              rules={[{ required: true, message: "Vui lòng chọn ảnh" }]}
             >
-              <Input />
+              <Upload
+                name="file"
+                listType="picture"
+                beforeUpload={() => false} // Không tự động upload
+                onChange={handleImageUpload} // Xử lý khi chọn ảnh
+              >
+                <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
+              </Upload>
             </Form.Item>
           </Form>
         </Modal>

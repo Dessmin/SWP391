@@ -29,11 +29,10 @@ function HomeLoged() {
           <BatchList />
         </CartProvider>
         <hr />
-        
+        <h2 style={{ color: "white", textAlign: "center" }}>Các bài viết</h2>
         <Blog_Carousel />
-        
+        <span></span>
       </div>
-
       <Footer />
     </div>
   );

@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./index.scss";
 import { Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Blog_Carousel() {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ export default function Blog_Carousel() {
   }, []);
   return (
     <div>
-      <h2 style={{ color: "white", textAlign: "center" }}>Các bài viết</h2>
       <Swiper
         navigation={true}
         modules={[Navigation, Pagination]}
@@ -36,17 +35,18 @@ export default function Blog_Carousel() {
       >
         {blogs.map((blog) => (
           <SwiperSlide key={blog.id} className="blog-slide">
-            <img src={blog.image} alt="" />
+            <Link to={`/blogDetail/${blog.id}`}>
+              <img
+                src={blog.image}
+                alt=""
+                style={{ width: "100%", height: "auto" }}
+              />
+            </Link>
             <div className="title-content">
               <div className="title">
                 <strong>{blog.title}</strong>
               </div>
               <div className="content">{blog.content}</div>
-            </div>
-            <div className="bton">
-              <Button onClick={() => navigate(`/blogDetail/${blog.id}`)}>
-                Xem thêm
-              </Button>
             </div>
           </SwiperSlide>
         ))}
