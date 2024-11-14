@@ -1,0 +1,14 @@
+.Breeds_Carousel{
+    
+    .slide{
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+
+    img{
+        width: 100%;
+        height: 70dvh;
+        object-fit: fill;
+        object-position: top;
+    }
+}

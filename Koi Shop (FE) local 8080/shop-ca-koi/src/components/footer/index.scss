@@ -1,0 +1,65 @@
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;  // Dàn đều các section
+    padding: 20px;
+    background-color: #000;
+    color: #fff;
+    position: relative;
+    
+  
+    .footer-section {
+      flex: 1;
+      margin: 10px;
+  
+      p {
+        margin: 5px 0;
+      }
+  
+      h4 {
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+  
+      nav {
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        align-items: center;
+  
+        a {
+          
+          color: #fff;
+          text-decoration: none;
+          font-weight: bold;
+  
+          &:hover {
+            
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  
+    .contact, .visit, .quality {
+      max-width: 300px;
+    }
+  
+    .copyright {
+      position: absolute; // Dùng absolute positioning để đưa phần này xuống giữa
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%); // Căn giữa theo chiều ngang
+      text-align: center;
+      width: 100%;
+      margin-top: 20px;
+    }
+  
+    .logo {
+      width: 80px;
+      margin: 0px 60px 10px 30px;
+      
+    }
+  }
+  

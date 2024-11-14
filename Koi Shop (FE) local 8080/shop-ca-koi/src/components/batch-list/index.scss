@@ -1,0 +1,30 @@
+.batch{
+    display: flex;
+    flex-direction: column;
+    padding: 0 50px;
+
+    h2 {
+        display: inline-block;
+        padding: 10px 20px; 
+        text-align: center; 
+        background-color: red;
+        border-radius: 55px;
+        margin: 45px auto 20px; 
+        color: white;
+    }
+
+    &__list{
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    &__page{
+        margin-top: 30px;
+        margin-bottom: 50px;
+        text-align: center;
+
+        Button{
+            border-radius: 10px;
+        }
+    }
+}
