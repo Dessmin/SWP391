@@ -3,11 +3,14 @@ package com.koishop.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -30,15 +33,25 @@ public class ConsignmentRequest {
     @JoinColumn(name = "koifish_id")
     private KoiFish koiFish;
 
-    @NotNull(message = "Request date is required")
-    private Date requestDate;
+
+    @FutureOrPresent(message = "Start date must be in the present or future")
+    private LocalDate startDate;
+
+
+    @Future(message = "End date must be in the future")
+    private LocalDate endDate;
 
     @NotNull(message = "Consignment type is required")
+    @Enumerated(EnumType.STRING)
     private ConsignmentType consignmentType;
 
     @NotNull(message = "Status is required")
-    private boolean status;
+    private String status;
 
     private double shopPrice;
+
+    @ManyToOne
+    @JoinColumn(name = "pack_id")
+    private Pack pack;
 
 }

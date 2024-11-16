@@ -1,5 +1,6 @@
 package com.koishop.api;
 
+import com.koishop.entity.ConsignmentType;
 import com.koishop.models.consignment_modle.ConsignmentRequestForCustomer;
 import com.koishop.models.consignment_modle.ConsignmentView;
 import com.koishop.models.consignment_modle.ResponseWithFishId;
@@ -23,9 +24,13 @@ public class ConsignmentRequestAPI {
     @Autowired
     private ConsignmentRequestService consignmentRequestService;
 
-    @GetMapping("list-consignments")
-    public List<ConsignmentView> getAllConsignmentRequests() {
-        return consignmentRequestService.getAllConsignmentRequests();
+
+    @GetMapping("/requests")
+    public ResponseEntity<List<ConsignmentView>> getConsignmentRequestsByType(
+            @RequestParam(value = "type", required = false) ConsignmentType type) {
+
+        List<ConsignmentView> consignmentViews = consignmentRequestService.getConsignmentRequestsByType(type);
+        return ResponseEntity.ok(consignmentViews);
     }
 
     @GetMapping("/{consignmentID}/get")
@@ -47,6 +52,13 @@ public class ConsignmentRequestAPI {
     @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
     public ConsignmentView updateConsignmentRequest(@PathVariable int consignmentID, @Valid @RequestBody ConsignmentView requestDetails) {
         return consignmentRequestService.updateConsignmentRequest(consignmentID, requestDetails);
+    }
+
+    @PutMapping("/{consignmentID}/status")
+    @PreAuthorize("hasAuthority('Manager') or hasAuthority('Staff')")
+    public ResponseEntity<String> updateStatus(@PathVariable Integer consignmentID, @RequestParam String status) {
+        consignmentRequestService.updateConsignmentStatus(consignmentID, status);
+        return ResponseEntity.ok().body("Order status updated successfully.");
     }
 
     @DeleteMapping("/{consignmentID}")

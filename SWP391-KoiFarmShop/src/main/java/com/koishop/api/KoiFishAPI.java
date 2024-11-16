@@ -74,10 +74,18 @@ public class KoiFishAPI {
         return koiFishService.searchKoiFishByName(koiFishName);
     }
 
-    @GetMapping("/{breed}")
-    public FishResponse getKoiFishByOrigin(@PathVariable String breed, @RequestParam int page) {
-        return koiFishService.getKoiFishesByBreed(breed, page, 4);
+    @GetMapping("/filter")
+    public FishResponse getKoiFishByOrigin(@RequestParam(required = false) String breed, @RequestParam(required = false) double[] fishsize, @RequestParam(required = false) double[] price, @RequestParam int page) {
+
+        double[] sizeRange = (fishsize != null && fishsize.length == 2) ? fishsize : new double[]{0, Double.MAX_VALUE};
+        double[] priceRange = (price != null && price.length == 2) ? price : new double[]{0, Double.MAX_VALUE};
+
+        return koiFishService.getKoiFishesByBreed(
+                breed != null ? breed : "", sizeRange, priceRange, page, 4
+        );
     }
+
+
 
     @GetMapping("/koiFish/cart/{id}")
     public FishForCart getIdforCart(@PathVariable int id) {

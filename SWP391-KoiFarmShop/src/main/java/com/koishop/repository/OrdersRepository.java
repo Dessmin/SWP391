@@ -13,13 +13,11 @@ import java.util.List;
 
 public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     List<Orders> findOrdersByUser(User user);
-    Orders findOrderByUserAndOrderID(User user, Integer OrderID);
     List<Orders> findByDeletedFalse();
     Orders findByOrderID(Integer OrderID);
-    List<Orders> findByOrderStatusAndDeletedFalse(String orderStatus);
     @Query(value = "SELECT YEAR(order_date) AS year, DATE_FORMAT(order_date, '%Y-%m') AS month, SUM(total_amount) AS total_monthly_amount " +
             "FROM orders " +
-            "WHERE order_status = 'PAID' " +
+            "WHERE order_status IN ('PAID', 'SUCCESSED')" +
             "AND order_date >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR) " +
             "GROUP BY year, month " +
             "ORDER BY year, month", nativeQuery = true)

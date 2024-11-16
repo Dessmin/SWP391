@@ -80,12 +80,11 @@ public class OrdersAPI {
         return ResponseEntity.ok().body("Order status updated successfully.");
     }
 
-    @PutMapping("/{orderId}/update-order-status")
-    public ResponseEntity<ViewOrdersOnly> updateOrderStatus(@PathVariable Integer orderId, @RequestParam String status) {
-        ViewOrdersOnly updatedOrder = ordersService.updateOrderStatus(orderId, status);
-        return ResponseEntity.ok(updatedOrder);
+    @PutMapping("/{orderId}/update-delivery-status")
+    public ResponseEntity<String> updateDeliveryStatus(@PathVariable Integer orderId, @RequestParam String status) {
+        ordersService.updateDeliveryStatus(orderId, status);
+        return ResponseEntity.ok().body("Order delivery status updated successfully.");
     }
-
 
     @PutMapping("/{orderID}/remove")
     @PreAuthorize("hasAuthority('Manager')")

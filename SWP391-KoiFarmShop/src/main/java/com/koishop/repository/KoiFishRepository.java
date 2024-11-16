@@ -15,7 +15,10 @@ public interface KoiFishRepository extends JpaRepository<KoiFish, Integer> {
 
     Page<KoiFish> findAll(Pageable pageable);
     Page<KoiFish> findByIsForSaleAndDeletedIsFalse(Boolean isforsale, Pageable pageable);
-    Page<KoiFish> findByBreed_BreedNameAndIsForSaleAndDeletedIsFalse(String breedName, Boolean isforsale, Pageable pageable);
 
     List<KoiFish> findAllByIsForSaleAndDeletedIsFalse(boolean isSale);
+
+    Page<KoiFish> findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndSizeBetweenAndPriceBetween(String breed, boolean isForSale, double minSize, double maxSize, double minPrice, double maxPrice, Pageable pageable);
+
+    Page<KoiFish> findByIsForSaleAndDeletedIsFalseAndSizeBetweenAndPriceBetween(boolean isForSale, double minSize, double maxSize, double minPrice, double maxPrice, Pageable pageable);
 }

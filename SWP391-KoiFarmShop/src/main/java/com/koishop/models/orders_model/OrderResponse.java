@@ -23,6 +23,7 @@ public class OrderResponse {
 
     private String orderStatus;
 
+    private String deliveryStatus;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderDetails> orderDetails;

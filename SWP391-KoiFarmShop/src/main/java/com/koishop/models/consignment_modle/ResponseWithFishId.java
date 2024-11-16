@@ -2,9 +2,12 @@ package com.koishop.models.consignment_modle;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.koishop.entity.ConsignmentType;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -19,13 +22,17 @@ public class ResponseWithFishId {
     @NotNull(message = "Koi is required")
     private String fishName;
 
-    @NotNull(message = "Request date is required")
-    private Date requestDate;
+    @FutureOrPresent(message = "Start date must be in the present or future")
+    private LocalDate startDate;
+
+
+    @Future(message = "End date must be in the future")
+    private LocalDate endDate;
 
     @NotNull(message = "Consignment type is required")
     private ConsignmentType consignmentType;
 
-    private boolean status;
+    private String status;
 
     private double shopPrice;
 }

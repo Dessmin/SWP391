@@ -31,7 +31,7 @@ public class BatchService {
 
     public BatchResponse getAllBatch(int page, int size) {
         List<BatchView> batchViewList = new ArrayList<>();
-        for (Batch batch : batchRepository.findByIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(true, PageRequest.of(page, size), 5)) {
+        for (Batch batch : batchRepository.findByIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(true, PageRequest.of(page, size), 10)) {
             BatchView batchView = modelMapper.map(batch, BatchView.class);
             batchView.setBreedName(batch.getBreed().getBreedName());
             batchViewList.add(batchView);
@@ -103,9 +103,9 @@ public class BatchService {
     public BatchResponse getAllBatchByBreed(String breed, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Batch> batchPage = batchRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(breed, true, pageable, 5);
+        Page<Batch> batchPage = batchRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(breed, true, pageable, 10);
         List<BatchView> batchViewList = new ArrayList<>();
-        for (Batch batches : batchRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(breed, true, pageable, 5)) {
+        for (Batch batches : batchRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndQuantityGreaterThan(breed, true, pageable, 10)) {
             if (batches.getBreed().getBreedName().equals(breed)) {
                 BatchView batch = modelMapper.map(batches, BatchView.class);
                 batch.setBreedName(batches.getBreed().getBreedName());
@@ -122,7 +122,7 @@ public class BatchService {
 
     public void quantityBatch(int id, int quantity) {
         Batch batch = batchRepository.findByBatchID(id);
-        batch.setQuantity(batch.getQuantity() - quantity);
+        batch.setQuantity(batch.getQuantity() - quantity*10);
         batchRepository.save(batch);
     }
 

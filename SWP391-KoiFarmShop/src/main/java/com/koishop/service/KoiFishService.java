@@ -120,16 +120,28 @@ public class KoiFishService {
         return koiFishNames;
     }
 
-    public FishResponse getKoiFishesByBreed(String breed, int page, int size) {
+    public FishResponse getKoiFishesByBreed(String breed, double[] fishsize, double[] price, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<KoiFish> koiFishPage = koiFishRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalse(breed, true, pageable);
+
+        double minSize = (fishsize != null && fishsize.length == 2) ? fishsize[0] : 0;
+        double maxSize = (fishsize != null && fishsize.length == 2) ? fishsize[1] : Double.MAX_VALUE;
+        double minPrice = (price != null && price.length == 2) ? price[0] : 0;
+        double maxPrice = (price != null && price.length == 2) ? price[1] : Double.MAX_VALUE;
+
+        Page<KoiFish> koiFishPage = breed != null && !breed.isEmpty()
+                ? koiFishRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalseAndSizeBetweenAndPriceBetween(
+                breed, true, minSize, maxSize, minPrice, maxPrice, pageable)
+                : koiFishRepository.findByIsForSaleAndDeletedIsFalseAndSizeBetweenAndPriceBetween(
+                true, minSize, maxSize, minPrice, maxPrice, pageable);
+
         List<FishForList> fishList = new ArrayList<>();
-        for (KoiFish koiFish : koiFishRepository.findByBreed_BreedNameAndIsForSaleAndDeletedIsFalse(breed, true, pageable)) {
-                FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
-                fishForList.setBreed(koiFish.getBreed().getBreedName());
-                fishForList.setOrigin(koiFish.getOrigin().getOriginName());
-                fishList.add(fishForList);
+        for (KoiFish koiFish : koiFishPage.getContent()) {
+            FishForList fishForList = modelMapper.map(koiFish, FishForList.class);
+            fishForList.setBreed(koiFish.getBreed().getBreedName());
+            fishForList.setOrigin(koiFish.getOrigin().getOriginName());
+            fishList.add(fishForList);
         }
+
         FishResponse fishResponse = new FishResponse();
         fishResponse.setTotalPages(koiFishPage.getTotalPages());
         fishResponse.setTotalElements(koiFishPage.getTotalElements());
@@ -137,6 +149,7 @@ public class KoiFishService {
         fishResponse.setContent(fishList);
         return fishResponse;
     }
+
 
 
     public void deleteKoiFish(Integer id) {

@@ -43,6 +43,9 @@ public class Orders {
     @Size(max = 50, message = "Order status must not exceed 50 characters")
     private String orderStatus;
 
+    @NotBlank(message = "Delivery status status is required")
+    @Size(max = 50, message = "Delivery status must not exceed 50 characters")
+    private String deliveryStatus;
 
     @OneToOne(mappedBy = "orders")
     @JsonIgnore

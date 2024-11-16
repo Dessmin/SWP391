@@ -22,4 +22,6 @@ public class ViewOrdersOnly {
     private Double totalAmount;
 
     private String orderStatus;
+
+    private String deliveryStatus;
 }

@@ -146,37 +146,12 @@ public class OrdersService {
         order.setType(orderRequest.getType());
         order.setOrderDetails(orderDetails);
         order.setTotalAmount(total);
+        order.setDeliveryStatus("Non-confirmed");
         order.setOrderStatus("Pending");
         order.setDeleted(false);
 
 
         return ordersRepository.save(order);
-    }
-
-
-    public void updateOrderStatus(String orderId, String status) {
-        Orders order = ordersRepository.findById(Integer.parseInt(orderId))
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setOrderStatus(status);
-        ordersRepository.save(order);
-    }
-
-    public ViewOrdersOnly updateOrderStatus(Integer orderId, String status) {
-        User user = userService.getCurrentUser();
-        Orders existingOrder = ordersRepository.findOrderByUserAndOrderID(user, orderId);
-        if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
-
-        // Cập nhật trạng thái của đơn hàng
-        existingOrder.setOrderStatus(status);
-
-        // Lưu đơn hàng đã cập nhật
-        Orders updatedOrder = ordersRepository.save(existingOrder);
-
-        // Tạo OrderResponse để trả về
-        ViewOrdersOnly viewOrdersOnly = modelMapper.map(updatedOrder, ViewOrdersOnly.class);
-        viewOrdersOnly.setUserName(updatedOrder.getUser().getUsername());
-
-        return viewOrdersOnly;
     }
 
     public void updateStatus(Integer orderId, String status) {
@@ -187,7 +162,7 @@ public class OrdersService {
                 for (OrderDetails orderDetail: orderDetailsRepository.findByOrders_OrderID(existingOrder.getOrderID())) {
                     KoiFish fish = koiFishRepository.findKoiFishByKoiID(orderDetail.getProductId());
                     ConsignmentRequest consignmentRequest = fish.getConsignmentRequest();
-                    consignmentRequest.setStatus(true);
+                    consignmentRequest.setStatus("COMPLETED");
                     consignmentRequestRepository.save(consignmentRequest);
                 }
             } else {
@@ -353,5 +328,10 @@ public class OrdersService {
         }
     }
 
-
+    public void updateDeliveryStatus(Integer orderId, String status) {
+        Orders existingOrder = ordersRepository.findByOrderID(orderId);
+        if (existingOrder == null) throw new EntityNotFoundException("Order not found!");
+        existingOrder.setDeliveryStatus(status);
+        ordersRepository.save(existingOrder);
+    }
 }
